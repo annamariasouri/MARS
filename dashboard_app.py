@@ -69,6 +69,8 @@ st.markdown(
       .badge.med {{ background: rgba(255,183,3,.15); color:#7c5700; border:1px solid rgba(255,183,3,.4); }}
       .badge.high {{ background: rgba(208,0,0,.15); color:#750000; border:1px solid rgba(208,0,0,.35); }}
       .section-title {{ color: #fff; font-weight:800; }}
+    /* map-specific title: black text */
+    .map-section-title {{ color: #000; font-weight:800; }}
       .soft-card {{ background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px;box-shadow:0 8px 24px rgba(0,0,0,.25);}}
       iframe, .folium-map {{ border-radius: 16px; box-shadow: 0 0 40px rgba(0,0,0,0.6); }}
     </style>
@@ -240,9 +242,10 @@ for v in REGIONS.values():
     all_lon.extend([lon_min, lon_max])
 
 if all_lat and all_lon:
-    center = [float(np.mean(all_lat)), float(np.mean(all_lon))]
+    # Adjust center slightly east to better show Cyprus
+    center = [37.0, 28.0]  # moved east and slightly south to center between Greece and Cyprus
 else:
-    center = [37.5, 23.5]
+    center = [37.0, 28.0]
 
 available = [r for r in REGIONS if os.path.exists(os.path.join(DATA_DIR, f"forecast_log_{r}.csv"))]
 if "region" not in st.session_state:
@@ -250,7 +253,7 @@ if "region" not in st.session_state:
 
 head_cols = st.columns([3,1])
 with head_cols[0]:
-    st.markdown("<div class='section-title' style='margin:16px 0 6px;'>📍 Regions Map (click to select)</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title map-section-title' style='margin:16px 0 6px;'>📍 Regions Map (click to select)</div>", unsafe_allow_html=True)
 with head_cols[1]:
     st.selectbox("Active region", options=list(REGIONS.keys()), format_func=lambda k: REGIONS[k]["title"], key="region")
 
@@ -258,11 +261,58 @@ with head_cols[1]:
 # Make map stretch full width
 map_col = st.columns(1)[0]
 with map_col:
-    m = folium.Map(location=center, zoom_start=7, tiles="cartodbpositron")
+    m = folium.Map(location=center, zoom_start=6, tiles="cartodbpositron")  # zoomed out to show Cyprus
+    
+    # Add custom CSS for marker styling
+    css = """
+    <style>
+        .leaflet-interactive {
+            cursor: pointer !important;
+        }
+        .custom-marker-icon {
+            color: white;
+            text-shadow: 0 0 3px rgba(0,0,0,0.4);
+        }
+    </style>
+    """
+    m.get_root().html.add_child(folium.Element(css))
+    
     for k, v in REGIONS.items():
         lat_min, lat_max, lon_min, lon_max = v["bbox"]
-        folium.Rectangle(bounds=[[lat_min, lon_min],[lat_max, lon_max]], color=v["color"], fill=True,
-                         fill_opacity=0.25 if k != st.session_state.region else 0.5, popup=v["title"]).add_to(m)
+        is_active = k == st.session_state.region
+        # Calculate center point for the marker
+        marker_lat = (lat_min + lat_max) / 2
+        marker_lon = (lon_min + lon_max) / 2
+        
+        # Create a custom icon for each region (pin only, no label)
+        icon = folium.DivIcon(
+            html=f'''
+                <div class="custom-marker-icon" style="text-align:center;">
+                    <div style="font-size:28px;color:{v['color']};">📍</div>
+                </div>
+            ''',
+            icon_size=(40, 40),
+            icon_anchor=(20, 40),
+        )
+        
+        # Add marker
+        folium.Marker(
+            location=[marker_lat, marker_lon],
+            icon=icon,
+            popup=v["title"],
+            tooltip=v["title"]
+        ).add_to(m)
+        
+        # Add a subtle region outline
+        folium.Rectangle(
+            bounds=[[lat_min, lon_min],[lat_max, lon_max]],
+            color=v["color"],
+            weight=1,
+            fill=True,
+            fill_opacity=0.1 if not is_active else 0.2,
+            popup=None,
+            opacity=0.5
+        ).add_to(m)
     mret = st_folium(m, height=600, width="100%", key="mars_map")
 
 if mret and mret.get("last_clicked"):
@@ -297,7 +347,7 @@ def likelihood_badge(pct: float | None) -> str:
     if pct <= 20: cls, label = "low", "Low"
     elif pct <= 60: cls, label = "med", "Moderate"
     else: cls, label = "high", "High"
-    return f"<span class='badge {cls}'>{pct:.0f}% • {label}</span>"
+    return f"<span class='badge {cls}'>{label} ({pct:.0f}%)</span>"
 
 # === KPI CARDS ===
 k1, k2, k3 = st.columns([2,2,3])
@@ -323,13 +373,15 @@ with k3:
 
 k4, k5, k6 = st.columns([3,3,2])
 with k4:
-    pct7 = summary['rec7'] if summary['rec7'] is not None else float('nan')
-    pct7_txt = '—' if pd.isna(pct7) else f"{pct7:.0f}%"
-    st.markdown(f"<div class='kpi'><div class='label'>Likelihood (Next 7 d)</div><div class='value'>{pct7_txt}</div>{likelihood_badge(summary['rec7'])}</div>", unsafe_allow_html=True)
+    st.markdown(f"""<div class='kpi'>
+        <div class='label'>Likelihood (Next 7 d)</div>
+        <div style='margin-top:8px;margin-bottom:4px'>{likelihood_badge(summary['rec7'])}</div>
+    </div>""", unsafe_allow_html=True)
 with k5:
-    pct30 = summary['rec30'] if summary['rec30'] is not None else float('nan')
-    pct30_txt = '—' if pd.isna(pct30) else f"{pct30:.0f}%"
-    st.markdown(f"<div class='kpi'><div class='label'>Likelihood (Next 30 d)</div><div class='value'>{pct30_txt}</div>{likelihood_badge(summary['rec30'])}</div>", unsafe_allow_html=True)
+    st.markdown(f"""<div class='kpi'>
+        <div class='label'>Likelihood (Next 30 d)</div>
+        <div style='margin-top:8px;margin-bottom:4px'>{likelihood_badge(summary['rec30'])}</div>
+    </div>""", unsafe_allow_html=True)
 with k6:
     r7 = summary['risk7'] if summary['risk7'] is not None else 0
     r30 = summary['risk30'] if summary['risk30'] is not None else 0
