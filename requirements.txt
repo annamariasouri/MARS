@@ -7,3 +7,6 @@ joblib
 scikit-learn
 copernicusmarine
 matplotlib
+folium
+streamlit-folium
+plotly
