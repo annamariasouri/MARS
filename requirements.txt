@@ -1,0 +1,9 @@
+streamlit
+pandas
+numpy
+xarray
+netCDF4
+joblib
+scikit-learn
+copernicusmarine
+matplotlib
