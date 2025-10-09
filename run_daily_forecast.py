@@ -75,17 +75,24 @@ for region in REGIONS:
 
     # === Dynamic threshold (per region/day)
     threshold = np.percentile(predicted_chl, 90)
-    # Continuous risk: percent of grid points above threshold
     risk_pct = float(np.mean(predicted_chl >= threshold)) * 100
     risk_flag = int(predicted_chl_mean >= threshold)
 
-    # === Save forecast row (add risk_pct)
+    # === Continuous risk score (normalized CHL)
+    # Set min/max from historical data (e.g., min=0, max=2.5 mg/m³)
+    min_chl = 0.0
+    max_chl = 2.5
+    risk_score = (predicted_chl_mean - min_chl) / (max_chl - min_chl)
+    risk_score_pct = max(0, min(1, risk_score)) * 100  # Clamp to [0, 100]
+
+    # === Save forecast row (add risk_pct and risk_score_pct)
     result = pd.DataFrame([{
         "date": target_date_str,
         "predicted_chl": round(predicted_chl_mean, 3),
         "bloom_risk_flag": risk_flag,
         "threshold_used": round(threshold, 3),
         "risk_pct": round(risk_pct, 1),
+        "risk_score": round(risk_score_pct, 1),
         "num_grid_points": len(predicted_chl)
     }])
 

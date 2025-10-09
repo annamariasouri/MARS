@@ -197,16 +197,15 @@ def plot_ts(df: pd.DataFrame, x: str, y: str, title: str, ylab: str):
 
 
 def summarize_region(forecast: pd.DataFrame) -> dict:
-    out = {"latest_chl": None, "bloom_flag": None, "threshold": None,
-        "rec7": None, "rec30": None, "risk7": None, "risk30": None, "risk_pct": None}
+    out = {"latest_chl": None, "threshold": None,
+        "rec7": None, "rec30": None, "risk7": None, "risk30": None, "risk_score": None}
     if forecast.empty:
         return out
     last = forecast.dropna(subset=["date"]).iloc[-1] if "date" in forecast.columns else forecast.iloc[-1]
     out["latest_chl"] = last.get("predicted_chl")
     out["threshold"] = last.get("threshold_used")
-    bf = last.get("bloom_risk_flag")
-    out["bloom_flag"] = (str(bf).lower() in ("1","true","yes")) if pd.notna(bf) else None
-    out["risk_pct"] = last.get("risk_pct") if "risk_pct" in forecast.columns else None
+    # Removed bloom_flag logic
+    out["risk_score"] = last.get("risk_score") if "risk_score" in forecast.columns else None
 
     # risk flags
     if "bloom_risk_flag" in forecast.columns:
@@ -351,7 +350,7 @@ def likelihood_badge(pct: float | None) -> str:
     return f"<span class='badge {cls}'>{label} ({pct:.1f}%)</span>"
 
 # === KPI CARDS ===
-k1, k2, k3, k4 = st.columns([2,2,2,3])
+k1, k2, k3 = st.columns([2,2,3])
 with k1:
         st.markdown(f"""
         <div class='kpi'>
@@ -359,22 +358,15 @@ with k1:
             <div class='value'>{fmt_val(summary['latest_chl'], 3, ' mg/m³')}</div>
         </div>""", unsafe_allow_html=True)
 with k2:
-        bloom_txt = 'Yes' if summary['bloom_flag'] is True else ('No' if summary['bloom_flag'] is False else '—')
         st.markdown(f"""
         <div class='kpi'>
-            <div class='label'>Bloom Flag (Today)</div>
-            <div class='value'>{bloom_txt}</div>
-        </div>""", unsafe_allow_html=True)
-with k3:
-        st.markdown(f"""
-        <div class='kpi'>
-            <div class='label'>Risk % (Today)</div>
-            <div class='value'>{likelihood_badge(summary['risk_pct'])}</div>
+            <div class='label'>Continuous Risk (Today)</div>
+            <div class='value'>{likelihood_badge(summary['risk_score'])}</div>
             <div style='margin-top:8px;'>
-                <progress value='{summary['risk_pct'] if summary['risk_pct'] is not None else 0}' max='100' style='width:80%;height:12px;'></progress>
+                <progress value='{summary['risk_score'] if summary['risk_score'] is not None else 0}' max='100' style='width:80%;height:12px;'></progress>
             </div>
         </div>""", unsafe_allow_html=True)
-with k4:
+with k3:
         st.markdown(f"""
         <div class='kpi'>
             <div class='label'>Threshold Used</div>
