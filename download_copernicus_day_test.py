@@ -20,8 +20,8 @@ output_dir = r"C:\Users\annam\OneDrive - University of Nicosia\Desktop\DASHBOARD
 os.makedirs(output_dir, exist_ok=True)
 
 # === Authenticate ===
-username = os.getenv('COPERNICUS_USERNAME')
-password = os.getenv('COPERNICUS_PASSWORD')
+username = os.getenv('COPERNICUS_USERNAME', '').strip()
+password = os.getenv('COPERNICUS_PASSWORD', '').strip()
 
 # TEMPORARY DEBUG - REMOVE IN NEXT COMMIT
 print("=== DEBUG CREDENTIALS ===")
@@ -31,7 +31,7 @@ print("=== END DEBUG ===")
 
 if not username or not password:
     raise ValueError("Copernicus credentials not found in environment variables. Please set COPERNICUS_USERNAME and COPERNICUS_PASSWORD")
-copernicusmarine.login(username=username, password=password)
+copernicusmarine.login(username=username, password=password, check_credentials_valid=True, force_overwrite=True)
 
 # === Dataset list ===
 datasets = [
