@@ -35,6 +35,10 @@ jobs:
           python -c "import os; print('Username exists:', bool(os.getenv('COPERNICUS_USERNAME'))); print('Password exists:', bool(os.getenv('COPERNICUS_PASSWORD')))"
           python download_copernicus_day_test.py
 
+      - name: Download model file from OneDrive
+        run: |
+          curl -L "https://unicaccy-my.sharepoint.com/:u:/g/personal/souri_am_unic_ac_cy/EURK8IaCkpFMkRejT0sga1UBj95eJCOaS-Z3li9RwNOALg?e=aFnSsh" -o final_rf_chl_model_2015_2023.pkl
+
       - name: Run MARS forecast
         run: |
           python run_daily_forecast.py
