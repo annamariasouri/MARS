@@ -3,8 +3,8 @@ pandas
 numpy
 xarray
 netCDF4
-joblib
-scikit-learn
+joblib==1.5.2
+scikit-learn==1.7.2
 copernicusmarine
 matplotlib
 folium
