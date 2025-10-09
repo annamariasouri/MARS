@@ -23,12 +23,6 @@ os.makedirs(output_dir, exist_ok=True)
 username = os.getenv('COPERNICUS_USERNAME', '').strip()
 password = os.getenv('COPERNICUS_PASSWORD', '').strip()
 
-# TEMPORARY DEBUG - REMOVE IN NEXT COMMIT
-print("=== DEBUG CREDENTIALS ===")
-print(f"Username value: '{username}'")
-print(f"Password value: '{password}'")
-print("=== END DEBUG ===")
-
 if not username or not password:
     raise ValueError("Copernicus credentials not found in environment variables. Please set COPERNICUS_USERNAME and COPERNICUS_PASSWORD")
 copernicusmarine.login(username=username, password=password, check_credentials_valid=True, force_overwrite=True)
@@ -46,6 +40,7 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
     print(f"\n🌍 Processing region: {region.upper()}")
 
     region_dir = os.path.join(output_dir, f"{region}_downloads_{target_date_str}")
+    region_dir = os.path.normpath(region_dir)  # Normalize path separators
     os.makedirs(region_dir, exist_ok=True)
     os.chdir(region_dir)
 
@@ -62,7 +57,9 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
             start_datetime=(yesterday - timedelta(days=30)).strftime("%Y-%m-%dT00:00:00"),
             end_datetime=target_date,
             minimum_depth=1.0,
-            maximum_depth=5.0
+            maximum_depth=5.0,
+            username=username,  # Pass credentials explicitly
+            password=password
         )
 
     # === Collect the most recent .nc files in this folder
