@@ -9,7 +9,7 @@ yesterday = datetime.today() - pd.Timedelta(days=1)
 target_date_str = yesterday.strftime("%Y-%m-%d")
 
 # === Model path (use CODE folder where model file exists)
-model_path = "final_rf_chl_model_2015_2023.pkl"
+model_path = "new_updated_model.pkl"
 model = joblib.load(model_path)
 
 # === Regions
