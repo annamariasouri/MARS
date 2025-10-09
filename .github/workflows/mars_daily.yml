@@ -28,11 +28,11 @@ jobs:
 
       - name: Run Copernicus download
         run: |
-          python copernicus_download.py
+          python download_copernicus_day_test.py
 
       - name: Run MARS forecast
         run: |
-          python mars_forecast.py
+          python run_daily_forecast.py
 
       - name: Merge new CSVs with old (no duplicates)
         run: |
