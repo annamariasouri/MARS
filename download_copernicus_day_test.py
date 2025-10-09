@@ -22,6 +22,13 @@ os.makedirs(output_dir, exist_ok=True)
 # === Authenticate ===
 username = os.getenv('COPERNICUS_USERNAME')
 password = os.getenv('COPERNICUS_PASSWORD')
+
+# TEMPORARY DEBUG - REMOVE IN NEXT COMMIT
+print("=== DEBUG CREDENTIALS ===")
+print(f"Username value: '{username}'")
+print(f"Password value: '{password}'")
+print("=== END DEBUG ===")
+
 if not username or not password:
     raise ValueError("Copernicus credentials not found in environment variables. Please set COPERNICUS_USERNAME and COPERNICUS_PASSWORD")
 copernicusmarine.login(username=username, password=password)
