@@ -20,7 +20,11 @@ output_dir = r"C:\Users\annam\OneDrive - University of Nicosia\Desktop\DASHBOARD
 os.makedirs(output_dir, exist_ok=True)
 
 # === Authenticate ===
-copernicusmarine.login()
+username = os.getenv('COPERNICUS_USERNAME')
+password = os.getenv('COPERNICUS_PASSWORD')
+if not username or not password:
+    raise ValueError("Copernicus credentials not found in environment variables. Please set COPERNICUS_USERNAME and COPERNICUS_PASSWORD")
+copernicusmarine.login(username=username, password=password)
 
 # === Dataset list ===
 datasets = [
