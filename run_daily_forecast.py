@@ -1,8 +1,8 @@
 import pandas as pd
-import joblib
 import numpy as np
 from datetime import datetime
 import os
+import pickle
 
 # === Dynamic date (matches model_ready_input file name)
 yesterday = datetime.today() - pd.Timedelta(days=1)
@@ -10,7 +10,27 @@ target_date_str = yesterday.strftime("%Y-%m-%d")
 
 # === Model path (use CODE folder where model file exists)
 model_path = "new_updated_model.pkl"
-model = joblib.load(model_path)
+
+# Check model file size
+if os.path.exists(model_path):
+    print(f"Model file '{model_path}' size: {os.path.getsize(model_path)} bytes")
+else:
+    print(f"Model file '{model_path}' not found!")
+
+# Try loading with joblib, fallback to pickle for diagnostics
+try:
+    import joblib
+    model = joblib.load(model_path)
+    print("Model loaded successfully with joblib.")
+except Exception as e:
+    print(f"Joblib failed to load model: {e}")
+    try:
+        with open(model_path, 'rb') as f:
+            model = pickle.load(f)
+        print("Model loaded successfully with pickle.")
+    except Exception as e2:
+        print(f"Pickle failed to load model: {e2}")
+        raise
 
 # === Regions
 REGIONS = ["thermaikos", "peiraeus", "limassol"]
