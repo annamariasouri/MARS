@@ -75,14 +75,17 @@ for region in REGIONS:
 
     # === Dynamic threshold (per region/day)
     threshold = np.percentile(predicted_chl, 90)
+    # Continuous risk: percent of grid points above threshold
+    risk_pct = float(np.mean(predicted_chl >= threshold)) * 100
     risk_flag = int(predicted_chl_mean >= threshold)
 
-    # === Save forecast row
+    # === Save forecast row (add risk_pct)
     result = pd.DataFrame([{
         "date": target_date_str,
         "predicted_chl": round(predicted_chl_mean, 3),
         "bloom_risk_flag": risk_flag,
         "threshold_used": round(threshold, 3),
+        "risk_pct": round(risk_pct, 1),
         "num_grid_points": len(predicted_chl)
     }])
 
