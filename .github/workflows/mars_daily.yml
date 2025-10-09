@@ -35,9 +35,9 @@ jobs:
           python -c "import os; print('Username exists:', bool(os.getenv('COPERNICUS_USERNAME'))); print('Password exists:', bool(os.getenv('COPERNICUS_PASSWORD')))"
           python download_copernicus_day_test.py
 
-      - name: Download model file from OneDrive
+      - name: Download model file from Google Drive
         run: |
-          curl -L "https://unicaccy-my.sharepoint.com/:u:/g/personal/souri_am_unic_ac_cy/ERP_7ni_sLlNpLARR_WfXkIBRS0ZNi2guiesl4fi3_SWzw?e=Nj0cKI&download=1" -o new_updated_model.pkl
+          curl -L "https://drive.google.com/uc?export=download&id=1hNwGOFAanesyLTjufvYjK_wO36xY-W6q" -o new_updated_model.pkl
 
       - name: Run MARS forecast
         run: |
