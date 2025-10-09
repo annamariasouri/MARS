@@ -10,6 +10,9 @@ yesterday = datetime.today() - timedelta(days=1)
 target_date = yesterday.strftime("%Y-%m-%dT00:00:00")
 target_date_str = yesterday.strftime("%Y-%m-%d")
 
+# Debug date information
+print(f"Debug: Using date {target_date_str} for downloads and processing")
+
 REGIONS = {
     "thermaikos": (40.2, 40.7, 22.5, 23.0),
     "peiraeus": (37.9, 38.1, 23.5, 23.8),
@@ -63,9 +66,22 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
         )
 
     # === Collect the most recent .nc files in this folder
-    nc_files = sorted([f for f in os.listdir(region_dir) if f.endswith(".nc")], key=os.path.getctime, reverse=True)
-    if len(nc_files) < 4:
-        print(f"⚠️ Not all datasets were downloaded for {region}. Found {len(nc_files)} files.")
+    try:
+        print(f"Looking for .nc files in: {region_dir}")
+        nc_files = [f for f in os.listdir(region_dir) if f.endswith(".nc")]
+        print(f"Found {len(nc_files)} .nc files: {nc_files}")
+        
+        if not nc_files:
+            print(f"⚠️ No .nc files found in {region_dir}")
+            continue
+            
+        nc_files = sorted(nc_files, key=lambda f: os.path.getctime(os.path.join(region_dir, f)), reverse=True)
+        
+        if len(nc_files) < 4:
+            print(f"⚠️ Not all datasets were downloaded for {region}. Found {len(nc_files)} files.")
+            continue
+    except Exception as e:
+        print(f"Error accessing directory {region_dir}: {str(e)}")
         continue
 
     chl_file, sal_file, temp_file, nut_file = nc_files[0], nc_files[1], nc_files[2], nc_files[3]
