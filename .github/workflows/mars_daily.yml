@@ -37,7 +37,7 @@ jobs:
 
       - name: Download model file from OneDrive
         run: |
-          curl -L "https://unicaccy-my.sharepoint.com/:u:/g/personal/souri_am_unic_ac_cy/ERP_7ni_sLlNpLARR_WfXkIBRS0ZNi2guiesl4fi3_SWzw?e=pIzlz0" -o new_updated_model.pkl
+          curl -L "https://unicaccy-my.sharepoint.com/:u:/g/personal/souri_am_unic_ac_cy/ERP_7ni_sLlNpLARR_WfXkIBRS0ZNi2guiesl4fi3_SWzw?e=Nj0cKI&download=1" -o new_updated_model.pkl
 
       - name: Run MARS forecast
         run: |
