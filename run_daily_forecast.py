@@ -46,9 +46,9 @@ features = [
 
 # === Loop through each region
 for region in REGIONS:
-    # Read model-ready CSVs and write forecast logs to the CODE folder
-    csv_input = fr"C:\Users\annam\OneDrive - University of Nicosia\Desktop\DASHBOARD CODE\model_ready_input_{region}_{target_date_str}.csv"
-    output_path = fr"C:\Users\annam\OneDrive - University of Nicosia\Desktop\DASHBOARD CODE\forecast_log_{region}.csv"
+    # Read model-ready CSVs and write forecast logs to the workspace root
+    csv_input = os.path.join(os.getcwd(), f"model_ready_input_{region}_{target_date_str}.csv")
+    output_path = os.path.join(os.getcwd(), f"forecast_log_{region}.csv")
 
     if not os.path.exists(csv_input):
         print(f"⚠️ Skipping {region} — no input file found for {target_date_str}")
