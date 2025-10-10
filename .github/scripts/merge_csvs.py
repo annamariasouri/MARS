@@ -9,15 +9,20 @@ for region in regions:
     files = glob.glob(pattern)
     if not files:
         continue
-    # Read and concatenate, drop duplicates, handle bad lines
+    # Read and concatenate, handle bad lines, and mixed columns
     dfs = []
+    all_columns = set()
     for f in files:
         try:
             df = pd.read_csv(f, on_bad_lines='warn')
+            all_columns.update(df.columns)
             dfs.append(df)
         except Exception as e:
             print(f"⚠️ Error reading {f}: {e}")
     if dfs:
+        # Reindex all DataFrames to have the union of all columns
+        all_columns = list(all_columns)
+        dfs = [d.reindex(columns=all_columns) for d in dfs]
         merged = pd.concat(dfs, ignore_index=True)
         # Drop duplicates by date, keep the last (latest) entry for each date
         if 'date' in merged.columns:
