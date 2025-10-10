@@ -50,7 +50,8 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
     print("📥 Starting downloads...")
     for dataset_id, vars in datasets:
         print(f"→ Downloading {vars} from {dataset_id}")
-        copernicusmarine.subset(
+        # Download and get the file path
+        downloaded_file = copernicusmarine.subset(
             dataset_id=dataset_id,
             variables=vars,
             minimum_longitude=lon_min,
@@ -64,6 +65,15 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
             username=username,  # Pass credentials explicitly
             password=password
         )
+        # Move the file to the correct region directory if needed
+        if downloaded_file and os.path.exists(downloaded_file):
+            target_path = os.path.join(region_dir, os.path.basename(downloaded_file))
+            if os.path.abspath(downloaded_file) != os.path.abspath(target_path):
+                try:
+                    os.rename(downloaded_file, target_path)
+                    print(f"Moved {downloaded_file} to {target_path}")
+                except Exception as e:
+                    print(f"Error moving file: {e}")
 
     # === Collect the most recent .nc files in this folder
     try:
