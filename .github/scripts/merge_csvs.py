@@ -1,6 +1,7 @@
 import pandas as pd
 import glob
 import os
+import numpy as np
 
 # Merge all forecast logs for each region
 regions = ["thermaikos", "peiraeus", "limassol"]
@@ -9,33 +10,41 @@ for region in regions:
     files = glob.glob(pattern)
     if not files:
         continue
-    # Read and concatenate, handle bad lines, and mixed columns
+    # Always expect 7 columns for forecast logs
+    expected_columns = [
+        "date",
+        "predicted_chl",
+        "bloom_risk_flag",
+        "threshold_used",
+        "risk_pct",
+        "risk_score",
+        "num_grid_points"
+    ]
     dfs = []
-    all_columns = set()
     for f in files:
         try:
             df = pd.read_csv(f, on_bad_lines='warn')
-            all_columns.update(df.columns)
+            # Fill missing columns with NaN
+            for col in expected_columns:
+                if col not in df.columns:
+                    df[col] = np.nan
+            # Only keep expected columns
+            df = df[expected_columns]
             dfs.append(df)
         except Exception as e:
             print(f"⚠️ Error reading {f}: {e}")
     if dfs:
-        # Remove old forecast log before writing merged result
         out_path = f"forecast_log_{region}.csv"
         try:
             if os.path.exists(out_path):
                 os.remove(out_path)
         except Exception as e:
             print(f"⚠️ Could not delete old {out_path}: {e}")
-        # Reindex all DataFrames to have the union of all columns
-        all_columns = list(all_columns)
-        dfs = [d.reindex(columns=all_columns) for d in dfs]
         merged = pd.concat(dfs, ignore_index=True)
         # Drop duplicates by date, keep the last (latest) entry for each date
-        if 'date' in merged.columns:
-            merged['date'] = pd.to_datetime(merged['date'], errors='coerce')
-            merged = merged.sort_values('date').drop_duplicates(subset=['date'], keep='last')
-            merged = merged.sort_values('date').reset_index(drop=True)
+        merged['date'] = pd.to_datetime(merged['date'], errors='coerce')
+        merged = merged.sort_values('date').drop_duplicates(subset=['date'], keep='last')
+        merged = merged.sort_values('date').reset_index(drop=True)
         merged.to_csv(out_path, index=False)
 
 # Merge all environmental history files for each region
