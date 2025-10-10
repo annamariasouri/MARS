@@ -63,7 +63,8 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
             minimum_depth=1.0,
             maximum_depth=5.0,
             username=username,  # Pass credentials explicitly
-            password=password
+            password=password,
+            output_directory=region_dir
         )
         # Always construct file path from output_directory and filename
         output_dir_attr = getattr(response, 'output_directory', None)
