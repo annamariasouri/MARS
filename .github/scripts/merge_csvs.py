@@ -20,6 +20,13 @@ for region in regions:
         except Exception as e:
             print(f"⚠️ Error reading {f}: {e}")
     if dfs:
+        # Remove old forecast log before writing merged result
+        out_path = f"forecast_log_{region}.csv"
+        try:
+            if os.path.exists(out_path):
+                os.remove(out_path)
+        except Exception as e:
+            print(f"⚠️ Could not delete old {out_path}: {e}")
         # Reindex all DataFrames to have the union of all columns
         all_columns = list(all_columns)
         dfs = [d.reindex(columns=all_columns) for d in dfs]
@@ -29,7 +36,7 @@ for region in regions:
             merged['date'] = pd.to_datetime(merged['date'], errors='coerce')
             merged = merged.sort_values('date').drop_duplicates(subset=['date'], keep='last')
             merged = merged.sort_values('date').reset_index(drop=True)
-        merged.to_csv(f"forecast_log_{region}.csv", index=False)
+        merged.to_csv(out_path, index=False)
 
 # Merge all environmental history files for each region
 for region in regions:
