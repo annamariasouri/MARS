@@ -19,7 +19,7 @@ REGIONS = {
     "limassol": (34.6, 34.8, 33.0, 33.2)
 }
 
-output_dir = r"C:\Users\annam\OneDrive - University of Nicosia\Desktop\DASHBOARD CODE"
+output_dir = os.getcwd()  # Use workspace root for both local and CI
 os.makedirs(output_dir, exist_ok=True)
 
 # === Authenticate ===
