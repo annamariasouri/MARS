@@ -1,2 +1,2 @@
-num_grid_points,predicted_chl,bloom_risk_flag,threshold_used,date
-112,0.157,0,0.168,2025-10-07
+threshold_used,bloom_risk_flag,predicted_chl,num_grid_points,date
+0.168,0,0.157,112,2025-10-07
