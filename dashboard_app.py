@@ -123,7 +123,11 @@ def load_forecast(region: str) -> pd.DataFrame:
     for name in [f"forecast_log_{region}.csv", f"forecast_{region}.csv"]:
         path = os.path.join(DATA_DIR, name)
         if os.path.exists(path):
-            df = pd.read_csv(path)
+            try:
+                df = pd.read_csv(path)
+            except Exception as e:
+                st.warning(f"Could not read forecast file for {region}: {e}")
+                return pd.DataFrame()
             df.columns = [c.strip().lower() for c in df.columns]
             # parse date
             for c in ["date", "day", "ds", "timestamp"]:
@@ -137,7 +141,12 @@ def load_forecast(region: str) -> pd.DataFrame:
                 "chl_pred": "predicted_chl",
                 "threshold": "threshold_used",
             })
+            # If all values are NaN or empty, treat as missing
+            if df.empty or df.isna().all(axis=None):
+                st.info(f"No forecast data available for {region}.")
+                return pd.DataFrame()
             return df.sort_values("date").reset_index(drop=True)
+    st.info(f"No forecast file found for {region}.")
     return pd.DataFrame()
 
 

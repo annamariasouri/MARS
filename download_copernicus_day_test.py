@@ -43,105 +43,92 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
     print(f"\n🌍 Processing region: {region.upper()}")
 
     region_dir = os.path.join(output_dir, f"{region}_downloads_{target_date_str}")
-    region_dir = os.path.normpath(region_dir)  # Normalize path separators
+    region_dir = os.path.normpath(region_dir)
     os.makedirs(region_dir, exist_ok=True)
     os.chdir(region_dir)
 
     print("📥 Starting downloads...")
+    nc_files = []
     for dataset_id, vars in datasets:
         print(f"→ Downloading {vars} from {dataset_id}")
-        # Download and get the file path from ResponseSubset
-        response = copernicusmarine.subset(
-            dataset_id=dataset_id,
-            variables=vars,
-            minimum_longitude=lon_min,
-            maximum_longitude=lon_max,
-            minimum_latitude=lat_min,
-            maximum_latitude=lat_max,
-            start_datetime=(yesterday - timedelta(days=30)).strftime("%Y-%m-%dT00:00:00"),
-            end_datetime=target_date,
-            minimum_depth=1.0,
-            maximum_depth=5.0,
-            username=username,  # Pass credentials explicitly
-            password=password,
-            output_directory=region_dir
-        )
-        # Always construct file path from output_directory and filename
-        output_dir_attr = getattr(response, 'output_directory', None)
-        filename_attr = getattr(response, 'filename', None)
-        print(f"DEBUG: response.output_directory = {output_dir_attr}")
-        print(f"DEBUG: response.filename = {filename_attr}")
-        file_path = None
-        if output_dir_attr and filename_attr:
-            file_path = os.path.join(region_dir, filename_attr)
-            print(f"DEBUG: expected file_path in region_dir = {file_path}")
-        if file_path and isinstance(file_path, str) and os.path.exists(file_path):
-            print(f"✅ File found in region directory: {file_path}")
-        else:
-            print(f"⚠️ File not found in region directory after download: {file_path}")
+        try:
+            response = copernicusmarine.subset(
+                dataset_id=dataset_id,
+                variables=vars,
+                minimum_longitude=lon_min,
+                maximum_longitude=lon_max,
+                minimum_latitude=lat_min,
+                maximum_latitude=lat_max,
+                start_datetime=(yesterday - timedelta(days=30)).strftime("%Y-%m-%dT00:00:00"),
+                end_datetime=target_date,
+                minimum_depth=1.0,
+                maximum_depth=5.0,
+                username=username,
+                password=password,
+                output_directory=region_dir
+            )
+            output_dir_attr = getattr(response, 'output_directory', None)
+            filename_attr = getattr(response, 'filename', None)
+            file_path = None
+            if output_dir_attr and filename_attr:
+                file_path = os.path.join(region_dir, filename_attr)
+                print(f"DEBUG: expected file_path in region_dir = {file_path}")
+            if file_path and isinstance(file_path, str) and os.path.exists(file_path):
+                print(f"✅ File found in region directory: {file_path}")
+                nc_files.append(file_path)
+            else:
+                print(f"⚠️ File not found in region directory after download: {file_path}")
+        except Exception as e:
+            print(f"⚠️ Download failed for {vars} in {region}: {e}")
 
-    # === Collect the most recent .nc files in this folder
-    try:
-        print(f"Looking for .nc files in: {region_dir}")
-        nc_files = [f for f in os.listdir(region_dir) if f.endswith(".nc")]
-        print(f"Found {len(nc_files)} .nc files: {nc_files}")
-        
-        if not nc_files:
-            print(f"⚠️ No .nc files found in {region_dir}")
-            continue
-            
-        nc_files = sorted(nc_files, key=lambda f: os.path.getctime(os.path.join(region_dir, f)), reverse=True)
-        
-        if len(nc_files) < 4:
-            print(f"⚠️ Not all datasets were downloaded for {region}. Found {len(nc_files)} files.")
-            continue
-    except Exception as e:
-        print(f"Error accessing directory {region_dir}: {str(e)}")
-        continue
+    # Try to open all available .nc files, even if some are missing
+    dfs = []
+    for f in nc_files:
+        try:
+            ds = xr.open_dataset(f)
+            dfs.append(ds.to_dataframe().reset_index())
+        except Exception as e:
+            print(f"⚠️ Failed to open {f}: {e}")
 
-    chl_file, sal_file, temp_file, nut_file = nc_files[0], nc_files[1], nc_files[2], nc_files[3]
+    # Merge all available datasets
+    if dfs:
+        df = dfs[0]
+        for d in dfs[1:]:
+            merge_keys = ['time', 'depth', 'latitude', 'longitude']
+            df = df.merge(d, on=merge_keys, how='outer')
+        df = df.sort_values(by=["latitude", "longitude", "time"]).reset_index(drop=True)
+    else:
+        print(f"⚠️ No valid .nc files for {region}, creating empty DataFrame.")
+        df = pd.DataFrame()
 
-    df_chl = xr.open_dataset(chl_file).to_dataframe().reset_index()
-    df_sal = xr.open_dataset(sal_file).to_dataframe().reset_index()
-    df_temp = xr.open_dataset(temp_file).to_dataframe().reset_index()
-    df_nut = xr.open_dataset(nut_file).to_dataframe().reset_index()
-
-    # === Merge datasets
-    merge_keys = ['time', 'depth', 'latitude', 'longitude']
-    df = df_nut.merge(df_temp, on=merge_keys, how='outer')
-    df = df.merge(df_sal, on=merge_keys, how='outer')
-    df = df.merge(df_chl, on=merge_keys, how='outer')
-    df = df.sort_values(by=["latitude", "longitude", "time"]).reset_index(drop=True)
-
-    # === Save full 30-day environmental history (before feature engineering)
+    # Save environmental history (even if empty)
     env_cols = ["time", "chl", "nh4", "no3", "po4", "thetao", "so"]
-    df_env = df[env_cols].copy()
-    df_env = df_env.groupby("time").mean().reset_index()  # daily average
+    if not df.empty:
+        df_env = df[env_cols].copy()
+        df_env = df_env.groupby("time").mean().reset_index()
+    else:
+        df_env = pd.DataFrame(columns=env_cols)
     history_filename = f"env_history_{region}_{target_date_str}.csv"
     df_env.to_csv(os.path.join(output_dir, history_filename), index=False)
     print(f"📤 Saved environmental history: {history_filename}")
 
-    # === Feature engineering
-    group = df.groupby(['latitude', 'longitude'])
-
-    def add_lag_and_rolling(df, var):
-        df[f"{var}_t-1"] = group[var].shift(1)
-        df[f"{var}_7day_avg"] = group[var].rolling(window=7, min_periods=1).mean().reset_index(drop=True)
-
-    for var in ["chl", "nh4", "no3", "po4", "so", "thetao"]:
-        add_lag_and_rolling(df, var)
-
-    df["chl_monthly_median"] = group["chl"].rolling(window=30, min_periods=1).median().reset_index(drop=True)
-    df["chl_anomaly"] = df["chl"] - df["chl_monthly_median"]
-
-    df["n_p_ratio"] = np.where(df["po4"] != 0, df["no3"] / df["po4"], np.nan)
-    df["n_nh4_ratio"] = np.where(df["nh4"] != 0, df["no3"] / df["nh4"], np.nan)
-    df["p_nh4_ratio"] = np.where(df["nh4"] != 0, df["po4"] / df["nh4"], np.nan)
-
-    df["bloom_proxy_label"] = 0
-
-    # === Keep only final date's data
-    df_latest = df[df["time"] == df["time"].max()]
+    # Feature engineering (robust to empty df)
+    if not df.empty:
+        group = df.groupby(['latitude', 'longitude'])
+        def add_lag_and_rolling(df, var):
+            df[f"{var}_t-1"] = group[var].shift(1)
+            df[f"{var}_7day_avg"] = group[var].rolling(window=7, min_periods=1).mean().reset_index(drop=True)
+        for var in ["chl", "nh4", "no3", "po4", "so", "thetao"]:
+            add_lag_and_rolling(df, var)
+        df["chl_monthly_median"] = group["chl"].rolling(window=30, min_periods=1).median().reset_index(drop=True)
+        df["chl_anomaly"] = df["chl"] - df["chl_monthly_median"]
+        df["n_p_ratio"] = np.where(df["po4"] != 0, df["no3"] / df["po4"], np.nan)
+        df["n_nh4_ratio"] = np.where(df["nh4"] != 0, df["no3"] / df["nh4"], np.nan)
+        df["p_nh4_ratio"] = np.where(df["nh4"] != 0, df["po4"] / df["nh4"], np.nan)
+        df["bloom_proxy_label"] = 0
+        df_latest = df[df["time"] == df["time"].max()]
+    else:
+        df_latest = pd.DataFrame()
 
     model_features = [
         'nh4','no3','po4','so','thetao',
@@ -150,11 +137,13 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
         'n_p_ratio','n_nh4_ratio','p_nh4_ratio',
         'chl_monthly_median','chl_anomaly','bloom_proxy_label'
     ]
-
-    df_ready = df_latest.dropna(subset=model_features)[model_features]
+    # Always write a model input file, even if empty
+    if not df_latest.empty:
+        df_ready = df_latest.dropna(subset=model_features)[model_features]
+    else:
+        df_ready = pd.DataFrame(columns=model_features)
     filename = f"model_ready_input_{region}_{target_date_str}.csv"
     final_path = os.path.join(output_dir, filename)
     df_ready.to_csv(final_path, index=False)
-
     print(f"✅ Saved model input: {final_path}")
     print(df_ready.head())

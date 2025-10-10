@@ -50,42 +50,47 @@ for region in REGIONS:
     csv_input = os.path.join(os.getcwd(), f"model_ready_input_{region}_{target_date_str}.csv")
     output_path = os.path.join(os.getcwd(), f"forecast_log_{region}.csv")
 
+    # Default placeholder row (all NaNs)
+    placeholder = pd.DataFrame([{
+        "date": target_date_str,
+        "predicted_chl": np.nan,
+        "bloom_risk_flag": np.nan,
+        "threshold_used": np.nan,
+        "risk_pct": np.nan,
+        "risk_score": np.nan,
+        "num_grid_points": 0
+    }])
+
     if not os.path.exists(csv_input):
-        print(f"⚠️ Skipping {region} — no input file found for {target_date_str}")
+        print(f"⚠️ No input file for {region} on {target_date_str}. Writing placeholder row.")
+        placeholder.to_csv(output_path, mode='a' if os.path.exists(output_path) else 'w', index=False, header=not os.path.exists(output_path))
         continue
 
     df = pd.read_csv(csv_input)
 
-    # === Check all features
     missing = set(model.feature_names_in_) - set(df.columns)
     if missing:
-        print(f"⚠️ Skipping {region} — missing required features: {missing}")
+        print(f"⚠️ Missing required features for {region}: {missing}. Writing placeholder row.")
+        placeholder.to_csv(output_path, mode='a' if os.path.exists(output_path) else 'w', index=False, header=not os.path.exists(output_path))
         continue
 
     df_input = df[model.feature_names_in_]
-
-    # === Skip region if no valid rows
     if df_input.empty:
-        print(f"⚠️ Skipping {region} — no valid rows for prediction on {target_date_str}")
+        print(f"⚠️ No valid rows for prediction for {region} on {target_date_str}. Writing placeholder row.")
+        placeholder.to_csv(output_path, mode='a' if os.path.exists(output_path) else 'w', index=False, header=not os.path.exists(output_path))
         continue
 
-    # === Predict CHL
+    # Predict CHL
     predicted_chl = model.predict(df_input)
     predicted_chl_mean = np.mean(predicted_chl)
-
-    # === Dynamic threshold (per region/day)
     threshold = np.percentile(predicted_chl, 90)
     risk_pct = float(np.mean(predicted_chl >= threshold)) * 100
     risk_flag = int(predicted_chl_mean >= threshold)
-
-    # === Continuous risk score (normalized CHL)
-    # Set min/max from historical data (e.g., min=0, max=2.5 mg/m³)
     min_chl = 0.0
     max_chl = 2.5
     risk_score = (predicted_chl_mean - min_chl) / (max_chl - min_chl)
-    risk_score_pct = max(0, min(1, risk_score)) * 100  # Clamp to [0, 100]
+    risk_score_pct = max(0, min(1, risk_score)) * 100
 
-    # === Save forecast row (add risk_pct and risk_score_pct)
     result = pd.DataFrame([{
         "date": target_date_str,
         "predicted_chl": round(predicted_chl_mean, 3),
