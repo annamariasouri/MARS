@@ -1,3 +1,4 @@
 date,predicted_chl,bloom_risk_flag,threshold_used,risk_pct,risk_score,num_grid_points
 2025-10-07,0.151,0,0.152,,,16
 2025-10-09,0.153,0,0.154,12.5,6.1,16
+2025-10-09,0.153,0,0.154,12.5,99.4,16
