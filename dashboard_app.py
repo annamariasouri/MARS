@@ -366,24 +366,36 @@ with k1:
             <div class='label'>{region_title} – CHL</div>
             <div class='value'>{fmt_val(summary['latest_chl'], 3, ' mg/m³')}</div>
         </div>""", unsafe_allow_html=True)
+        with st.expander("How is this predicted?", expanded=False):
+            st.markdown("""
+            The model uses recent environmental data (nutrients, temperature, salinity, and past chlorophyll levels) to estimate the chlorophyll concentration for each grid point in the region. It is trained on historical data to learn patterns that indicate bloom risk.
+            """)
 with k2:
         st.markdown(f"""
         <div class='kpi'>
             <div class='label'>Continuous Risk (Today)</div>
             <div class='value'>{likelihood_badge(summary['risk_score'])}</div>
-            <div style='margin-top:8px;font-size:0.95em;color:#555;'>
-                <b>What does this mean?</b><br>
-                The risk score shows how close the average predicted chlorophyll level is to the bloom threshold for today.<br>
-                <b>100</b> means the average is at or above the threshold (high risk), <b>0</b> means far below (low risk).<br>
-                Values in between indicate increasing likelihood of a bloom event.
-            </div>
         </div>""", unsafe_allow_html=True)
+        with st.expander("What does this mean?", expanded=False):
+            st.markdown("""
+            The risk score shows how close the average predicted chlorophyll level is to the bloom threshold for today.  
+            **100** means the average is at or above the threshold (high risk), **0** means far below (low risk).  
+            Values in between indicate increasing likelihood of a bloom event.
+            """)
 with k3:
         st.markdown(f"""
         <div class='kpi'>
             <div class='label'>Threshold Used</div>
             <div class='value'>{fmt_val(summary['threshold'], 3)}</div>
         </div>""", unsafe_allow_html=True)
+        with st.expander("What is the threshold?", expanded=False):
+            st.markdown("""
+            **Threshold Used:**
+            This is the chlorophyll concentration value (mg/m³) used as the threshold for bloom risk. Predictions above this value indicate higher risk of a bloom event.
+            
+            **How is the threshold calculated?**
+            The threshold is dynamic: it is recalculated for every region and day as the 90th percentile of the predicted chlorophyll values. This means it adapts to the distribution of predicted concentrations for each forecast, marking the value above which only the highest 10% of predicted concentrations fall.
+            """)
 
 k4, k5, k6 = st.columns([3,3,2])
 with k4:
@@ -391,11 +403,39 @@ with k4:
         <div class='label'>Likelihood (Next 7 d)</div>
         <div style='margin-top:8px;margin-bottom:4px'>{likelihood_badge(summary['rec7'])}</div>
     </div>""", unsafe_allow_html=True)
+    with st.expander("How is this likelihood calculated?", expanded=False):
+        st.markdown("""
+        The likelihood (Next 7 d) is shown as a percentage and represents the model's estimate of how likely it is that a bloom event will occur in the next 7 days.
+        
+        **How is it calculated?**
+        For each day in the next 7 days, the model predicts the chlorophyll concentration for the region. If the predicted value is at or above the dynamic threshold, that day is counted as a 'risk day'. The percentage is calculated as:
+        
+        `Likelihood (%) = (Number of risk days in next 7) / 7 × 100`
+        
+        For example, if 3 out of 7 days are predicted to be above the threshold, the likelihood is 43%.
+        
+        **Why is today's risk not always a percentage?**
+        Today's risk is shown as a continuous score (0–100) based on how close the average predicted chlorophyll is to the threshold, while the next 7/30 days likelihood is based on the count of days above threshold.
+        """)
 with k5:
     st.markdown(f"""<div class='kpi'>
         <div class='label'>Likelihood (Next 30 d)</div>
         <div style='margin-top:8px;margin-bottom:4px'>{likelihood_badge(summary['rec30'])}</div>
     </div>""", unsafe_allow_html=True)
+    with st.expander("How is this likelihood calculated?", expanded=False):
+        st.markdown("""
+        The likelihood (Next 30 d) is shown as a percentage and represents the model's estimate of how likely it is that a bloom event will occur in the next 30 days.
+        
+        **How is it calculated?**
+        For each day in the next 30 days, the model predicts the chlorophyll concentration for the region. If the predicted value is at or above the dynamic threshold, that day is counted as a 'risk day'. The percentage is calculated as:
+        
+        `Likelihood (%) = (Number of risk days in next 30) / 30 × 100`
+        
+        For example, if 9 out of 30 days are predicted to be above the threshold, the likelihood is 30%.
+        
+        **Why is today's risk not always a percentage?**
+        Today's risk is shown as a continuous score (0–100) based on how close the average predicted chlorophyll is to the threshold, while the next 7/30 days likelihood is based on the count of days above threshold.
+        """)
 with k6:
     r7 = summary['risk7'] if summary['risk7'] is not None else 0
     r30 = summary['risk30'] if summary['risk30'] is not None else 0
@@ -403,7 +443,7 @@ with k6:
 
 # === TABS ===
 
-tab1, tab2, tab3 = st.tabs(["Today’s Forecast", "Environmental Trends", "About MARS"])
+tab1, tab2 = st.tabs(["Today’s Forecast", "Environmental Trends"])
 
 with tab1:
     st.markdown("<div class='section-title'>CHL Forecasts</div>", unsafe_allow_html=True)
@@ -437,22 +477,14 @@ with tab2:
                 label = dict(ENV_VARS).get(v, v)
                 st.plotly_chart(plot_ts(env, "TIME", v, label, label), use_container_width=True)
 
-with tab3:
-    st.markdown(
-        """
-        <div class='soft-card'>
-        <h3 style='margin:0 0 10px 0;'>About MARS</h3>
-        <p><b>MARS – Marine Autonomous Risk System</b> forecasts harmful algal bloom (red tide) risk in the
-        Eastern Mediterranean using daily <b>Copernicus Marine</b> data and a trained machine‑learning model.</p>
-        <p><b>Regions:</b> Thermaikos (GR), Piraeus (GR), Limassol (CY).<br/>
-           <b>Variables:</b> NH₄, NO₃, PO₄, θ (temperature), SO (salinity), CHL.</p>
-        <p><i>Part of Annamaria Souri’s PhD Research – University of Nicosia.</i></p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
 
 # --- Diagnostics ---
+st.sidebar.markdown("""
+MARS – Marine Autonomous Risk System forecasts harmful algal bloom (red tide) risk in the Eastern Mediterranean using daily Copernicus Marine data and a trained machine‑learning model.
+
+Regions: Thermaikos (GR), Piraeus (GR), Limassol (CY).
+Variables: NH₄, NO₃, PO₄, θ (temperature), SO (salinity), CHL.
+""")
 with st.expander("🔍 Diagnostics"):
     st.write("Working directory:", DATA_DIR)
     st.write("Files:", list_files())
