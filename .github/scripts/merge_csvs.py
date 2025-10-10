@@ -9,10 +9,17 @@ for region in regions:
     files = glob.glob(pattern)
     if not files:
         continue
-    # Read and concatenate, drop duplicates
-    dfs = [pd.read_csv(f) for f in files]
-    merged = pd.concat(dfs).drop_duplicates()
-    merged.to_csv(f"forecast_log_{region}.csv", index=False)
+    # Read and concatenate, drop duplicates, handle bad lines
+    dfs = []
+    for f in files:
+        try:
+            df = pd.read_csv(f, on_bad_lines='warn')
+            dfs.append(df)
+        except Exception as e:
+            print(f"⚠️ Error reading {f}: {e}")
+    if dfs:
+        merged = pd.concat(dfs).drop_duplicates()
+        merged.to_csv(f"forecast_log_{region}.csv", index=False)
 
 # Merge all environmental history files for each region
 for region in regions:
@@ -20,6 +27,13 @@ for region in regions:
     files = glob.glob(pattern)
     if not files:
         continue
-    dfs = [pd.read_csv(f) for f in files]
-    merged = pd.concat(dfs).drop_duplicates()
-    merged.to_csv(f"env_history_{region}.csv", index=False)
+    dfs = []
+    for f in files:
+        try:
+            df = pd.read_csv(f, on_bad_lines='warn')
+            dfs.append(df)
+        except Exception as e:
+            print(f"⚠️ Error reading {f}: {e}")
+    if dfs:
+        merged = pd.concat(dfs).drop_duplicates()
+        merged.to_csv(f"env_history_{region}.csv", index=False)
