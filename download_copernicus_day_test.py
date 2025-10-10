@@ -68,9 +68,12 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
         # Always construct file path from output_directory and filename
         output_dir_attr = getattr(response, 'output_directory', None)
         filename_attr = getattr(response, 'filename', None)
+        print(f"DEBUG: response.output_directory = {output_dir_attr}")
+        print(f"DEBUG: response.filename = {filename_attr}")
         file_path = None
         if output_dir_attr and filename_attr:
             file_path = os.path.join(output_dir_attr, filename_attr)
+            print(f"DEBUG: constructed file_path = {file_path}")
         if file_path and isinstance(file_path, str) and os.path.exists(file_path):
             target_path = os.path.join(region_dir, os.path.basename(file_path))
             if os.path.abspath(file_path) != os.path.abspath(target_path):
