@@ -59,6 +59,9 @@ for region in REGIONS:
             print(f"Input file not found for {region} on {forecast_date_str}: {csv_input}")
             continue
         df_input = pd.read_csv(csv_input)
+        if df_input.shape[0] == 0:
+            print(f"Input file for {region} on {forecast_date_str} is empty. Skipping prediction.")
+            continue
         predicted_chl = model.predict(df_input)
         predicted_chl_mean = np.mean(predicted_chl)
         threshold = np.percentile(predicted_chl, 90)
