@@ -86,10 +86,17 @@ for region in REGIONS:
     threshold = np.percentile(predicted_chl, 90)
     risk_pct = float(np.mean(predicted_chl >= threshold)) * 100
     risk_flag = int(predicted_chl_mean >= threshold)
-    min_chl = 0.0
-    max_chl = 2.5
-    risk_score = (predicted_chl_mean - min_chl) / (max_chl - min_chl)
-    risk_score_pct = max(0, min(1, risk_score)) * 100
+
+    # Model-based probability risk score
+    try:
+        bloom_probs = model.predict_proba(df_input)[:, 1]
+        risk_score_pct = np.mean(bloom_probs) * 100
+    except Exception:
+        # Fallback to threshold-relative risk if model does not support predict_proba
+        min_chl = 0.0
+        max_chl = 2.5
+        risk_score = (predicted_chl_mean - min_chl) / (max_chl - min_chl)
+        risk_score_pct = max(0, min(1, risk_score)) * 100
 
     result = pd.DataFrame([{
         "date": target_date_str,
