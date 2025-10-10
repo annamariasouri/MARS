@@ -46,72 +46,47 @@ features = [
 
 # === Loop through each region
 for region in REGIONS:
-    # Read model-ready CSVs and write forecast logs to the workspace root
-    csv_input = os.path.join(os.getcwd(), f"model_ready_input_{region}_{target_date_str}.csv")
+    # Forecast for today, next 7 days, and next month
     output_path = os.path.join(os.getcwd(), f"forecast_log_{region}.csv")
+    forecast_dates = [yesterday + pd.Timedelta(days=i) for i in range(0, 8)]
+    forecast_dates.append(yesterday + pd.Timedelta(days=30))
 
-    # Default placeholder row (all NaNs)
-    placeholder = pd.DataFrame([{
-        "date": target_date_str,
-        "predicted_chl": np.nan,
-        "bloom_risk_flag": np.nan,
-        "threshold_used": np.nan,
-        "risk_pct": np.nan,
-        "risk_score": np.nan,
-        "num_grid_points": 0
-    }])
+    all_results = []
+    for forecast_date in forecast_dates:
+        forecast_date_str = forecast_date.strftime("%Y-%m-%d")
+        csv_input = os.path.join(os.getcwd(), f"model_ready_input_{region}_{forecast_date_str}.csv")
+        if not os.path.exists(csv_input):
+            print(f"Input file not found for {region} on {forecast_date_str}: {csv_input}")
+            continue
+        df_input = pd.read_csv(csv_input)
+        predicted_chl = model.predict(df_input)
+        predicted_chl_mean = np.mean(predicted_chl)
+        threshold = np.percentile(predicted_chl, 90)
+        risk_pct = float(np.mean(predicted_chl >= threshold)) * 100
+        risk_flag = int(predicted_chl_mean >= threshold)
 
-    if not os.path.exists(csv_input):
-        print(f"⚠️ No input file for {region} on {target_date_str}. Writing placeholder row.")
-        placeholder.to_csv(output_path, mode='a' if os.path.exists(output_path) else 'w', index=False, header=not os.path.exists(output_path))
-        continue
+        # Threshold-relative risk (main risk score)
+        if threshold > 0:
+            risk_score = min(100, max(0, (predicted_chl_mean / threshold) * 100))
+        else:
+            risk_score = 0
 
-    df = pd.read_csv(csv_input)
+        result = {
+            "date": forecast_date_str,
+            "predicted_chl": round(predicted_chl_mean, 3),
+            "bloom_risk_flag": risk_flag,
+            "threshold_used": round(threshold, 3),
+            "risk_pct": round(risk_pct, 1),
+            "risk_score": round(risk_score, 1),
+            "num_grid_points": len(predicted_chl)
+        }
+        all_results.append(result)
 
-    missing = set(model.feature_names_in_) - set(df.columns)
-    if missing:
-        print(f"⚠️ Missing required features for {region}: {missing}. Writing placeholder row.")
-        placeholder.to_csv(output_path, mode='a' if os.path.exists(output_path) else 'w', index=False, header=not os.path.exists(output_path))
-        continue
-
-    df_input = df[model.feature_names_in_]
-    if df_input.empty:
-        print(f"⚠️ No valid rows for prediction for {region} on {target_date_str}. Writing placeholder row.")
-        placeholder.to_csv(output_path, mode='a' if os.path.exists(output_path) else 'w', index=False, header=not os.path.exists(output_path))
-        continue
-
-    # Predict CHL
-    predicted_chl = model.predict(df_input)
-    predicted_chl_mean = np.mean(predicted_chl)
-    threshold = np.percentile(predicted_chl, 90)
-    risk_pct = float(np.mean(predicted_chl >= threshold)) * 100
-    risk_flag = int(predicted_chl_mean >= threshold)
-
-    # Model-based probability risk score
-    try:
-        bloom_probs = model.predict_proba(df_input)[:, 1]
-        risk_score_pct = np.mean(bloom_probs) * 100
-    except Exception:
-        # Fallback to threshold-relative risk if model does not support predict_proba
-        min_chl = 0.0
-        max_chl = 2.5
-        risk_score = (predicted_chl_mean - min_chl) / (max_chl - min_chl)
-        risk_score_pct = max(0, min(1, risk_score)) * 100
-
-    result = pd.DataFrame([{
-        "date": target_date_str,
-        "predicted_chl": round(predicted_chl_mean, 3),
-        "bloom_risk_flag": risk_flag,
-        "threshold_used": round(threshold, 3),
-        "risk_pct": round(risk_pct, 1),
-        "risk_score": round(risk_score_pct, 1),
-        "num_grid_points": len(predicted_chl)
-    }])
-
-    if os.path.exists(output_path):
-        result.to_csv(output_path, mode='a', index=False, header=False)
-    else:
-        result.to_csv(output_path, index=False)
-
-    print(f"✅ Forecast complete for {region}:")
-    print(result)
+    if all_results:
+        df_results = pd.DataFrame(all_results)
+        if os.path.exists(output_path):
+            df_results.to_csv(output_path, mode='a', index=False, header=False)
+        else:
+            df_results.to_csv(output_path, index=False)
+        print(f"✅ Forecast complete for {region}:")
+        print(df_results)
