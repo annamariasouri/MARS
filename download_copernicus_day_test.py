@@ -72,20 +72,12 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
         print(f"DEBUG: response.filename = {filename_attr}")
         file_path = None
         if output_dir_attr and filename_attr:
-            file_path = os.path.join(output_dir_attr, filename_attr)
-            print(f"DEBUG: constructed file_path = {file_path}")
+            file_path = os.path.join(region_dir, filename_attr)
+            print(f"DEBUG: expected file_path in region_dir = {file_path}")
         if file_path and isinstance(file_path, str) and os.path.exists(file_path):
-            target_path = os.path.join(region_dir, os.path.basename(file_path))
-            if os.path.abspath(file_path) != os.path.abspath(target_path):
-                try:
-                    os.rename(file_path, target_path)
-                    print(f"Moved {file_path} to {target_path}")
-                except Exception as e:
-                    print(f"Error moving file: {e}")
-            else:
-                print(f"File already in target location: {target_path}")
+            print(f"✅ File found in region directory: {file_path}")
         else:
-            print(f"Download did not return a valid file path. Response type: {type(response)}, attributes: {dir(response)}")
+            print(f"⚠️ File not found in region directory after download: {file_path}")
 
     # === Collect the most recent .nc files in this folder
     try:
