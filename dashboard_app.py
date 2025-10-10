@@ -371,8 +371,11 @@ with k2:
         <div class='kpi'>
             <div class='label'>Continuous Risk (Today)</div>
             <div class='value'>{likelihood_badge(summary['risk_score'])}</div>
-            <div style='margin-top:8px;'>
-                <progress value='{summary['risk_score'] if summary['risk_score'] is not None else 0}' max='100' style='width:80%;height:12px;'></progress>
+            <div style='margin-top:8px;font-size:0.95em;color:#555;'>
+                <b>What does this mean?</b><br>
+                The risk score shows how close the average predicted chlorophyll level is to the bloom threshold for today.<br>
+                <b>100</b> means the average is at or above the threshold (high risk), <b>0</b> means far below (low risk).<br>
+                Values in between indicate increasing likelihood of a bloom event.
             </div>
         </div>""", unsafe_allow_html=True)
 with k3:
