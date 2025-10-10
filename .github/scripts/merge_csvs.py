@@ -18,7 +18,12 @@ for region in regions:
         except Exception as e:
             print(f"⚠️ Error reading {f}: {e}")
     if dfs:
-        merged = pd.concat(dfs).drop_duplicates()
+        merged = pd.concat(dfs, ignore_index=True)
+        # Drop duplicates by date, keep the last (latest) entry for each date
+        if 'date' in merged.columns:
+            merged['date'] = pd.to_datetime(merged['date'], errors='coerce')
+            merged = merged.sort_values('date').drop_duplicates(subset=['date'], keep='last')
+            merged = merged.sort_values('date').reset_index(drop=True)
         merged.to_csv(f"forecast_log_{region}.csv", index=False)
 
 # Merge all environmental history files for each region
