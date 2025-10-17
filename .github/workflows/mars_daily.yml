@@ -45,7 +45,8 @@ jobs:
 
       - name: Merge new CSVs with old (no duplicates)
         run: |
-          python .github/scripts/merge_csvs.py
+          echo "Running env_history merge script"
+          python scripts/merge_env_history.py
 
       - name: Commit and push updated CSVs
         run: |
