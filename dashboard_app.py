@@ -113,10 +113,50 @@ def list_files():
 
 
 def latest_env_file(region: str) -> str | None:
-    # Use glob (case-insensitive not supported natively) – rely on consistent prefix
-    pattern = os.path.join(DATA_DIR, f"env_history_{region}_*.csv")
-    files = sorted(glob(pattern))
-    return files[-1] if files else None
+    # Find both dated and undated env_history files.
+    pattern_dated = os.path.join(DATA_DIR, f"env_history_{region}_*.csv")
+    dated = glob(pattern_dated)
+    undated = os.path.join(DATA_DIR, f"env_history_{region}.csv")
+
+    # Helper: quick validity check for a CSV file (has >0 rows and a time-like column)
+    def is_valid_env_file(path: str) -> bool:
+        try:
+            if not os.path.exists(path) or os.path.getsize(path) < 40:
+                return False
+            sample = pd.read_csv(path, nrows=5)
+            if sample.empty:
+                return False
+            # look for any datetime-like column
+            for c in sample.columns:
+                try:
+                    parsed = pd.to_datetime(sample[c], errors="coerce")
+                    if parsed.notna().sum() >= 1:
+                        return True
+                except Exception:
+                    continue
+            return False
+        except Exception:
+            return False
+
+    # Prefer the undated full-history file if it exists and looks valid
+    if os.path.exists(undated) and is_valid_env_file(undated):
+        return undated
+
+    # Otherwise consider dated files; filter valid ones
+    valid_dated = [p for p in dated if is_valid_env_file(p)]
+    if valid_dated:
+        # pick most recently modified valid dated file
+        valid_dated.sort(key=lambda p: os.path.getmtime(p))
+        return valid_dated[-1]
+
+    # Fallback: if undated exists (even if not ideal) return it, else return newest dated file if any
+    if os.path.exists(undated):
+        return undated
+    if dated:
+        dated.sort(key=lambda p: os.path.getmtime(p))
+        return dated[-1]
+
+    return None
 
 
 def load_forecast(region: str) -> pd.DataFrame:
@@ -489,6 +529,9 @@ with st.expander("🔍 Diagnostics"):
     st.write("Working directory:", DATA_DIR)
     st.write("Files:", list_files())
     st.write("Forecast columns:", list(forecast.columns))
+    # show which env_history file was used (if any)
+    env_file = latest_env_file(region)
+    st.write("Env file used:", env_file)
     st.write("Env columns:", list(env.columns))
 
 st.markdown(
