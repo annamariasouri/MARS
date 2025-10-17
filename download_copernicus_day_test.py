@@ -51,35 +51,61 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
     nc_files = []
     for dataset_id, vars in datasets:
         print(f"→ Downloading {vars} from {dataset_id}")
-        try:
-            response = copernicusmarine.subset(
-                dataset_id=dataset_id,
-                variables=vars,
-                minimum_longitude=lon_min,
-                maximum_longitude=lon_max,
-                minimum_latitude=lat_min,
-                maximum_latitude=lat_max,
-                start_datetime=(yesterday - timedelta(days=30)).strftime("%Y-%m-%dT00:00:00"),
-                end_datetime=target_date,
-                minimum_depth=1.0,
-                maximum_depth=5.0,
-                username=username,
-                password=password,
-                output_directory=region_dir
-            )
-            output_dir_attr = getattr(response, 'output_directory', None)
-            filename_attr = getattr(response, 'filename', None)
-            file_path = None
-            if output_dir_attr and filename_attr:
-                file_path = os.path.join(region_dir, filename_attr)
-                print(f"DEBUG: expected file_path in region_dir = {file_path}")
-            if file_path and isinstance(file_path, str) and os.path.exists(file_path):
-                print(f"✅ File found in region directory: {file_path}")
-                nc_files.append(file_path)
-            else:
-                print(f"⚠️ File not found in region directory after download: {file_path}")
-        except Exception as e:
-            print(f"⚠️ Download failed for {vars} in {region}: {e}")
+        # Retry download/open up to N times to avoid transient NetCDF/HDF errors on the runner
+        max_attempts = 3
+        attempt = 0
+        success_path = None
+        while attempt < max_attempts and success_path is None:
+            attempt += 1
+            try:
+                response = copernicusmarine.subset(
+                    dataset_id=dataset_id,
+                    variables=vars,
+                    minimum_longitude=lon_min,
+                    maximum_longitude=lon_max,
+                    minimum_latitude=lat_min,
+                    maximum_latitude=lon_max if False else lon_max,
+                    start_datetime=(yesterday - timedelta(days=30)).strftime("%Y-%m-%dT00:00:00"),
+                    end_datetime=target_date,
+                    minimum_depth=1.0,
+                    maximum_depth=5.0,
+                    username=username,
+                    password=password,
+                    output_directory=region_dir
+                )
+                output_dir_attr = getattr(response, 'output_directory', None)
+                filename_attr = getattr(response, 'filename', None)
+                file_path = None
+                if output_dir_attr and filename_attr:
+                    file_path = os.path.join(region_dir, filename_attr)
+                    print(f"DEBUG: expected file_path in region_dir = {file_path}")
+                if file_path and isinstance(file_path, str) and os.path.exists(file_path):
+                    # validate the file can be opened
+                    try:
+                        ds_test = xr.open_dataset(file_path)
+                        ds_test.close()
+                        print(f"✅ File downloaded and opened: {file_path}")
+                        success_path = file_path
+                        nc_files.append(file_path)
+                    except Exception as eopen:
+                        print(f"⚠️ Downloaded file could not be opened (attempt {attempt}): {eopen}")
+                        # remove possibly corrupted file
+                        try:
+                            os.remove(file_path)
+                        except Exception:
+                            pass
+                        if attempt < max_attempts:
+                            print("→ Retrying download...")
+                else:
+                    print(f"⚠️ File not found in region directory after download (attempt {attempt}): {file_path}")
+                    if attempt < max_attempts:
+                        print("→ Retrying download...")
+            except Exception as e:
+                print(f"⚠️ Download failed for {vars} in {region} (attempt {attempt}): {e}")
+                if attempt < max_attempts:
+                    print("→ Retrying download...")
+        if success_path is None:
+            print(f"❌ Failed to obtain a valid .nc for {vars} in {region} after {max_attempts} attempts")
 
     # Try to open all available .nc files, even if some are missing
     dfs = []
@@ -98,7 +124,7 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
             df = df.merge(d, on=merge_keys, how='outer')
         df = df.sort_values(by=["latitude", "longitude", "time"]).reset_index(drop=True)
     else:
-        print(f"⚠️ No valid .nc files for {region}, creating empty DataFrame.")
+        print(f"⚠️ No valid .nc files for {region} after retries; skipping env history write.")
         df = pd.DataFrame()
 
     # Save environmental history (even if empty)
@@ -109,8 +135,12 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
     else:
         df_env = pd.DataFrame(columns=env_cols)
     history_filename = f"env_history_{region}_{target_date_str}.csv"
-    df_env.to_csv(os.path.join(output_dir, history_filename), index=False)
-    print(f"📤 Saved environmental history: {history_filename}")
+    # Only write per-day env_history if we have data; otherwise skip to avoid creating empty files
+    if not df_env.empty:
+        df_env.to_csv(os.path.join(output_dir, history_filename), index=False)
+        print(f"📤 Saved environmental history: {history_filename}")
+    else:
+        print(f"⚠️ No valid environmental rows for {region} on {target_date_str}; not writing {history_filename}")
 
     # Feature engineering (robust to empty df)
     if not df.empty:
