@@ -1,0 +1,3 @@
+region=thermaikos
+nc_files=0
+files:

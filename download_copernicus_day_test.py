@@ -6,11 +6,22 @@ import os
 from datetime import datetime, timedelta
 import time
 import random
+import argparse
 
 # === Parameters ===
-yesterday = datetime.today() - timedelta(days=1)
-target_date = yesterday.strftime("%Y-%m-%dT00:00:00")
-target_date_str = yesterday.strftime("%Y-%m-%d")
+parser = argparse.ArgumentParser(description='Download Copernicus data for a given date (default: yesterday)')
+parser.add_argument('--date', help='Target date YYYY-MM-DD (defaults to yesterday)', default=None)
+args = parser.parse_args()
+if args.date:
+    try:
+        tgt = datetime.strptime(args.date, '%Y-%m-%d')
+    except Exception:
+        raise ValueError('Invalid --date format, expected YYYY-MM-DD')
+else:
+    tgt = datetime.today() - timedelta(days=1)
+
+target_date = tgt.strftime("%Y-%m-%dT00:00:00")
+target_date_str = tgt.strftime("%Y-%m-%d")
 
 # Debug date information
 print(f"Debug: Using date {target_date_str} for downloads and processing")
@@ -72,8 +83,8 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
                     minimum_longitude=lon_min,
                     maximum_longitude=lon_max,
                     minimum_latitude=lat_min,
-                    maximum_latitude=lon_max if False else lon_max,
-                    start_datetime=(yesterday - timedelta(days=30)).strftime("%Y-%m-%dT00:00:00"),
+                    maximum_latitude=lat_max,
+                    start_datetime=(tgt - timedelta(days=30)).strftime("%Y-%m-%dT00:00:00"),
                     end_datetime=target_date,
                     minimum_depth=1.0,
                     maximum_depth=5.0,
