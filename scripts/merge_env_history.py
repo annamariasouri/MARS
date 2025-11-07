@@ -21,7 +21,11 @@ DATA_DIR = os.environ.get("MARS_DATA_DIR", "data")
 DATA_DIR = os.path.abspath(DATA_DIR)
 ENV_DIR = os.path.join(DATA_DIR, "env_history")
 os.makedirs(ENV_DIR, exist_ok=True)
-REGIONS = ["thermaikos", "peiraeus", "limassol"]
+env_regions = os.environ.get("MARS_REGIONS", None)
+if env_regions:
+    REGIONS = [r.strip() for r in env_regions.split(',') if r.strip()]
+else:
+    REGIONS = ["thermaikos", "peiraeus", "limassol"]
 
 # common time column names to check
 TIME_CANDIDATES = ["time", "date", "datetime", "ts", "TIME"]

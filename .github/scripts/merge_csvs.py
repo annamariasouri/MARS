@@ -4,7 +4,12 @@ import os
 import numpy as np
 
 # Merge all forecast logs for each region
-regions = ["thermaikos", "peiraeus", "limassol"]
+import os
+env_regions = os.environ.get("MARS_REGIONS", None)
+if env_regions:
+    regions = [r.strip() for r in env_regions.split(',') if r.strip()]
+else:
+    regions = ["thermaikos", "peiraeus", "limassol"]
 
 ## Only merge environmental history files for each region
 for region in regions:
