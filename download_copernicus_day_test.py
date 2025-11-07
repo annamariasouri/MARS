@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 import os
 from datetime import datetime, timedelta
+import time
+import random
 
 # === Parameters ===
 yesterday = datetime.today() - timedelta(days=1)
@@ -58,7 +60,7 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
     for dataset_id, vars in datasets:
         print(f"→ Downloading {vars} from {dataset_id}")
         # Retry download/open up to N times to avoid transient NetCDF/HDF errors on the runner
-        max_attempts = 3
+        max_attempts = 5
         attempt = 0
         success_path = None
         while attempt < max_attempts and success_path is None:
@@ -94,22 +96,47 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
                         success_path = file_path
                         nc_files.append(file_path)
                     except Exception as eopen:
-                        print(f"⚠️ Downloaded file could not be opened (attempt {attempt}): {eopen}")
+                        # record detailed error
+                        err_text = str(eopen)
+                        size_info = None
+                        try:
+                            size_info = os.path.getsize(file_path)
+                        except Exception:
+                            pass
+                        print(f"⚠️ Downloaded file could not be opened (attempt {attempt}): {err_text}; size={size_info}")
+                        # append details to a report file for triage
+                        try:
+                            with open(os.path.join(REPORT_DIR, f"{region}_{target_date_str}_{dataset_id}.error"), "a") as efh:
+                                efh.write(f"attempt={attempt}\nerror={err_text}\nfile={file_path}\nsize={size_info}\n---\n")
+                        except Exception:
+                            pass
                         # remove possibly corrupted file so retry gets a fresh download
                         try:
                             os.remove(file_path)
                         except Exception:
                             pass
                         if attempt < max_attempts:
-                            print("→ Retrying download...")
+                            backoff = (2 ** attempt) + random.uniform(0, 2)
+                            print(f"→ Retrying download after {backoff:.1f}s backoff...")
+                            time.sleep(backoff)
                 else:
                     print(f"⚠️ File not found in region directory after download (attempt {attempt}): {file_path}")
                     if attempt < max_attempts:
-                        print("→ Retrying download...")
+                        backoff = (2 ** attempt) + random.uniform(0, 2)
+                        print(f"→ Retrying download after {backoff:.1f}s backoff...")
+                        time.sleep(backoff)
             except Exception as e:
-                print(f"⚠️ Download failed for {vars} in {region} (attempt {attempt}): {e}")
+                err = str(e)
+                print(f"⚠️ Download failed for {vars} in {region} (attempt {attempt}): {err}")
+                try:
+                    with open(os.path.join(REPORT_DIR, f"{region}_{target_date_str}_{dataset_id}.error"), "a") as efh:
+                        efh.write(f"attempt={attempt}\nexception={err}\n---\n")
+                except Exception:
+                    pass
                 if attempt < max_attempts:
-                    print("→ Retrying download...")
+                    backoff = (2 ** attempt) + random.uniform(0, 2)
+                    print(f"→ Retrying download after {backoff:.1f}s backoff...")
+                    time.sleep(backoff)
         if success_path is None:
             print(f"❌ Failed to obtain a valid .nc for {vars} in {region} after {max_attempts} attempts")
             # write a small marker for debugging
