@@ -160,10 +160,10 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
                     time.sleep(backoff)
         if success_path is None:
             print(f"❌ Failed to obtain a valid .nc for {vars} in {region} after {max_attempts} attempts")
-            # write a small marker for debugging
+            # append a marker for debugging (use append so any earlier exception details are preserved)
             try:
-                with open(os.path.join(REPORT_DIR, f"{region}_{target_date_str}_{dataset_id}.error"), "w") as fh:
-                    fh.write("failed_to_download_or_open\n")
+                with open(os.path.join(REPORT_DIR, f"{region}_{target_date_str}_{dataset_id}.error"), "a") as fh:
+                    fh.write(f"failed_to_download_or_open timestamp={datetime.utcnow().isoformat()} attempts={max_attempts}\n")
             except Exception:
                 pass
 
@@ -209,6 +209,21 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
     if not df_env.empty:
         df_env.to_csv(os.path.join(ENV_DIR, history_filename), index=False)
         print(f"📤 Saved environmental history: {os.path.join(ENV_DIR, history_filename)}")
+        # Clean up any previous failure markers for this region/date because we have valid data now
+        try:
+            import glob
+            # remove the simple .no_rows marker
+            no_rows_path = os.path.join(REPORT_DIR, f"{region}_{target_date_str}.no_rows")
+            if os.path.exists(no_rows_path):
+                os.remove(no_rows_path)
+            # remove any per-dataset .error files for this region/date (they may be from earlier failed runs)
+            for p in glob.glob(os.path.join(REPORT_DIR, f"{region}_{target_date_str}_*.error")):
+                try:
+                    os.remove(p)
+                except Exception:
+                    pass
+        except Exception:
+            pass
     else:
         print(f"⚠️ No valid environmental rows for {region} on {target_date_str}; not writing {history_filename}")
         # write a marker so merge can detect a failed date later
