@@ -44,8 +44,12 @@ except Exception as e:
         print(f"Pickle failed to load model: {e2}")
         raise
 
-# === Regions
-REGIONS = ["thermaikos", "peiraeus", "limassol"]
+# === Regions (can be overridden with MARS_REGIONS env var, comma-separated)
+env_regions = os.environ.get("MARS_REGIONS", None)
+if env_regions:
+    REGIONS = [r.strip() for r in env_regions.split(',') if r.strip()]
+else:
+    REGIONS = ["thermaikos", "peiraeus", "limassol"]
 
 # === Features used by the model
 features = [

@@ -26,11 +26,21 @@ target_date_str = tgt.strftime("%Y-%m-%d")
 # Debug date information
 print(f"Debug: Using date {target_date_str} for downloads and processing")
 
-REGIONS = {
+# Default regions and their bounding boxes (lat_min, lat_max, lon_min, lon_max)
+DEFAULT_REGIONS = {
     "thermaikos": (40.2, 40.7, 22.5, 23.0),
     "peiraeus": (37.9, 38.1, 23.5, 23.8),
     "limassol": (34.6, 34.8, 33.0, 33.2)
 }
+
+# Allow overriding which regions to process via environment variable MARS_REGIONS
+# Example: export MARS_REGIONS=limassol,thermaikos
+env_regions = os.environ.get("MARS_REGIONS", None)
+if env_regions:
+    selected = [r.strip() for r in env_regions.split(',') if r.strip()]
+    REGIONS = {k: v for k, v in DEFAULT_REGIONS.items() if k in selected}
+else:
+    REGIONS = DEFAULT_REGIONS
 
 DATA_DIR = os.environ.get("MARS_DATA_DIR", "data")
 DATA_DIR = os.path.abspath(DATA_DIR)
