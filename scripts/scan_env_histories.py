@@ -3,8 +3,10 @@ import glob
 import pandas as pd
 from datetime import datetime
 
-DATA_DIR = os.getcwd()
-pattern = os.path.join(DATA_DIR, 'env_history_*.csv')
+DATA_DIR = os.environ.get("MARS_DATA_DIR", "data")
+DATA_DIR = os.path.abspath(DATA_DIR)
+ENV_DIR = os.path.join(DATA_DIR, "env_history")
+pattern = os.path.join(ENV_DIR, 'env_history_*.csv')
 files = sorted(glob.glob(pattern))
 
 print('Found', len(files), 'env_history files')

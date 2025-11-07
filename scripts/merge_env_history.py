@@ -17,8 +17,10 @@ import glob
 import pandas as pd
 from datetime import datetime
 
-ROOT = os.getcwd()
-DATA_DIR = ROOT
+DATA_DIR = os.environ.get("MARS_DATA_DIR", "data")
+DATA_DIR = os.path.abspath(DATA_DIR)
+ENV_DIR = os.path.join(DATA_DIR, "env_history")
+os.makedirs(ENV_DIR, exist_ok=True)
 REGIONS = ["thermaikos", "peiraeus", "limassol"]
 
 # common time column names to check
@@ -98,9 +100,9 @@ def merge_region(region: str) -> str | None:
     """Merge files for a region and write env_history_{region}.csv in DATA_DIR.
     Returns path to written file or None on failure/no valid files.
     """
-    pattern = os.path.join(DATA_DIR, f"env_history_{region}_*.csv")
+    pattern = os.path.join(ENV_DIR, f"env_history_{region}_*.csv")
     dated = glob.glob(pattern)
-    undated = os.path.join(DATA_DIR, f"env_history_{region}.csv")
+    undated = os.path.join(ENV_DIR, f"env_history_{region}.csv")
 
     frames = []
     # read undated first (so its rows can be preferred)

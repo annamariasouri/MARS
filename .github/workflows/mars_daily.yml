@@ -30,28 +30,69 @@ jobs:
         env:
           COPERNICUS_USERNAME: ${{ secrets.COPERNICUS_USERNAME }}
           COPERNICUS_PASSWORD: ${{ secrets.COPERNICUS_PASSWORD }}
+          MARS_DATA_DIR: data
         run: |
           echo "Checking if credentials are set (without exposing them)..."
           python -c "import os; print('Username exists:', bool(os.getenv('COPERNICUS_USERNAME'))); print('Password exists:', bool(os.getenv('COPERNICUS_PASSWORD')))"
           python download_copernicus_day_test.py
 
       - name: Download model file from Google Drive
+        env:
+          MARS_DATA_DIR: data
         run: |
-          curl -L "https://drive.google.com/uc?export=download&id=1hNwGOFAanesyLTjufvYjK_wO36xY-W6q" -o new_updated_model.pkl
+          mkdir -p data/models
+          curl -L "https://drive.google.com/uc?export=download&id=1hNwGOFAanesyLTjufvYjK_wO36xY-W6q" -o data/models/final_rf_chl_model_2015_2023.pkl
 
       - name: Run MARS forecast
+        env:
+          MARS_DATA_DIR: data
         run: |
           python run_daily_forecast.py
 
       - name: Merge new CSVs with old (no duplicates)
+        env:
+          MARS_DATA_DIR: data
         run: |
           echo "Running env_history merge script"
           python scripts/merge_env_history.py
+
+      - name: Scan env histories and produce diagnostics
+        env:
+          MARS_DATA_DIR: data
+        run: |
+          echo "Scanning env_history files"
+          python scripts/scan_env_histories.py || true
+
+      - name: Upload download diagnostics and raw data (artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: mars-download-diagnostics
+          path: |
+            data/download_reports/**
+            data/raw_nc/**
+            data/env_history/**
+            data/model_ready/**
+
+      - name: Fail if any download errors or no_rows markers
+        env:
+          MARS_DATA_DIR: data
+        run: |
+          set -e
+          shopt -s nullglob || true
+          errs=$(ls data/download_reports/*.error 2>/dev/null || true)
+          nors=$(ls data/download_reports/*.no_rows 2>/dev/null || true)
+          if [ -n "$errs" ] || [ -n "$nors" ]; then
+            echo "Found download errors or empty processing results. See artifact 'mars-download-diagnostics' for details."
+            ls -la data/download_reports || true
+            exit 1
+          else
+            echo "No download errors found."
+          fi
 
       - name: Commit and push updated CSVs
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add *.csv
+          git add data/** || true
           git commit -m "Daily data update: $(date -u +'%Y-%m-%d')" || echo "No changes to commit"
           git push

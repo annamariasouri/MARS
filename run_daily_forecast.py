@@ -8,8 +8,20 @@ import pickle
 yesterday = datetime.today() - pd.Timedelta(days=1)
 target_date_str = yesterday.strftime("%Y-%m-%d")
 
-# === Model path (use CODE folder where model file exists)
-model_path = "new_updated_model.pkl"
+# === DATA layout
+DATA_DIR = os.environ.get("MARS_DATA_DIR", "data")
+DATA_DIR = os.path.abspath(DATA_DIR)
+MODEL_DIR = os.path.join(DATA_DIR, "models")
+MODEL_READY_DIR = os.path.join(DATA_DIR, "model_ready")
+FORECAST_DIR = os.path.join(DATA_DIR, "forecasts")
+for d in (DATA_DIR, MODEL_DIR, MODEL_READY_DIR, FORECAST_DIR):
+    os.makedirs(d, exist_ok=True)
+
+# prefer model in data/models; fallback to root filename
+model_path = os.path.join(MODEL_DIR, "final_rf_chl_model_2015_2023.pkl")
+if not os.path.exists(model_path):
+    if os.path.exists("new_updated_model.pkl"):
+        model_path = "new_updated_model.pkl"
 
 # Check model file size
 if os.path.exists(model_path):
@@ -47,14 +59,14 @@ features = [
 # === Loop through each region
 for region in REGIONS:
     # Forecast for today, next 7 days, and next month
-    output_path = os.path.join(os.getcwd(), f"forecast_log_{region}.csv")
+    output_path = os.path.join(FORECAST_DIR, f"forecast_log_{region}.csv")
     forecast_dates = [yesterday + pd.Timedelta(days=i) for i in range(0, 8)]
     forecast_dates.append(yesterday + pd.Timedelta(days=30))
 
     all_results = []
     for forecast_date in forecast_dates:
         forecast_date_str = forecast_date.strftime("%Y-%m-%d")
-        csv_input = os.path.join(os.getcwd(), f"model_ready_input_{region}_{forecast_date_str}.csv")
+        csv_input = os.path.join(MODEL_READY_DIR, f"model_ready_input_{region}_{forecast_date_str}.csv")
         if not os.path.exists(csv_input):
             print(f"Input file not found for {region} on {forecast_date_str}: {csv_input}")
             continue

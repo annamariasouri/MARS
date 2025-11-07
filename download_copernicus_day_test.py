@@ -19,8 +19,14 @@ REGIONS = {
     "limassol": (34.6, 34.8, 33.0, 33.2)
 }
 
-output_dir = os.getcwd()  # Use workspace root for both local and CI
-os.makedirs(output_dir, exist_ok=True)
+DATA_DIR = os.environ.get("MARS_DATA_DIR", "data")
+DATA_DIR = os.path.abspath(DATA_DIR)
+ENV_DIR = os.path.join(DATA_DIR, "env_history")
+MODEL_READY_DIR = os.path.join(DATA_DIR, "model_ready")
+RAW_DIR = os.path.join(DATA_DIR, "raw_nc")
+REPORT_DIR = os.path.join(DATA_DIR, "download_reports")
+for d in (DATA_DIR, ENV_DIR, MODEL_READY_DIR, RAW_DIR, REPORT_DIR):
+    os.makedirs(d, exist_ok=True)
 
 # === Authenticate ===
 username = os.getenv('COPERNICUS_USERNAME', '').strip()
@@ -42,10 +48,10 @@ datasets = [
 for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
     print(f"\n🌍 Processing region: {region.upper()}")
 
-    region_dir = os.path.join(output_dir, f"{region}_downloads_{target_date_str}")
+    # store raw .nc per-region under RAW_DIR; do NOT chdir
+    region_dir = os.path.join(RAW_DIR, f"{region}_downloads_{target_date_str}")
     region_dir = os.path.normpath(region_dir)
     os.makedirs(region_dir, exist_ok=True)
-    os.chdir(region_dir)
 
     print("📥 Starting downloads...")
     nc_files = []
@@ -89,7 +95,7 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
                         nc_files.append(file_path)
                     except Exception as eopen:
                         print(f"⚠️ Downloaded file could not be opened (attempt {attempt}): {eopen}")
-                        # remove possibly corrupted file
+                        # remove possibly corrupted file so retry gets a fresh download
                         try:
                             os.remove(file_path)
                         except Exception:
@@ -106,6 +112,12 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
                     print("→ Retrying download...")
         if success_path is None:
             print(f"❌ Failed to obtain a valid .nc for {vars} in {region} after {max_attempts} attempts")
+            # write a small marker for debugging
+            try:
+                with open(os.path.join(REPORT_DIR, f"{region}_{target_date_str}_{dataset_id}.error"), "w") as fh:
+                    fh.write("failed_to_download_or_open\n")
+            except Exception:
+                pass
 
     # Try to open all available .nc files, even if some are missing
     dfs = []
@@ -115,6 +127,16 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
             dfs.append(ds.to_dataframe().reset_index())
         except Exception as e:
             print(f"⚠️ Failed to open {f}: {e}")
+    # write a simple per-region download report
+    try:
+        with open(os.path.join(REPORT_DIR, f"report_{region}_{target_date_str}.txt"), "w") as rfh:
+            rfh.write(f"region={region}\n")
+            rfh.write(f"nc_files={len(nc_files)}\n")
+            rfh.write("files:\n")
+            for p in nc_files:
+                rfh.write(p + "\n")
+    except Exception:
+        pass
 
     # Merge all available datasets
     if dfs:
@@ -137,10 +159,16 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
     history_filename = f"env_history_{region}_{target_date_str}.csv"
     # Only write per-day env_history if we have data; otherwise skip to avoid creating empty files
     if not df_env.empty:
-        df_env.to_csv(os.path.join(output_dir, history_filename), index=False)
-        print(f"📤 Saved environmental history: {history_filename}")
+        df_env.to_csv(os.path.join(ENV_DIR, history_filename), index=False)
+        print(f"📤 Saved environmental history: {os.path.join(ENV_DIR, history_filename)}")
     else:
         print(f"⚠️ No valid environmental rows for {region} on {target_date_str}; not writing {history_filename}")
+        # write a marker so merge can detect a failed date later
+        try:
+            with open(os.path.join(REPORT_DIR, f"{region}_{target_date_str}.no_rows"), "w") as fh:
+                fh.write("no_rows_after_processing\n")
+        except Exception:
+            pass
 
     # Feature engineering (robust to empty df)
     if not df.empty:
@@ -173,7 +201,7 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
     else:
         df_ready = pd.DataFrame(columns=model_features)
     filename = f"model_ready_input_{region}_{target_date_str}.csv"
-    final_path = os.path.join(output_dir, filename)
+    final_path = os.path.join(MODEL_READY_DIR, filename)
     df_ready.to_csv(final_path, index=False)
     print(f"✅ Saved model input: {final_path}")
     print(df_ready.head())
