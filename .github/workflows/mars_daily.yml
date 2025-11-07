@@ -30,6 +30,7 @@ jobs:
         env:
           COPERNICUS_USERNAME: ${{ secrets.COPERNICUS_USERNAME }}
           COPERNICUS_PASSWORD: ${{ secrets.COPERNICUS_PASSWORD }}
+          MARS_REGIONS: limassol,thermaikos
           MARS_DATA_DIR: data
         run: |
           echo "Checking if credentials are set (without exposing them)..."
@@ -46,6 +47,7 @@ jobs:
       - name: Run MARS forecast
         env:
           MARS_DATA_DIR: data
+          MARS_REGIONS: limassol,thermaikos
         run: |
           python run_daily_forecast.py
 
