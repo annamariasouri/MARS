@@ -27,6 +27,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Clean data (preserve models)
+        run: |
+          echo "Cleaning data folders except data/models to start fresh..."
+          rm -rf data/env_history || true
+          rm -rf data/raw_nc || true
+          rm -rf data/model_ready || true
+          rm -rf data/forecasts || true
+          rm -rf data/download_reports || true
+          mkdir -p data/models
+
       - name: Run Copernicus download
         env:
           COPERNICUS_USERNAME: ${{ secrets.COPERNICUS_USERNAME }}
@@ -55,14 +65,6 @@ jobs:
           MARS_REGIONS: limassol,thermaikos
         run: |
           python run_daily_forecast.py
-
-      - name: Merge new CSVs with old (no duplicates)
-        env:
-          MARS_DATA_DIR: data
-          MARS_REGIONS: limassol,thermaikos
-        run: |
-          echo "Running env_history merge script"
-          python scripts/merge_env_history.py
 
       - name: Scan env histories and produce diagnostics
         env:

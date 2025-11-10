@@ -148,10 +148,88 @@ def merge_region(region: str) -> str | None:
 
 
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Merge dated env_history CSVs into master files.")
+    parser.add_argument("--start-date", type=str, default=None,
+                        help="Optional start date (YYYY-MM-DD). Only dated files on/after this date will be considered.")
+    parser.add_argument("--force", action="store_true",
+                        help="If set, existing master env_history_{region}.csv will be removed before merging.")
+    args = parser.parse_args()
+
+    # helper to decide whether a dated file is >= start-date
+    def _dated_file_in_range(path: str, start_date: str | None) -> bool:
+        if start_date is None:
+            return True
+        # attempt to extract YYYY-MM-DD from filename
+        basename = os.path.basename(path)
+        # look for a date-like segment
+        import re
+        m = re.search(r"(\d{4}-\d{2}-\d{2})", basename)
+        if not m:
+            return True
+        try:
+            file_date = datetime.strptime(m.group(1), "%Y-%m-%d").date()
+            start = datetime.strptime(start_date, "%Y-%m-%d").date()
+            return file_date >= start
+        except Exception:
+            return True
+
     updated = {}
     for r in REGIONS:
-        p = merge_region(r)
-        updated[r] = p
+        # if force is set, remove existing undated master so we start fresh
+        undated = os.path.join(ENV_DIR, f"env_history_{r}.csv")
+        if args.force and os.path.exists(undated):
+            try:
+                os.remove(undated)
+                print(f"Removed existing master file for {r}: {undated}")
+            except Exception as e:
+                print(f"Could not remove {undated}: {e}")
+
+        # collect dated files filtered by start-date
+        pattern = os.path.join(ENV_DIR, f"env_history_{r}_*.csv")
+        dated_files = sorted(glob.glob(pattern))
+        if args.start_date:
+            dated_files = [p for p in dated_files if _dated_file_in_range(p, args.start_date)]
+
+        # temporarily override globbing in merge_region by injecting the filtered list
+        # We'll implement merging here to honor the filtered set.
+        frames = []
+        # read existing undated first (if any)
+        if os.path.exists(undated):
+            dfu = _read_and_normalize(undated)
+            if not dfu.empty:
+                frames.append(dfu)
+
+        for p in dated_files:
+            if os.path.abspath(p) == os.path.abspath(undated):
+                continue
+            dfd = _read_and_normalize(p)
+            if not dfd.empty:
+                frames.append(dfd)
+
+        if not frames:
+            updated[r] = None
+            print(f"No valid env_history files found for {r} after applying start-date filter.")
+            continue
+
+        big = pd.concat(frames, ignore_index=True)
+        big = big.drop_duplicates(subset=["TIME"], keep="last")
+        big = big.sort_values("TIME").reset_index(drop=True)
+
+        # backup existing undated file if present
+        if os.path.exists(undated):
+            bak = undated + ".bak." + datetime.now().strftime("%Y%m%dT%H%M%S")
+            try:
+                os.replace(undated, bak)
+            except Exception:
+                pass
+
+        out = big.copy()
+        out = out.rename(columns={"TIME": "time"})
+        out.to_csv(undated, index=False)
+        updated[r] = undated
+
     for r, p in updated.items():
         if p:
             print(f"Merged for {r}: {p}")

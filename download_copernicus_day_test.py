@@ -34,6 +34,14 @@ DEFAULT_REGIONS = {
     "limassol": (34.6, 34.8, 33.0, 33.2)
 }
 
+# Known dataset depth coordinate bounds (to avoid requesting out-of-range depths)
+# These values came from dataset metadata warnings; clamp requests to this range.
+DEPTH_COORD_MIN = 1.0182366371154785
+DEPTH_COORD_MAX = 4152.89599609375
+# Default requested depth slice (can be tuned)
+REQUESTED_MIN_DEPTH = 1.0
+REQUESTED_MAX_DEPTH = 5.0
+
 # Allow overriding which regions to process via environment variable MARS_REGIONS
 # Example: export MARS_REGIONS=limassol,thermaikos
 env_regions = os.environ.get("MARS_REGIONS", None)
@@ -88,6 +96,12 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
         while attempt < max_attempts and success_path is None:
             attempt += 1
             try:
+                # clamp requested depths to dataset coordinate bounds to avoid warnings/errors
+                min_depth = max(REQUESTED_MIN_DEPTH, DEPTH_COORD_MIN + 1e-6)
+                max_depth = min(REQUESTED_MAX_DEPTH, DEPTH_COORD_MAX - 1e-6)
+                if (min_depth != REQUESTED_MIN_DEPTH) or (max_depth != REQUESTED_MAX_DEPTH):
+                    print(f"INFO - Clamping requested depth from [{REQUESTED_MIN_DEPTH}, {REQUESTED_MAX_DEPTH}] to [{min_depth}, {max_depth}] to fit dataset coordinates")
+
                 response = copernicusmarine.subset(
                     dataset_id=dataset_id,
                     variables=vars,
@@ -97,8 +111,8 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
                     maximum_latitude=lat_max,
                     start_datetime=(tgt - timedelta(days=30)).strftime("%Y-%m-%dT00:00:00"),
                     end_datetime=target_date,
-                    minimum_depth=1.0,
-                    maximum_depth=5.0,
+                    minimum_depth=min_depth,
+                    maximum_depth=max_depth,
                     username=username,
                     password=password,
                     output_directory=region_dir
