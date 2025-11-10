@@ -39,3 +39,44 @@ file=/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cme
 size=62331
 ---
 failed_to_download_or_open timestamp=2025-11-10T09:06:56.160337 attempts=8
+attempt=1
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=62295
+---
+attempt=2
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=62295
+---
+attempt=3
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=62295
+---
+attempt=4
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=62295
+---
+attempt=5
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=62295
+---
+attempt=6
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=62295
+---
+attempt=7
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=62295
+---
+attempt=8
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/thermaikos_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_22.50E-23.00E_40.23N-40.69N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=62295
+---
+failed_to_download_or_open timestamp=2025-11-10T10:29:51.136173 attempts=8
