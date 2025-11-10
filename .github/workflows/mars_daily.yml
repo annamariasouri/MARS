@@ -33,6 +33,10 @@ jobs:
           COPERNICUS_PASSWORD: ${{ secrets.COPERNICUS_PASSWORD }}
           MARS_REGIONS: limassol,thermaikos
           MARS_DATA_DIR: data
+          # CI-specific overrides to fail faster and reduce long exponential backoffs
+          MARS_MAX_DOWNLOAD_ATTEMPTS: '3'
+          MARS_MAX_BACKOFF_SECONDS: '16'
+          MARS_DOWNLOAD_TIMEOUT: '60'
         run: |
           echo "Checking if credentials are set (without exposing them)..."
           python -c "import os; print('Username exists:', bool(os.getenv('COPERNICUS_USERNAME'))); print('Password exists:', bool(os.getenv('COPERNICUS_PASSWORD')))"
@@ -78,18 +82,20 @@ jobs:
             data/env_history/**
             data/model_ready/**
 
-      - name: Fail if any download errors or no_rows markers
+      - name: Check for download errors or no_rows markers (do not fail CI)
         env:
           MARS_DATA_DIR: data
         run: |
-          set -e
+          # In CI we keep diagnostics but do not fail the whole workflow so the forecast
+          # and merges can run with available data. This helps recovery when some
+          # regions/datasets are intermittently failing upstream.
           shopt -s nullglob || true
           errs=$(ls data/download_reports/*.error 2>/dev/null || true)
           nors=$(ls data/download_reports/*.no_rows 2>/dev/null || true)
           if [ -n "$errs" ] || [ -n "$nors" ]; then
-            echo "Found download errors or empty processing results. See artifact 'mars-download-diagnostics' for details."
+            echo "WARNING: Found download errors or empty processing results. See artifact 'mars-download-diagnostics' for details."
             ls -la data/download_reports || true
-            exit 1
+            echo "Continuing pipeline despite download issues. Investigate the artifact for details."
           else
             echo "No download errors found."
           fi
