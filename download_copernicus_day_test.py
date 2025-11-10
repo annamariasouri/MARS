@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import time
 import random
 import argparse
+import binascii
 
 # === Parameters ===
 parser = argparse.ArgumentParser(description='Download Copernicus data for a given date (default: yesterday)')
@@ -81,7 +82,7 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
     for dataset_id, vars in datasets:
         print(f"→ Downloading {vars} from {dataset_id}")
         # Retry download/open up to N times to avoid transient NetCDF/HDF errors on the runner
-        max_attempts = 5
+        max_attempts = 8
         attempt = 0
         success_path = None
         while attempt < max_attempts and success_path is None:
@@ -109,6 +110,45 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
                     file_path = os.path.join(region_dir, filename_attr)
                     print(f"DEBUG: expected file_path in region_dir = {file_path}")
                 if file_path and isinstance(file_path, str) and os.path.exists(file_path):
+                    # quick magic-byte check to detect HTML/error pages or corrupted downloads
+                    def looks_like_netcdf(path):
+                        try:
+                            with open(path, 'rb') as fh:
+                                head = fh.read(16)
+                            # HDF5 files start with b'\x89HDF\r\n\x1a\n'
+                            if head.startswith(b"\x89HDF\r\n\x1a\n"):
+                                return True
+                            # classic NetCDF may start with 'CDF' in first bytes
+                            if head[0:3] == b"CDF":
+                                return True
+                            return False
+                        except Exception:
+                            return False
+
+                    if not looks_like_netcdf(file_path):
+                        # file doesn't look like a NetCDF/HDF5 file; capture a short preview and remove
+                        preview = ""
+                        try:
+                            with open(file_path, 'rb') as fh:
+                                preview = fh.read(512)
+                                # limit size in the report
+                                preview = binascii.hexlify(preview[:256]).decode('ascii')
+                        except Exception:
+                            preview = '<unreadable>'
+                        try:
+                            with open(os.path.join(REPORT_DIR, f"{region}_{target_date_str}_{dataset_id}.error"), "a") as efh:
+                                efh.write(f"attempt={attempt}\nerror=invalid_magic\nfile={file_path}\nsize={os.path.getsize(file_path)}\npreview_hex={preview}\n---\n")
+                        except Exception:
+                            pass
+                        try:
+                            os.remove(file_path)
+                        except Exception:
+                            pass
+                        if attempt < max_attempts:
+                            backoff = (2 ** attempt) + random.uniform(0, 2)
+                            print(f"→ Retrying download after {backoff:.1f}s backoff due to invalid file magic...")
+                            time.sleep(backoff)
+                        continue
                     # validate the file can be opened
                     try:
                         ds_test = xr.open_dataset(file_path)
