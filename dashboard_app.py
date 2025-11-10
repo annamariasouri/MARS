@@ -513,7 +513,7 @@ with k6:
 
 # === TABS ===
 
-tab1, tab2 = st.tabs(["Today’s Forecast", "Environmental Trends"])
+tab1, tab2, tab3 = st.tabs(["Today’s Forecast", "Environmental Trends", "Accuracy"])
 
 with tab1:
     st.markdown("<div class='section-title'>CHL Forecasts</div>", unsafe_allow_html=True)
@@ -546,6 +546,76 @@ with tab2:
             for v in chosen:
                 label = dict(ENV_VARS).get(v, v)
                 st.plotly_chart(plot_ts(env, "TIME", v, label, label), use_container_width=True)
+
+    with tab3:
+        st.markdown(f"<div class='section-title'>{region_title} – Forecast Accuracy</div>", unsafe_allow_html=True)
+        # look for eval file in DATA_DIR/eval or data/eval
+        eval_paths = [os.path.join(DATA_DIR, 'eval', f'accuracy_{region}.csv'), os.path.join(DATA_DIR, f'accuracy_{region}.csv')]
+        eval_path = next((p for p in eval_paths if os.path.exists(p)), None)
+        if not eval_path:
+            st.info(f"No evaluation file found for {region}. Run the evaluation script: python scripts/evaluate_forecasts.py --region {region}")
+        else:
+            try:
+                eval_df = pd.read_csv(eval_path, parse_dates=['target_date', 'forecast_date'])
+            except Exception as e:
+                st.warning(f"Could not read evaluation file: {e}")
+                eval_df = pd.DataFrame()
+
+            if eval_df.empty:
+                st.info("No evaluated rows available for this region yet.")
+            else:
+                # location selector: region average or specific lat/lon
+                eval_df['lat_str'] = eval_df['lat'].apply(lambda x: f"{x:.4f}" if pd.notna(x) else '')
+                eval_df['lon_str'] = eval_df['lon'].apply(lambda x: f"{x:.4f}" if pd.notna(x) else '')
+                eval_df['loc_key'] = eval_df.apply(lambda r: (f"{r['lat_str']},{r['lon_str']}" if r['lat_str'] and r['lon_str'] else 'region average'), axis=1)
+                locs = ['region average'] + sorted([k for k in eval_df['loc_key'].unique() if k != 'region average'])
+                sel_loc = st.selectbox('Location (region average or specific grid point)', options=locs)
+
+                if sel_loc == 'region average':
+                    ts = eval_df.groupby(eval_df['target_date'].dt.normalize(), as_index=False).agg({'predicted_chl':'mean','observed_chl':'mean'})
+                else:
+                    lat_s, lon_s = sel_loc.split(',')
+                    sub = eval_df[(eval_df['lat_str']==lat_s)&(eval_df['lon_str']==lon_s)].copy()
+                    ts = sub.groupby(sub['target_date'].dt.normalize(), as_index=False).agg({'predicted_chl':'mean','observed_chl':'mean'})
+
+                # Time series overlay
+                if not ts.empty:
+                    fig_ts = px.line(ts, x='target_date', y=['predicted_chl','observed_chl'], labels={'value':'CHL (mg/m³)','target_date':'Date'}, template=PLOTLY_TEMPLATE)
+                    fig_ts.update_layout(title='Predicted vs Observed CHL', legend_title_text='Series')
+                    st.plotly_chart(fig_ts, use_container_width=True)
+
+                # Scatter plot
+                scatter_df = eval_df if sel_loc=='region average' else eval_df[(eval_df['lat_str']==lat_s)&(eval_df['lon_str']==lon_s)]
+                if not scatter_df.empty:
+                    scatter_df = scatter_df.dropna(subset=['predicted_chl','observed_chl'])
+                    fig_sc = px.scatter(scatter_df, x='predicted_chl', y='observed_chl', trendline='ols', template=PLOTLY_TEMPLATE)
+                    fig_sc.add_shape(type='line', x0=0, x1=max(scatter_df['predicted_chl'].max(), scatter_df['observed_chl'].max()), y0=0, y1=max(scatter_df['predicted_chl'].max(), scatter_df['observed_chl'].max()), line=dict(dash='dash'))
+                    fig_sc.update_layout(title='Predicted vs Observed (scatter)')
+                    st.plotly_chart(fig_sc, use_container_width=True)
+
+                # Simple table: predicted | actual | accuracy percent
+                show_n = st.slider('Rows to show (most recent)', min_value=5, max_value=200, value=20)
+                table_df = eval_df.sort_values('target_date', ascending=False).head(show_n)
+                # compute simple accuracy: if bloom flags exist use them, else percentage within tolerance
+                if {'bloom_pred','bloom_obs'}.issubset(table_df.columns):
+                    tp = ((table_df['bloom_pred']==True)&(table_df['bloom_obs']==True)).sum()
+                    tn = ((table_df['bloom_pred']==False)&(table_df['bloom_obs']==False)).sum()
+                    total = len(table_df.dropna(subset=['bloom_pred','bloom_obs']))
+                    acc_pct = (tp+tn)/total*100 if total>0 else None
+                    st.metric('Bloom flag accuracy (%)', f"{acc_pct:.1f}%" if acc_pct is not None else 'N/A')
+                else:
+                    # tolerance-based
+                    tol = st.number_input('Tolerance for "correct" (mg/m³)', value=0.2, step=0.05)
+                    ok = (table_df['abs_err'] <= tol).sum()
+                    total = len(table_df.dropna(subset=['abs_err']))
+                    acc_pct = ok/total*100 if total>0 else None
+                    st.metric('Accuracy within tolerance (%)', f"{acc_pct:.1f}%" if acc_pct is not None else 'N/A')
+
+                # show table
+                display_cols = ['target_date','lat','lon','predicted_chl','observed_chl','err','abs_err']
+                display = table_df[[c for c in display_cols if c in table_df.columns]].copy()
+                display['target_date'] = pd.to_datetime(display['target_date']).dt.date
+                st.dataframe(display)
 
 
 # --- Diagnostics ---
