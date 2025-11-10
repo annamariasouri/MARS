@@ -71,12 +71,39 @@ for region in REGIONS:
     for forecast_date in forecast_dates:
         forecast_date_str = forecast_date.strftime("%Y-%m-%d")
         csv_input = os.path.join(MODEL_READY_DIR, f"model_ready_input_{region}_{forecast_date_str}.csv")
-        if not os.path.exists(csv_input):
-            print(f"Input file not found for {region} on {forecast_date_str}: {csv_input}")
-            continue
-        df_input = pd.read_csv(csv_input)
+        used_input_date = None
+        df_input = pd.DataFrame()
+        # Try the exact-date input first
+        if os.path.exists(csv_input):
+            try:
+                df_input = pd.read_csv(csv_input)
+                if df_input.shape[0] > 0:
+                    used_input_date = forecast_date_str
+            except Exception:
+                df_input = pd.DataFrame()
+
+        # If exact-date input missing or empty, search backwards up to 7 days for most recent non-empty input
         if df_input.shape[0] == 0:
-            print(f"Input file for {region} on {forecast_date_str} is empty. Skipping prediction.")
+            lookback_days = 7
+            for i in range(1, lookback_days + 1):
+                alt_date = (forecast_date - pd.Timedelta(days=i)).strftime("%Y-%m-%d")
+                alt_path = os.path.join(MODEL_READY_DIR, f"model_ready_input_{region}_{alt_date}.csv")
+                if os.path.exists(alt_path):
+                    try:
+                        alt_df = pd.read_csv(alt_path)
+                        if alt_df.shape[0] > 0:
+                            df_input = alt_df.copy()
+                            used_input_date = alt_date
+                            print(f"Using fallback model input for {region}: {alt_path} (for target date {forecast_date_str})")
+                            break
+                    except Exception:
+                        continue
+
+        if df_input.shape[0] == 0:
+            if used_input_date is None:
+                print(f"No model input found for {region} on {forecast_date_str} and no fallback available. Skipping prediction.")
+            else:
+                print(f"Fallback input for {region} on {forecast_date_str} was empty. Skipping prediction.")
             continue
         predicted_chl = model.predict(df_input)
         predicted_chl_mean = np.mean(predicted_chl)

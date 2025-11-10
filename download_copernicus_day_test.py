@@ -34,14 +34,6 @@ DEFAULT_REGIONS = {
     "limassol": (34.6, 34.8, 33.0, 33.2)
 }
 
-# Known dataset depth coordinate bounds (to avoid requesting out-of-range depths)
-# These values came from dataset metadata warnings; clamp requests to this range.
-DEPTH_COORD_MIN = 1.0182366371154785
-DEPTH_COORD_MAX = 4152.89599609375
-# Default requested depth slice (can be tuned)
-REQUESTED_MIN_DEPTH = 1.0
-REQUESTED_MAX_DEPTH = 5.0
-
 # Allow overriding which regions to process via environment variable MARS_REGIONS
 # Example: export MARS_REGIONS=limassol,thermaikos
 env_regions = os.environ.get("MARS_REGIONS", None)
@@ -76,6 +68,17 @@ datasets = [
     ("cmems_mod_med_bgc-pft_anfc_4.2km_P1D-m", ["chl"])
 ]
 
+# Requested depth window (user-facing)
+REQUESTED_MIN_DEPTH = 1.0
+REQUESTED_MAX_DEPTH = 5.0
+
+# Known dataset coordinate bounds (used to clamp requests and avoid warnings)
+# These are conservative defaults observed for the CMEMS MED products; they
+# prevent the library from warning when the requested min/max slightly fall
+# outside exact grid coordinates. If datasets change, adjust these values.
+DEPTH_COORD_MIN = 1.0182366371154785
+DEPTH_COORD_MAX = 5754.0439453125
+
 # === Process each region ===
 for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
     print(f"\n🌍 Processing region: {region.upper()}")
@@ -85,24 +88,26 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
     region_dir = os.path.normpath(region_dir)
     os.makedirs(region_dir, exist_ok=True)
 
-    print("📥 Starting downloads...")
-    nc_files = []
+    print("📥 Starting downloads (using read_dataframe -> CSV)...")
+    df_list = []
+    dataset_csv_files = []
     for dataset_id, vars in datasets:
-        print(f"→ Downloading {vars} from {dataset_id}")
-        # Retry download/open up to N times to avoid transient NetCDF/HDF errors on the runner
+        print(f"→ Fetching {vars} from {dataset_id} as DataFrame")
+        # Retry read_dataframe up to N times to avoid transient errors on the runner
         max_attempts = 8
         attempt = 0
-        success_path = None
-        while attempt < max_attempts and success_path is None:
+        success_df = None
+        while attempt < max_attempts and success_df is None:
             attempt += 1
             try:
-                # clamp requested depths to dataset coordinate bounds to avoid warnings/errors
-                min_depth = max(REQUESTED_MIN_DEPTH, DEPTH_COORD_MIN + 1e-6)
-                max_depth = min(REQUESTED_MAX_DEPTH, DEPTH_COORD_MAX - 1e-6)
+                # call read_dataframe to get a pandas DataFrame directly (avoids saving .nc files)
+                # clamp requested depths to known dataset bounds to avoid warnings
+                min_depth = max(REQUESTED_MIN_DEPTH, DEPTH_COORD_MIN)
+                max_depth = min(REQUESTED_MAX_DEPTH, DEPTH_COORD_MAX)
                 if (min_depth != REQUESTED_MIN_DEPTH) or (max_depth != REQUESTED_MAX_DEPTH):
-                    print(f"INFO - Clamping requested depth from [{REQUESTED_MIN_DEPTH}, {REQUESTED_MAX_DEPTH}] to [{min_depth}, {max_depth}] to fit dataset coordinates")
+                    print(f"ℹ️ Clamping requested depth range {REQUESTED_MIN_DEPTH}-{REQUESTED_MAX_DEPTH} to {min_depth}-{max_depth} to match dataset coords")
 
-                response = copernicusmarine.subset(
+                df = copernicusmarine.read_dataframe(
                     dataset_id=dataset_id,
                     variables=vars,
                     minimum_longitude=lon_min,
@@ -115,94 +120,41 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
                     maximum_depth=max_depth,
                     username=username,
                     password=password,
-                    output_directory=region_dir
                 )
-                output_dir_attr = getattr(response, 'output_directory', None)
-                filename_attr = getattr(response, 'filename', None)
-                file_path = None
-                if output_dir_attr and filename_attr:
-                    file_path = os.path.join(region_dir, filename_attr)
-                    print(f"DEBUG: expected file_path in region_dir = {file_path}")
-                if file_path and isinstance(file_path, str) and os.path.exists(file_path):
-                    # quick magic-byte check to detect HTML/error pages or corrupted downloads
-                    def looks_like_netcdf(path):
-                        try:
-                            with open(path, 'rb') as fh:
-                                head = fh.read(16)
-                            # HDF5 files start with b'\x89HDF\r\n\x1a\n'
-                            if head.startswith(b"\x89HDF\r\n\x1a\n"):
-                                return True
-                            # classic NetCDF may start with 'CDF' in first bytes
-                            if head[0:3] == b"CDF":
-                                return True
-                            return False
-                        except Exception:
-                            return False
-
-                    if not looks_like_netcdf(file_path):
-                        # file doesn't look like a NetCDF/HDF5 file; capture a short preview and remove
-                        preview = ""
-                        try:
-                            with open(file_path, 'rb') as fh:
-                                preview = fh.read(512)
-                                # limit size in the report
-                                preview = binascii.hexlify(preview[:256]).decode('ascii')
-                        except Exception:
-                            preview = '<unreadable>'
-                        try:
-                            with open(os.path.join(REPORT_DIR, f"{region}_{target_date_str}_{dataset_id}.error"), "a") as efh:
-                                efh.write(f"attempt={attempt}\nerror=invalid_magic\nfile={file_path}\nsize={os.path.getsize(file_path)}\npreview_hex={preview}\n---\n")
-                        except Exception:
-                            pass
-                        try:
-                            os.remove(file_path)
-                        except Exception:
-                            pass
-                        if attempt < max_attempts:
-                            backoff = (2 ** attempt) + random.uniform(0, 2)
-                            print(f"→ Retrying download after {backoff:.1f}s backoff due to invalid file magic...")
-                            time.sleep(backoff)
-                        continue
-                    # validate the file can be opened
+                # read_dataframe may return None or an empty dataframe on failure
+                if df is None or (hasattr(df, 'empty') and df.empty):
+                    print(f"⚠️ Received empty DataFrame for {dataset_id} (attempt {attempt})")
                     try:
-                        ds_test = xr.open_dataset(file_path)
-                        ds_test.close()
-                        print(f"✅ File downloaded and opened: {file_path}")
-                        success_path = file_path
-                        nc_files.append(file_path)
-                    except Exception as eopen:
-                        # record detailed error
-                        err_text = str(eopen)
-                        size_info = None
-                        try:
-                            size_info = os.path.getsize(file_path)
-                        except Exception:
-                            pass
-                        print(f"⚠️ Downloaded file could not be opened (attempt {attempt}): {err_text}; size={size_info}")
-                        # append details to a report file for triage
-                        try:
-                            with open(os.path.join(REPORT_DIR, f"{region}_{target_date_str}_{dataset_id}.error"), "a") as efh:
-                                efh.write(f"attempt={attempt}\nerror={err_text}\nfile={file_path}\nsize={size_info}\n---\n")
-                        except Exception:
-                            pass
-                        # remove possibly corrupted file so retry gets a fresh download
-                        try:
-                            os.remove(file_path)
-                        except Exception:
-                            pass
-                        if attempt < max_attempts:
-                            backoff = (2 ** attempt) + random.uniform(0, 2)
-                            print(f"→ Retrying download after {backoff:.1f}s backoff...")
-                            time.sleep(backoff)
-                else:
-                    print(f"⚠️ File not found in region directory after download (attempt {attempt}): {file_path}")
+                        with open(os.path.join(REPORT_DIR, f"{region}_{target_date_str}_{dataset_id}.error"), "a") as efh:
+                            efh.write(f"attempt={attempt}\nerror=empty_dataframe\n---\n")
+                    except Exception:
+                        pass
                     if attempt < max_attempts:
                         backoff = (2 ** attempt) + random.uniform(0, 2)
-                        print(f"→ Retrying download after {backoff:.1f}s backoff...")
+                        print(f"→ Retrying read_dataframe after {backoff:.1f}s backoff...")
                         time.sleep(backoff)
+                    continue
+                # normalize to DataFrame with coords as columns
+                try:
+                    df = df.reset_index()
+                except Exception:
+                    pass
+                # save a CSV copy of the raw dataset for records
+                safe_vars = "-".join(vars)
+                csv_name = f"{dataset_id}_{safe_vars}_{target_date_str}.csv"
+                csv_path = os.path.join(region_dir, csv_name)
+                try:
+                    df.to_csv(csv_path, index=False)
+                    dataset_csv_files.append(csv_path)
+                except Exception:
+                    # if saving fails, continue but still use the in-memory df
+                    pass
+                print(f"✅ DataFrame fetched for {dataset_id}, rows={len(df)}")
+                success_df = df
+                df_list.append(df)
             except Exception as e:
                 err = str(e)
-                print(f"⚠️ Download failed for {vars} in {region} (attempt {attempt}): {err}")
+                print(f"⚠️ read_dataframe failed for {vars} in {region} (attempt {attempt}): {err}")
                 try:
                     with open(os.path.join(REPORT_DIR, f"{region}_{target_date_str}_{dataset_id}.error"), "a") as efh:
                         efh.write(f"attempt={attempt}\nexception={err}\n---\n")
@@ -210,32 +162,25 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
                     pass
                 if attempt < max_attempts:
                     backoff = (2 ** attempt) + random.uniform(0, 2)
-                    print(f"→ Retrying download after {backoff:.1f}s backoff...")
+                    print(f"→ Retrying read_dataframe after {backoff:.1f}s backoff...")
                     time.sleep(backoff)
-        if success_path is None:
-            print(f"❌ Failed to obtain a valid .nc for {vars} in {region} after {max_attempts} attempts")
-            # append a marker for debugging (use append so any earlier exception details are preserved)
+        if success_df is None:
+            print(f"❌ Failed to obtain a valid DataFrame for {vars} in {region} after {max_attempts} attempts")
             try:
                 with open(os.path.join(REPORT_DIR, f"{region}_{target_date_str}_{dataset_id}.error"), "a") as fh:
                     fh.write(f"failed_to_download_or_open timestamp={datetime.utcnow().isoformat()} attempts={max_attempts}\n")
             except Exception:
                 pass
 
-    # Try to open all available .nc files, even if some are missing
-    dfs = []
-    for f in nc_files:
-        try:
-            ds = xr.open_dataset(f)
-            dfs.append(ds.to_dataframe().reset_index())
-        except Exception as e:
-            print(f"⚠️ Failed to open {f}: {e}")
-    # write a simple per-region download report
+    # We fetched datasets as DataFrames via read_dataframe and stored them in df_list
+    dfs = df_list[:]  # list of pandas.DataFrame objects (may be empty)
+    # write a simple per-region download report (CSV copies count)
     try:
         with open(os.path.join(REPORT_DIR, f"report_{region}_{target_date_str}.txt"), "w") as rfh:
             rfh.write(f"region={region}\n")
-            rfh.write(f"nc_files={len(nc_files)}\n")
+            rfh.write(f"dataframes={len(dfs)}\n")
             rfh.write("files:\n")
-            for p in nc_files:
+            for p in dataset_csv_files:
                 rfh.write(p + "\n")
     except Exception:
         pass
