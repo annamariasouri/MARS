@@ -1,0 +1,41 @@
+attempt=1
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=29843
+---
+attempt=2
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=29843
+---
+attempt=3
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=29843
+---
+attempt=4
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=29843
+---
+attempt=5
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=29843
+---
+attempt=6
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=29843
+---
+attempt=7
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=29843
+---
+attempt=8
+error=[Errno -101] NetCDF: HDF error: '/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc'
+file=/home/runner/work/MARS/MARS/data/raw_nc/limassol_downloads_2025-11-09/cmems_mod_med_phy-sal_anfc_4.2km_P1D-m_so_33.00E-33.17E_34.60N-34.77N_1.02-3.17m_2025-10-10-2025-11-09.nc
+size=29843
+---
+failed_to_download_or_open timestamp=2025-11-10T09:27:47.084973 attempts=8
