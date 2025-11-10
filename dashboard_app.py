@@ -186,29 +186,29 @@ def load_forecast(region: str) -> pd.DataFrame:
         for d in search_dirs:
             path = os.path.join(d, name)
             if os.path.exists(path):
-            try:
-                df = pd.read_csv(path)
-            except Exception as e:
-                st.warning(f"Could not read forecast file for {region}: {e}")
-                return pd.DataFrame()
-            df.columns = [c.strip().lower() for c in df.columns]
-            # parse date
-            for c in ["date", "day", "ds", "timestamp"]:
-                if c in df.columns:
-                    df["date"] = pd.to_datetime(df[c], errors="coerce")
-                    break
-            # normalize possible alternative names
-            df = df.rename(columns={
-                "bloom_flag": "bloom_risk_flag",
-                "risk_flag": "bloom_risk_flag",
-                "chl_pred": "predicted_chl",
-                "threshold": "threshold_used",
-            })
-            # If all values are NaN or empty, treat as missing
-            if df.empty or df.isna().all(axis=None):
-                st.info(f"No forecast data available for {region}.")
-                return pd.DataFrame()
-            return df.sort_values("date").reset_index(drop=True)
+                try:
+                    df = pd.read_csv(path)
+                except Exception as e:
+                    st.warning(f"Could not read forecast file for {region}: {e}")
+                    return pd.DataFrame()
+                df.columns = [c.strip().lower() for c in df.columns]
+                # parse date
+                for c in ["date", "day", "ds", "timestamp"]:
+                    if c in df.columns:
+                        df["date"] = pd.to_datetime(df[c], errors="coerce")
+                        break
+                # normalize possible alternative names
+                df = df.rename(columns={
+                    "bloom_flag": "bloom_risk_flag",
+                    "risk_flag": "bloom_risk_flag",
+                    "chl_pred": "predicted_chl",
+                    "threshold": "threshold_used",
+                })
+                # If all values are NaN or empty, treat as missing
+                if df.empty or df.isna().all(axis=None):
+                    st.info(f"No forecast data available for {region}.")
+                    return pd.DataFrame()
+                return df.sort_values("date").reset_index(drop=True)
     st.info(f"No forecast file found for {region}.")
     return pd.DataFrame()
 
