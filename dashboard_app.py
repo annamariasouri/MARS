@@ -83,8 +83,8 @@ with st.sidebar:
     st.markdown("### 🌊 MARS – Marine Autonomous Risk System")
     st.write("Part of **Annamaria Souri**’s PhD research • Powered by **Copernicus Marine**")
 
-# Data dir
-DATA_DIR = os.environ.get("MARS_DATA_DIR", ".")
+# Data dir (prefer a top-level `data/` folder, overridable via MARS_DATA_DIR)
+DATA_DIR = os.environ.get("MARS_DATA_DIR", "data")
 
 # --- Hero Header ---
 st.markdown(
@@ -106,17 +106,37 @@ st.markdown(
 # === HELPERS ===
 
 def list_files():
+    out = []
     try:
-        return sorted(os.listdir(DATA_DIR))
+        # top-level files
+        out.extend(sorted(os.listdir(DATA_DIR)))
     except Exception:
-        return []
+        pass
+    # also include env_history and forecasts subfolders if present
+    for sub in ("env_history", "forecasts"):
+        p = os.path.join(DATA_DIR, sub)
+        try:
+            if os.path.exists(p):
+                out.extend([os.path.join(sub, f) for f in sorted(os.listdir(p))])
+        except Exception:
+            continue
+    return out
 
 
 def latest_env_file(region: str) -> str | None:
-    # Find both dated and undated env_history files.
-    pattern_dated = os.path.join(DATA_DIR, f"env_history_{region}_*.csv")
-    dated = glob(pattern_dated)
-    undated = os.path.join(DATA_DIR, f"env_history_{region}.csv")
+    # Find both dated and undated env_history files. Search both DATA_DIR and data/env_history/.
+    search_dirs = [DATA_DIR, os.path.join(DATA_DIR, "env_history")]
+    dated = []
+    undated_candidates = []
+    for d in search_dirs:
+        dated.extend(glob(os.path.join(d, f"env_history_{region}_*.csv")))
+        undated_candidates.append(os.path.join(d, f"env_history_{region}.csv"))
+
+    undated = None
+    for u in undated_candidates:
+        if os.path.exists(u):
+            undated = u
+            break
 
     # Helper: quick validity check for a CSV file (has >0 rows and a time-like column)
     def is_valid_env_file(path: str) -> bool:
@@ -139,7 +159,7 @@ def latest_env_file(region: str) -> str | None:
             return False
 
     # Prefer the undated full-history file if it exists and looks valid
-    if os.path.exists(undated) and is_valid_env_file(undated):
+    if undated and is_valid_env_file(undated):
         return undated
 
     # Otherwise consider dated files; filter valid ones
@@ -150,7 +170,7 @@ def latest_env_file(region: str) -> str | None:
         return valid_dated[-1]
 
     # Fallback: if undated exists (even if not ideal) return it, else return newest dated file if any
-    if os.path.exists(undated):
+    if undated:
         return undated
     if dated:
         dated.sort(key=lambda p: os.path.getmtime(p))
@@ -160,9 +180,12 @@ def latest_env_file(region: str) -> str | None:
 
 
 def load_forecast(region: str) -> pd.DataFrame:
+    # Look in both DATA_DIR and data/forecasts for forecast files (backwards-compatible)
+    search_dirs = [DATA_DIR, os.path.join(DATA_DIR, "forecasts")]
     for name in [f"forecast_log_{region}.csv", f"forecast_{region}.csv"]:
-        path = os.path.join(DATA_DIR, name)
-        if os.path.exists(path):
+        for d in search_dirs:
+            path = os.path.join(d, name)
+            if os.path.exists(path):
             try:
                 df = pd.read_csv(path)
             except Exception as e:
@@ -296,7 +319,14 @@ if all_lat and all_lon:
 else:
     center = [37.0, 28.0]
 
-available = [r for r in REGIONS if os.path.exists(os.path.join(DATA_DIR, f"forecast_log_{r}.csv"))]
+def _has_forecast_for(region: str) -> bool:
+    # check both root and forecasts/ folder
+    for d in (DATA_DIR, os.path.join(DATA_DIR, "forecasts")):
+        if os.path.exists(os.path.join(d, f"forecast_log_{region}.csv")) or os.path.exists(os.path.join(d, f"forecast_{region}.csv")):
+            return True
+    return False
+
+available = [r for r in REGIONS if _has_forecast_for(r)]
 if "region" not in st.session_state:
     st.session_state.region = available[0] if available else "thermaikos"
 
