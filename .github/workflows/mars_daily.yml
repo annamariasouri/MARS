@@ -41,7 +41,7 @@ jobs:
         env:
           COPERNICUS_USERNAME: ${{ secrets.COPERNICUS_USERNAME }}
           COPERNICUS_PASSWORD: ${{ secrets.COPERNICUS_PASSWORD }}
-          MARS_REGIONS: limassol,thermaikos
+          MARS_REGIONS: limassol,thermaikos,peiraeus
           MARS_DATA_DIR: data
           # CI-specific overrides to fail faster and reduce long exponential backoffs
           MARS_MAX_DOWNLOAD_ATTEMPTS: '3'
@@ -62,14 +62,14 @@ jobs:
       - name: Run MARS forecast
         env:
           MARS_DATA_DIR: data
-          MARS_REGIONS: limassol,thermaikos
+          MARS_REGIONS: limassol,thermaikos,peiraeus
         run: |
           python run_daily_forecast.py
 
       - name: Scan env histories and produce diagnostics
         env:
           MARS_DATA_DIR: data
-          MARS_REGIONS: limassol,thermaikos
+          MARS_REGIONS: limassol,thermaikos,peiraeus
         run: |
           echo "Scanning env_history files"
           python scripts/scan_env_histories.py || true
