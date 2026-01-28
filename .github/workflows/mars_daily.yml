@@ -53,13 +53,6 @@ jobs:
           python -c "import os; print('Username exists:', bool(os.getenv('COPERNICUS_USERNAME'))); print('Password exists:', bool(os.getenv('COPERNICUS_PASSWORD')))"
           python download_copernicus_day_test.py
 
-      - name: Download model file from Google Drive
-        env:
-          MARS_DATA_DIR: data
-        run: |
-          mkdir -p data/models
-          gdown "https://drive.google.com/uc?id=1hNwGOFAanesyLTjufvYjK_wO36xY-W6q" -O data/models/final_rf_chl_model_2015_2023.pkl
-
       - name: Run MARS forecast
         env:
           MARS_DATA_DIR: data
