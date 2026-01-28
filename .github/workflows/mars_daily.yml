@@ -25,6 +25,7 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y libhdf5-dev libnetcdf-dev netcdf-bin
           python -m pip install --upgrade pip
+          pip install gdown
           pip install -r requirements.txt
 
       - name: Clean data (preserve models)
@@ -57,7 +58,7 @@ jobs:
           MARS_DATA_DIR: data
         run: |
           mkdir -p data/models
-          curl -L "https://drive.google.com/uc?export=download&id=1hNwGOFAanesyLTjufvYjK_wO36xY-W6q" -o data/models/final_rf_chl_model_2015_2023.pkl
+          gdown "https://drive.google.com/uc?id=1hNwGOFAanesyLTjufvYjK_wO36xY-W6q" -O data/models/final_rf_chl_model_2015_2023.pkl
 
       - name: Run MARS forecast
         env:
