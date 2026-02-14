@@ -10,7 +10,7 @@ import folium
 from streamlit_folium import st_folium
 
 # === CONFIG ===
-st.set_page_config(page_title="MARS – Marine Autonomous Risk System", page_icon="🌊", layout="wide")
+st.set_page_config(page_title="MARS – Marine Autonomous Risk System", page_icon="surprise-favicon-32x32.png", layout="wide")
 
 # Clear any cached data to avoid stale reads when switching regions
 try:
