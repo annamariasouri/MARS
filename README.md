@@ -11,6 +11,7 @@ This repository includes scripts that download Copernicus NetCDF files, process 
 - `run_daily_forecast.py` — loads a trained model and creates daily forecasts (writes `forecast_log_*.csv`).
 - `final_rf_chl_model_2015_2023.pkl` — trained random forest model used by `run_daily_forecast.py`.
 - `*.csv` — example CSV files in the repository (e.g., `env_history_*.csv`, `model_ready_input_*.csv`, `forecast_log_*.csv`).
+- **`METHODOLOGY.md`** — detailed documentation of data splits, backtesting design, leakage controls, and missing-data policy.
 
 ## Where CSVs are saved (important)
 

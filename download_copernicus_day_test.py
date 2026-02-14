@@ -8,6 +8,18 @@ import time
 import random
 import argparse
 import binascii
+import sys
+
+# === Import execution logger
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'scripts'))
+try:
+    from execution_logger import log_download_start, log_download_success, log_download_error
+    LOGGING_ENABLED = True
+except:
+    LOGGING_ENABLED = False
+    def log_download_start(*args, **kwargs): pass
+    def log_download_success(*args, **kwargs): pass
+    def log_download_error(*args, **kwargs): pass
 
 # === Parameters ===
 parser = argparse.ArgumentParser(description='Download Copernicus data for a given date (default: yesterday)')
@@ -59,7 +71,8 @@ password = os.getenv('COPERNICUS_PASSWORD', '').strip()
 if not username or not password:
     raise ValueError("Copernicus credentials not found in environment variables. Please set COPERNICUS_USERNAME and COPERNICUS_PASSWORD")
 copernicusmarine.login(username=username, password=password, check_credentials_valid=True, force_overwrite=True)
-
+# Log download start
+log_download_start(target_date_str, list(REGIONS.keys()))
 # === Dataset list ===
 datasets = [
     ("cmems_mod_med_bgc-nut_anfc_4.2km_P1D-m", ["nh4", "no3", "po4"]),
@@ -93,6 +106,7 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
     # This helps for near-shore ports where the immediate bbox may be masked or have no valid grid cells.
     bbox_expansions = [0.0, 0.05, 0.1, 0.25, 0.5]
     found_non_empty = False
+    successful_expansion = None
     df = pd.DataFrame()
     # dataset_csv_files will capture the CSVs for the successful expansion (if any)
     dataset_csv_files = []
@@ -199,6 +213,7 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
             if measurement_like and non_null_count > 0:
                 df = tmp.copy()
                 found_non_empty = True
+                successful_expansion = expand
                 dataset_csv_files = local_csv_files
                 print(f"✅ Found non-empty measurements with bbox expansion ±{expand}°")
                 break
@@ -219,6 +234,7 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
         with open(os.path.join(REPORT_DIR, f"report_{region}_{target_date_str}.txt"), "w") as rfh:
             rfh.write(f"region={region}\n")
             rfh.write(f"found_non_empty={found_non_empty}\n")
+            rfh.write(f"expansion_used={successful_expansion if successful_expansion is not None else 'none'}\n")
             rfh.write(f"files:\n")
             for p in dataset_csv_files:
                 rfh.write(p + "\n")
@@ -340,3 +356,7 @@ for region, (lat_min, lat_max, lon_min, lon_max) in REGIONS.items():
     df_ready.to_csv(final_path, index=False)
     print(f"✅ Saved model input: {final_path}")
     print(df_ready.head())
+    
+    # Log successful download and processing
+    file_count = len(dataset_csv_files) if found_non_empty else 0
+    log_download_success(target_date_str, region, successful_expansion if found_non_empty else "none", file_count)

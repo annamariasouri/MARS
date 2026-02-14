@@ -29,15 +29,16 @@ jobs:
           pip install gdown
           pip install -r requirements.txt
 
-      - name: Clean data (preserve models)
+      - name: Ensure data directories exist
         run: |
-          echo "Cleaning data folders except data/models to start fresh..."
-          rm -rf data/env_history || true
-          rm -rf data/raw_nc || true
-          rm -rf data/model_ready || true
-          rm -rf data/forecasts || true
-          rm -rf data/download_reports || true
+          echo "Creating data directories (without deleting existing data)..."
           mkdir -p data/models
+          mkdir -p data/env_history
+          mkdir -p data/raw_nc
+          mkdir -p data/model_ready
+          mkdir -p data/forecasts
+          mkdir -p data/download_reports
+          echo "Data directories ready. Existing files preserved."
 
       - name: Run Copernicus download
         env:

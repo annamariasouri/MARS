@@ -3,9 +3,23 @@ import numpy as np
 from datetime import datetime
 import os
 import pickle
+import argparse
+
+# === Parse command-line arguments
+parser = argparse.ArgumentParser(description='Run daily forecast for a specific date')
+parser.add_argument('--date', help='Target date YYYY-MM-DD (defaults to yesterday)', default=None)
+args = parser.parse_args()
 
 # === Dynamic date (matches model_ready_input file name)
-yesterday = datetime.today() - pd.Timedelta(days=1)
+if args.date:
+    try:
+        target_date = datetime.strptime(args.date, '%Y-%m-%d')
+        yesterday = target_date
+    except ValueError:
+        raise ValueError('Invalid --date format, expected YYYY-MM-DD')
+else:
+    yesterday = datetime.today() - pd.Timedelta(days=1)
+
 target_date_str = yesterday.strftime("%Y-%m-%d")
 
 # === DATA layout
@@ -62,10 +76,9 @@ features = [
 
 # === Loop through each region
 for region in REGIONS:
-    # Forecast for today, next 7 days, and next month
+    # Forecast for today and next 30 days (31 forecasts total)
     output_path = os.path.join(FORECAST_DIR, f"forecast_log_{region}.csv")
-    forecast_dates = [yesterday + pd.Timedelta(days=i) for i in range(0, 8)]
-    forecast_dates.append(yesterday + pd.Timedelta(days=30))
+    forecast_dates = [yesterday + pd.Timedelta(days=i) for i in range(0, 31)]
 
     all_results = []
     for forecast_date in forecast_dates:
