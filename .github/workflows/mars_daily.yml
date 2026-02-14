@@ -38,6 +38,8 @@ jobs:
           mkdir -p data/model_ready
           mkdir -p data/forecasts
           mkdir -p data/download_reports
+          mkdir -p data/eval
+          mkdir -p data/logs
           echo "Data directories ready. Existing files preserved."
 
       - name: Run Copernicus download
@@ -62,6 +64,16 @@ jobs:
         run: |
           python run_daily_forecast.py
 
+      - name: Evaluate forecast accuracy
+        env:
+          MARS_DATA_DIR: data
+        run: |
+          echo "Evaluating forecast accuracy against observations..."
+          python scripts/evaluate_forecasts.py --region limassol || echo "Limassol evaluation skipped (no data yet)"
+          python scripts/evaluate_forecasts.py --region thermaikos || echo "Thermaikos evaluation skipped (no data yet)"
+          python scripts/evaluate_forecasts.py --region peiraeus || echo "Peiraeus evaluation skipped (no data yet)"
+          echo "Accuracy evaluation complete. Results in data/eval/"
+
       - name: Scan env histories and produce diagnostics
         env:
           MARS_DATA_DIR: data
@@ -77,6 +89,8 @@ jobs:
           path: |
             data/download_reports/**
             data/raw_nc/**
+            data/eval/**
+            data/logs/**
             data/env_history/**
             data/model_ready/**
 

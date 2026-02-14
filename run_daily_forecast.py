@@ -2,8 +2,21 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 import os
+import sys
 import pickle
 import argparse
+
+# Add scripts directory to path for execution_logger
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'scripts'))
+try:
+    from execution_logger import log_forecast_start, log_forecast_success, log_forecast_error
+    LOGGING_ENABLED = True
+except Exception as e:
+    LOGGING_ENABLED = False
+    # Fallback no-ops if logger unavailable
+    def log_forecast_start(*args, **kwargs): pass
+    def log_forecast_success(*args, **kwargs): pass
+    def log_forecast_error(*args, **kwargs): pass
 
 # === Parse command-line arguments
 parser = argparse.ArgumentParser(description='Run daily forecast for a specific date')
@@ -73,6 +86,9 @@ features = [
     'n_p_ratio','n_nh4_ratio','p_nh4_ratio',
     'chl_monthly_median','chl_anomaly','bloom_proxy_label'
 ]
+
+# Log forecast start
+log_forecast_start(target_date_str, REGIONS)
 
 # === Loop through each region
 for region in REGIONS:
@@ -149,3 +165,9 @@ for region in REGIONS:
             df_results.to_csv(output_path, index=False)
         print(f"✅ Forecast complete for {region}:")
         print(df_results)
+        
+        # Log success
+        log_forecast_success(target_date_str, region, len(all_results))
+    else:
+        print(f"⚠️  No forecasts generated for {region}")
+        log_forecast_error(target_date_str, region, "No forecasts generated")
