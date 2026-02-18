@@ -7,3 +7,7 @@ forecast_date,target_date,lat,lon,predicted_chl,observed_chl,err,abs_err,bloom_p
 ,2026-02-18,,,0.758,,,,False,False,|2026-02-18 00:00:00|None|None
 ,2026-02-19,,,0.758,,,,False,False,|2026-02-19 00:00:00|None|None
 ,2026-02-20,,,0.758,,,,False,False,|2026-02-20 00:00:00|None|None
+,2026-02-21,,,0.757,,,,False,False,|2026-02-21 00:00:00|None|None
+,2026-02-22,,,0.757,,,,False,False,|2026-02-22 00:00:00|None|None
+,2026-02-23,,,0.757,,,,False,False,|2026-02-23 00:00:00|None|None
+,2026-02-24,,,0.757,,,,False,False,|2026-02-24 00:00:00|None|None
