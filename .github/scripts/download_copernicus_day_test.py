@@ -11,7 +11,7 @@ import binascii
 import sys
 
 # === Import execution logger
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'scripts'))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
     from execution_logger import log_download_start, log_download_success, log_download_error
     LOGGING_ENABLED = True

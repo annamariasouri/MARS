@@ -7,7 +7,7 @@ import pickle
 import argparse
 
 # Add scripts directory to path for execution_logger
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'scripts'))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
     from execution_logger import log_forecast_start, log_forecast_success, log_forecast_error
     LOGGING_ENABLED = True
