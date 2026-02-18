@@ -112,8 +112,8 @@ def list_files():
         out.extend(sorted(os.listdir(DATA_DIR)))
     except Exception:
         pass
-    # also include env_history and forecasts subfolders if present
-    for sub in ("env_history", "forecasts"):
+    # also include copernicus/env_history and forecasts subfolders if present
+    for sub in ("copernicus/env_history", "forecasts"):
         p = os.path.join(DATA_DIR, sub)
         try:
             if os.path.exists(p):
@@ -124,8 +124,8 @@ def list_files():
 
 
 def latest_env_file(region: str) -> str | None:
-    # Find both dated and undated env_history files. Search both DATA_DIR and data/env_history/.
-    search_dirs = [DATA_DIR, os.path.join(DATA_DIR, "env_history")]
+    # Find both dated and undated env_history files. Search data/copernicus/env_history/.
+    search_dirs = [os.path.join(DATA_DIR, "copernicus", "env_history")]
     dated = []
     undated_candidates = []
     for d in search_dirs:
@@ -180,8 +180,8 @@ def latest_env_file(region: str) -> str | None:
 
 
 def load_forecast(region: str) -> pd.DataFrame:
-    # Look in both DATA_DIR and data/forecasts for forecast files (backwards-compatible)
-    search_dirs = [DATA_DIR, os.path.join(DATA_DIR, "forecasts")]
+    # Look in data/forecasts/ for forecast files
+    search_dirs = [os.path.join(DATA_DIR, "forecasts")]
     for name in [f"forecast_log_{region}.csv", f"forecast_{region}.csv"]:
         for d in search_dirs:
             path = os.path.join(d, name)

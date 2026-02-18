@@ -57,10 +57,10 @@ else:
 
 DATA_DIR = os.environ.get("MARS_DATA_DIR", "data")
 DATA_DIR = os.path.abspath(DATA_DIR)
-ENV_DIR = os.path.join(DATA_DIR, "env_history")
-MODEL_READY_DIR = os.path.join(DATA_DIR, "model_ready")
-RAW_DIR = os.path.join(DATA_DIR, "raw_nc")
-REPORT_DIR = os.path.join(DATA_DIR, "download_reports")
+ENV_DIR = os.path.join(DATA_DIR, "copernicus", "env_history")
+MODEL_READY_DIR = os.path.join(DATA_DIR, "copernicus", "model_ready")
+RAW_DIR = os.path.join(DATA_DIR, "copernicus", "raw_nc")
+REPORT_DIR = os.path.join(DATA_DIR, "logs")
 for d in (DATA_DIR, ENV_DIR, MODEL_READY_DIR, RAW_DIR, REPORT_DIR):
     os.makedirs(d, exist_ok=True)
 

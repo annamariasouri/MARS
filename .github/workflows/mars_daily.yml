@@ -33,12 +33,12 @@ jobs:
         run: |
           echo "Creating data directories (without deleting existing data)..."
           mkdir -p data/models
-          mkdir -p data/env_history
-          mkdir -p data/raw_nc
-          mkdir -p data/model_ready
+          mkdir -p data/copernicus/env_history
+          mkdir -p data/copernicus/model_ready
+          mkdir -p data/copernicus/features
+          mkdir -p data/copernicus/raw_nc
           mkdir -p data/forecasts
-          mkdir -p data/download_reports
-          mkdir -p data/eval
+          mkdir -p data/evaluation
           mkdir -p data/logs
           echo "Data directories ready. Existing files preserved."
 
@@ -55,14 +55,14 @@ jobs:
         run: |
           echo "Checking if credentials are set (without exposing them)..."
           python -c "import os; print('Username exists:', bool(os.getenv('COPERNICUS_USERNAME'))); print('Password exists:', bool(os.getenv('COPERNICUS_PASSWORD')))"
-          python download_copernicus_day_test.py
+          python scripts/download_copernicus_day_test.py
 
       - name: Run MARS forecast
         env:
           MARS_DATA_DIR: data
           MARS_REGIONS: limassol,thermaikos,peiraeus
         run: |
-          python run_daily_forecast.py
+          python scripts/run_daily_forecast.py
 
       - name: Evaluate forecast accuracy
         env:
@@ -72,7 +72,7 @@ jobs:
           python scripts/evaluate_forecasts.py --region limassol || echo "Limassol evaluation skipped (no data yet)"
           python scripts/evaluate_forecasts.py --region thermaikos || echo "Thermaikos evaluation skipped (no data yet)"
           python scripts/evaluate_forecasts.py --region peiraeus || echo "Peiraeus evaluation skipped (no data yet)"
-          echo "Accuracy evaluation complete. Results in data/eval/"
+          echo "Accuracy evaluation complete. Results in data/evaluation/"
 
       - name: Scan env histories and produce diagnostics
         env:
@@ -82,32 +82,27 @@ jobs:
           echo "Scanning env_history files"
           python scripts/scan_env_histories.py || true
 
-      - name: Upload download diagnostics and raw data (artifact)
+      - name: Upload diagnostics artifact
         uses: actions/upload-artifact@v4
         with:
           name: mars-download-diagnostics
           path: |
-            data/download_reports/**
-            data/raw_nc/**
-            data/eval/**
             data/logs/**
-            data/env_history/**
-            data/model_ready/**
+            data/evaluation/**
+            data/copernicus/env_history/**
+            data/copernicus/model_ready/**
 
       - name: Check for download errors or no_rows markers (do not fail CI)
         env:
           MARS_DATA_DIR: data
         run: |
-          # In CI we keep diagnostics but do not fail the whole workflow so the forecast
-          # and merges can run with available data. This helps recovery when some
-          # regions/datasets are intermittently failing upstream.
           shopt -s nullglob || true
-          errs=$(ls data/download_reports/*.error 2>/dev/null || true)
-          nors=$(ls data/download_reports/*.no_rows 2>/dev/null || true)
+          errs=$(ls data/logs/*.error 2>/dev/null || true)
+          nors=$(ls data/logs/*.no_rows 2>/dev/null || true)
           if [ -n "$errs" ] || [ -n "$nors" ]; then
             echo "WARNING: Found download errors or empty processing results. See artifact 'mars-download-diagnostics' for details."
-            ls -la data/download_reports || true
-            echo "Continuing pipeline despite download issues. Investigate the artifact for details."
+            ls -la data/logs || true
+            echo "Continuing pipeline despite download issues."
           else
             echo "No download errors found."
           fi

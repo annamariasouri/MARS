@@ -18,8 +18,8 @@ from datetime import datetime
 
 # Paths
 ROOT = os.environ.get("MARS_DATA_DIR", "data")
-EVAL_DIR = os.path.join(ROOT, "eval")
-ENV_DIR = os.path.join(ROOT, "env_history")
+EVAL_DIR = os.path.join(ROOT, "evaluation")
+ENV_DIR = os.path.join(ROOT, "copernicus", "env_history")
 FORECAST_DIR = os.path.join(ROOT, "forecasts")
 
 os.makedirs(EVAL_DIR, exist_ok=True)

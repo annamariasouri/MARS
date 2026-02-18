@@ -39,7 +39,7 @@ target_date_str = yesterday.strftime("%Y-%m-%d")
 DATA_DIR = os.environ.get("MARS_DATA_DIR", "data")
 DATA_DIR = os.path.abspath(DATA_DIR)
 MODEL_DIR = os.path.join(DATA_DIR, "models")
-MODEL_READY_DIR = os.path.join(DATA_DIR, "model_ready")
+MODEL_READY_DIR = os.path.join(DATA_DIR, "copernicus", "model_ready")
 FORECAST_DIR = os.path.join(DATA_DIR, "forecasts")
 for d in (DATA_DIR, MODEL_DIR, MODEL_READY_DIR, FORECAST_DIR):
     os.makedirs(d, exist_ok=True)
