@@ -20,6 +20,14 @@ env/
 # Raw NetCDF files (large binary — excluded from git)
 data/copernicus/raw_nc/
 
+# Large retrain data files (too big for GitHub)
+data/retrain/*.nc
+data/retrain/train_pooled.csv
+data/retrain/val_pooled.csv
+
+# Model binaries (large — excluded from git)
+data/models/*.pkl
+
 # Copernicus marine client cache
 .copernicusmarine/
 
@@ -52,3 +60,4 @@ npm-debug.log*
 *.bak
 *.tmp
 *.swp
+data/models/rf_chl_retrained.pkl

@@ -1,6 +1,7 @@
 streamlit
 pandas
 numpy
+gdown
 xarray
 netCDF4
 joblib==1.5.2

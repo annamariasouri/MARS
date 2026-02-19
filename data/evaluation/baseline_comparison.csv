@@ -1,0 +1,13 @@
+Region,Model,RMSE,MAE,R²,N_samples
+limassol,RandomForest,0.085716,0.085613,-85.5746,61
+limassol,Persistence,0.003734,0.00214,0.8383,60
+limassol,LinearRegression,0.012152,0.010312,-0.448,50
+peiraeus,RandomForest,0.014696,0.011665,0.9189,61
+peiraeus,Persistence,0.026366,0.013604,0.7414,60
+peiraeus,LinearRegression,0.157188,0.102678,-9.5723,50
+thermaikos,RandomForest,0.073931,0.040703,0.8485,61
+thermaikos,Persistence,0.183236,0.107583,0.0847,60
+thermaikos,LinearRegression,2.187603,1.393506,-116.9089,50
+OVERALL,RandomForest,0.065902,0.045994,0.9642,183
+OVERALL,Persistence,0.106902,0.041109,0.906,180
+OVERALL,LinearRegression,1.266289,0.502166,-12.2268,150

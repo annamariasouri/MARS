@@ -9,9 +9,10 @@ This repository includes scripts that download Copernicus NetCDF files, process 
 - `dashboard_app.py` — Streamlit app (UI).
 - `download_copernicus_day_test.py` — downloads Copernicus data, merges NetCDFs, does feature engineering, and saves CSVs.
 - `run_daily_forecast.py` — loads a trained model and creates daily forecasts (writes `forecast_log_*.csv`).
-- `final_rf_chl_model_2015_2023.pkl` — trained random forest model used by `run_daily_forecast.py`.
+- `retrain_rf_model.py` — full pipeline to retrain the Random Forest on 2012–2022 CMEMS reanalysis data.
+- `download_model.py` — downloads the pre-trained model (~3 GB) from Google Drive to `data/models/`.
 - `*.csv` — example CSV files in the repository (e.g., `env_history_*.csv`, `model_ready_input_*.csv`, `forecast_log_*.csv`).
-- **`METHODOLOGY.md`** — detailed documentation of data splits, backtesting design, leakage controls, and missing-data policy.
+- **`METHODOLOGY.md`** — detailed documentation of the model, data splits, backtesting design, leakage controls, and missing-data policy.
 
 ## Where CSVs are saved (important)
 
@@ -23,10 +24,21 @@ C:\Users\annam\OneDrive - University of Nicosia\Desktop\DASHBOARD CODE
 
 If you want to change where CSVs are stored, update the `output_dir` variable in `download_copernicus_day_test.py` and the `csv_input`/`output_path` variables in `run_daily_forecast.py`. If you'd like, I can centralise that path into a single `config.py` for you.
 
+## Model file
+
+The trained Random Forest (`data/models/rf_chl_retrained.pkl`, ~3 GB) is too large for Git and is hosted on Google Drive. Download it before running any forecast or evaluation script:
+
+```powershell
+pip install gdown
+python download_model.py
+```
+
+This will save the file to `data/models/rf_chl_retrained.pkl` automatically. If the file already exists it is skipped.
+
 ## Prerequisites
 
 - Python 3.10+ (a virtual environment is recommended)
-- Internet access (for Copernicus downloads)
+- Internet access (for Copernicus downloads and model download)
 
 ## Install dependencies
 

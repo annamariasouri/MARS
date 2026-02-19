@@ -44,8 +44,10 @@ FORECAST_DIR = os.path.join(DATA_DIR, "forecasts")
 for d in (DATA_DIR, MODEL_DIR, MODEL_READY_DIR, FORECAST_DIR):
     os.makedirs(d, exist_ok=True)
 
-# prefer model in data/models; fallback to root filename
-model_path = os.path.join(MODEL_DIR, "final_rf_chl_model_2015_2023.pkl")
+# prefer retrained model; fall back to previous model if not found
+model_path = os.path.join(MODEL_DIR, "rf_chl_retrained.pkl")
+if not os.path.exists(model_path):
+    model_path = os.path.join(MODEL_DIR, "final_rf_chl_model_2015_2023.pkl")
 if not os.path.exists(model_path):
     if os.path.exists("new_updated_model.pkl"):
         model_path = "new_updated_model.pkl"
