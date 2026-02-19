@@ -11,8 +11,8 @@ forecast_date,target_date,lat,lon,predicted_chl,observed_chl,err,abs_err,bloom_p
 ,2026-02-14,,,0.153,,,,False,False,|2026-02-14 00:00:00|None|None
 ,2026-02-15,,,0.153,,,,False,False,|2026-02-15 00:00:00|None|None
 ,2026-02-16,,,0.153,,,,False,False,|2026-02-16 00:00:00|None|None
-,2026-02-17,,,0.153,,,,False,False,|2026-02-17 00:00:00|None|None
-,2026-02-18,,,0.153,,,,False,False,|2026-02-18 00:00:00|None|None
+,2026-02-17,,,0.153,0.0706652435806451,,,False,False,|2026-02-17 00:00:00|None|None
+,2026-02-18,,,0.153,0.0717995971290322,,,False,False,|2026-02-18 00:00:00|None|None
 ,2026-02-19,,,0.153,,,,False,False,|2026-02-19 00:00:00|None|None
 ,2026-02-20,,,0.153,,,,False,False,|2026-02-20 00:00:00|None|None
 ,2026-02-21,,,0.154,,,,False,False,|2026-02-21 00:00:00|None|None

@@ -1,4 +1,25 @@
 # MARS Dashboard
+# How are predictions made?
+
+- **Data ingestion:** Daily download of Copernicus Marine Service data (nutrients, temperature, salinity, chlorophyll) for the last 30 days per region.
+- **Feature engineering:** Computes lagged values, rolling averages, nutrient ratios, and anomalies for each grid cell, creating model-ready input files.
+- **Prediction:** The retrained Random Forest model (`rf_chl_retrained.pkl`) predicts daily chlorophyll-a concentration for each region and day.
+- **Risk scoring:** Calculates a region-specific threshold (90th percentile of predicted chlorophyll). If the predicted value exceeds this, a bloom risk flag is set. A continuous risk score is also computed.
+- **Outputs:** Results are saved as CSVs and visualized in the dashboard, including time series, risk frequencies, and interactive maps.
+
+# What do the predictions mean?
+
+- **Chlorophyll-a (mg/m³):** Proxy for phytoplankton biomass; high values may indicate a harmful algal bloom (HAB).
+- **Risk flag:** Indicates if the predicted chlorophyll exceeds the region’s adaptive threshold (potential bloom event).
+- **Risk score:** Shows how close the prediction is to the threshold (as a percentage).
+- **Rolling risk counts:** Show how often the region has been flagged in the last 7 and 30 days, providing context for trends.
+
+# Model details
+
+- **Model:** Random Forest, retrained on 2012–2022 Copernicus reanalysis data, validated on 2023–2025.
+- **Regions:** Thermaikos, Piraeus, Limassol (pooled training).
+- **Features:** 24 variables including nutrients, temperature, salinity, lags, rolling means, and anomalies.
+- **Performance:** High accuracy (overall R² ≈ 0.94, RMSE ≈ 0.08 mg/m³).
 
 A small Streamlit dashboard and supporting scripts for daily marine forecasts and environmental data processing (Copernicus subsets, feature engineering, and a trained random forest model for chlorophyll prediction).
 

@@ -332,7 +332,7 @@ if "region" not in st.session_state:
 
 head_cols = st.columns([3,1])
 with head_cols[0]:
-    st.markdown("<div class='section-title map-section-title' style='margin:16px 0 6px;'>📍 Regions Map (click to select)</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title map-section-title' style='margin:16px 0 6px; color:#fff;'>📍 Regions Map (click to select)</div>", unsafe_allow_html=True)
 with head_cols[1]:
     st.selectbox("Active region", options=list(REGIONS.keys()), format_func=lambda k: REGIONS[k]["title"], key="region")
 
@@ -438,7 +438,12 @@ with k1:
         </div>""", unsafe_allow_html=True)
         with st.expander("How is this predicted?", expanded=False):
             st.markdown("""
-            The model uses recent environmental data (nutrients, temperature, salinity, and past chlorophyll levels) to estimate the chlorophyll concentration for each grid point in the region. It is trained on historical data to learn patterns that indicate bloom risk.
+**How is this predicted?**
+
+- **Data ingestion:** Daily Copernicus Marine Service data (nutrients, temperature, salinity, chlorophyll) for the last 30 days per region.
+- **Feature engineering:** Computes lagged values, rolling averages, nutrient ratios, and anomalies for each grid cell, creating model-ready input files.
+- **Prediction:** The retrained Random Forest model (`rf_chl_retrained.pkl`) predicts daily chlorophyll-a concentration for each region and day.
+- **Risk scoring:** Calculates a region-specific threshold (90th percentile of predicted chlorophyll). If the predicted value exceeds this, a bloom risk flag is set. A continuous risk score is also computed.
             """)
 with k2:
         st.markdown(f"""
@@ -448,9 +453,12 @@ with k2:
         </div>""", unsafe_allow_html=True)
         with st.expander("What does this mean?", expanded=False):
             st.markdown("""
-            The risk score shows how close the average predicted chlorophyll level is to the bloom threshold for today.  
-            **100** means the average is at or above the threshold (high risk), **0** means far below (low risk).  
-            Values in between indicate increasing likelihood of a bloom event.
+**What does this mean?**
+
+- **Chlorophyll-a (mg/m³):** Proxy for phytoplankton biomass; high values may indicate a harmful algal bloom (HAB).
+- **Risk flag:** Indicates if the predicted chlorophyll exceeds the region’s adaptive threshold (potential bloom event).
+- **Risk score:** Shows how close the prediction is to the threshold (as a percentage). **100** means the average is at or above the threshold (high risk), **0** means far below (low risk). Values in between indicate increasing likelihood of a bloom event.
+- **Rolling risk counts:** Show how often the region has been flagged in the last 7 and 30 days, providing context for trends.
             """)
 with k3:
         st.markdown(f"""
@@ -460,11 +468,9 @@ with k3:
         </div>""", unsafe_allow_html=True)
         with st.expander("What is the threshold?", expanded=False):
             st.markdown("""
-            **Threshold Used:**
-            This is the chlorophyll concentration value (mg/m³) used as the threshold for bloom risk. Predictions above this value indicate higher risk of a bloom event.
-            
-            **How is the threshold calculated?**
-            The threshold is dynamic: it is recalculated for every region and day as the 90th percentile of the predicted chlorophyll values. This means it adapts to the distribution of predicted concentrations for each forecast, marking the value above which only the highest 10% of predicted concentrations fall.
+**What is the threshold?**
+
+The threshold is set as the 90th percentile of predicted chlorophyll for this region and day, based on historical data. If the predicted value exceeds this, a bloom risk is flagged. This adapts to local conditions and helps reduce false positives in naturally high-chlorophyll regions.
             """)
 
 k4, k5, k6 = st.columns([3,3,2])
@@ -547,8 +553,77 @@ with tab2:
                 label = dict(ENV_VARS).get(v, v)
                 st.plotly_chart(plot_ts(env, "TIME", v, label, label), use_container_width=True)
 
+
     with tab3:
+        st.markdown("<div class='section-title'>Predicted vs Observed Chlorophyll-a (mg/m³)</div>", unsafe_allow_html=True)
+        region_options = ["thermaikos", "peiraeus", "limassol"]
+        region_labels = {"thermaikos": "Thermaikos", "peiraeus": "Peiraeus", "limassol": "Limassol"}
+        selected_region = st.selectbox("Select region for accuracy plot", options=region_options, format_func=lambda x: region_labels[x])
+        acc_path = os.path.join(DATA_DIR, "evaluation", f"accuracy_{selected_region}.csv")
+        if os.path.exists(acc_path):
+            acc_df = pd.read_csv(acc_path)
+            # Only keep rows where observed_chl is present
+            if not acc_df.empty and "target_date" in acc_df.columns and "predicted_chl" in acc_df.columns:
+                acc_df["target_date"] = pd.to_datetime(acc_df["target_date"], errors="coerce")
+                acc_df = acc_df[acc_df["observed_chl"].notnull()]
+                if not acc_df.empty:
+                    fig_acc = px.line(acc_df, x="target_date", y=["predicted_chl", "observed_chl"],
+                                     labels={"value": "CHL (mg/m³)", "target_date": "Date"},
+                                     title=f"Predicted vs Observed CHL – {region_labels[selected_region]}",
+                                     template=PLOTLY_TEMPLATE)
+                    fig_acc.update_layout(legend_title_text="Series")
+                    st.plotly_chart(fig_acc, use_container_width=True)
+                else:
+                    st.info("No accuracy data with observed values for this region yet.")
+            else:
+                st.info("No accuracy data available for this region yet.")
+        else:
+            st.info("No accuracy file found for this region yet.")
+
         st.markdown(f"<div class='section-title'>{region_title} – Forecast Accuracy</div>", unsafe_allow_html=True)
+        st.markdown("""
+**Model training period:** 2012–2022  
+**Validation period:** 2023–2025
+        """)
+        st.markdown("""
+**Validation Metrics**
+
+| Region      | n       | RMSE     | MAE      | R²     |
+|-------------|---------|----------|----------|--------|
+| Thermaikos  | 60,984  | 0.1283   | 0.0629   | 0.9185 |
+| Peiraeus    | 90,387  | 0.0070   | 0.0040   | 0.9742 |
+| Limassol    | 8,712   | 0.0051   | 0.0031   | 0.9085 |
+| **Overall** | 160,083 | 0.0794   | 0.0264   | 0.9449 |
+        """, unsafe_allow_html=True)
+        with st.expander("What do these metrics mean?", expanded=False):
+            st.markdown("""
+**RMSE (Root Mean Squared Error):** Measures the average magnitude of prediction errors (lower is better).
+
+**MAE (Mean Absolute Error):** The average absolute difference between predicted and observed values (lower is better).
+
+**R² (Coefficient of Determination):** Proportion of variance explained by the model (closer to 1 is better).
+            """)
+        st.markdown("""
+**Bloom Detection Metrics**
+
+| Region      | Threshold | Prevalence | Precision | Recall | F1   |
+|-------------|-----------|------------|-----------|--------|------|
+| Thermaikos  | 1.00      | 12.4%      | 0.825     | 0.849  | 0.837|
+| Peiraeus    | 0.50      | 0.0%       | 0.000     | 0.000  | 0.000|
+| Limassol    | 0.30      | 0.0%       | 0.000     | 0.000  | 0.000|
+        """, unsafe_allow_html=True)
+        with st.expander("What do these bloom metrics mean?", expanded=False):
+            st.markdown("""
+**Threshold:** Chlorophyll value (mg/m³) used to define a bloom event for each region.
+
+    **Prevalence:** Percentage of days with a bloom event in the validation set.
+
+    **Precision:** Of all days flagged as blooms, the fraction that were true blooms.
+
+    **Recall:** Of all true bloom days, the fraction that were correctly flagged.
+
+    **F1:** Harmonic mean of precision and recall (balances both).
+            """)
         # look for eval file in DATA_DIR/eval or data/eval
         eval_paths = [os.path.join(DATA_DIR, 'eval', f'accuracy_{region}.csv'), os.path.join(DATA_DIR, f'accuracy_{region}.csv')]
         eval_path = next((p for p in eval_paths if os.path.exists(p)), None)
