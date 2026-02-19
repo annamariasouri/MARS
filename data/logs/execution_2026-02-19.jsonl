@@ -1,11 +1,3 @@
-{"timestamp": "2026-02-18T12:51:06.658650", "component": "download", "status": "START", "message": "Starting download for 2026-02-17", "metadata": {"date": "2026-02-17", "regions": ["thermaikos", "peiraeus", "limassol"]}}
-{"timestamp": "2026-02-18T12:51:31.503556", "component": "download", "status": "SUCCESS", "message": "Downloaded thermaikos", "metadata": {"date": "2026-02-17", "region": "thermaikos", "expansion": 0.0, "files": 4}}
-{"timestamp": "2026-02-18T12:52:14.692761", "component": "download", "status": "SUCCESS", "message": "Downloaded peiraeus", "metadata": {"date": "2026-02-17", "region": "peiraeus", "expansion": 0.05, "files": 4}}
-{"timestamp": "2026-02-18T12:52:36.045927", "component": "download", "status": "SUCCESS", "message": "Downloaded limassol", "metadata": {"date": "2026-02-17", "region": "limassol", "expansion": 0.0, "files": 4}}
-{"timestamp": "2026-02-18T12:52:38.100631", "component": "forecast", "status": "START", "message": "Starting forecasts for 2026-02-17", "metadata": {"date": "2026-02-17", "regions": ["limassol", "thermaikos", "peiraeus"]}}
-{"timestamp": "2026-02-18T12:52:38.172269", "component": "forecast", "status": "SUCCESS", "message": "Generated 8 forecasts for limassol", "metadata": {"date": "2026-02-17", "region": "limassol", "count": 8}}
-{"timestamp": "2026-02-18T12:52:38.255105", "component": "forecast", "status": "SUCCESS", "message": "Generated 8 forecasts for thermaikos", "metadata": {"date": "2026-02-17", "region": "thermaikos", "count": 8}}
-{"timestamp": "2026-02-18T12:52:38.330501", "component": "forecast", "status": "SUCCESS", "message": "Generated 8 forecasts for peiraeus", "metadata": {"date": "2026-02-17", "region": "peiraeus", "count": 8}}
 {"timestamp": "2026-02-19T04:39:46.624021", "component": "download", "status": "START", "message": "Starting download for 2026-02-18", "metadata": {"date": "2026-02-18", "regions": ["thermaikos", "peiraeus", "limassol"]}}
 {"timestamp": "2026-02-19T04:40:16.538376", "component": "download", "status": "SUCCESS", "message": "Downloaded thermaikos", "metadata": {"date": "2026-02-18", "region": "thermaikos", "expansion": 0.0, "files": 4}}
 {"timestamp": "2026-02-19T04:41:13.219786", "component": "download", "status": "SUCCESS", "message": "Downloaded peiraeus", "metadata": {"date": "2026-02-18", "region": "peiraeus", "expansion": 0.05, "files": 4}}
