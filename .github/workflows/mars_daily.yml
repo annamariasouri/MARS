@@ -45,7 +45,7 @@ jobs:
       - name: Download model from Google Drive
         run: |
           echo "Downloading rf_chl_retrained.pkl (~3 GB) from Google Drive..."
-          python download_model.py
+          python github/scripts/download_model.py
           echo "Model ready at data/models/rf_chl_retrained.pkl"
 
       - name: Run Copernicus download

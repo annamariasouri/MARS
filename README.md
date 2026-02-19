@@ -6,11 +6,11 @@ This repository includes scripts that download Copernicus NetCDF files, process 
 
 ## Files of interest
 
-- `dashboard_app.py` — Streamlit app (UI).
-- `download_copernicus_day_test.py` — downloads Copernicus data, merges NetCDFs, does feature engineering, and saves CSVs.
-- `run_daily_forecast.py` — loads a trained model and creates daily forecasts (writes `forecast_log_*.csv`).
-- `retrain_rf_model.py` — full pipeline to retrain the Random Forest on 2012–2022 CMEMS reanalysis data.
-- `download_model.py` — downloads the pre-trained model (~3 GB) from Google Drive to `data/models/`.
+- `github/scripts/dashboard_app.py` — Streamlit app (UI).
+- `github/scripts/download_copernicus_day_test.py` — downloads Copernicus data, merges NetCDFs, does feature engineering, and saves CSVs.
+- `github/scripts/run_daily_forecast.py` — loads a trained model and creates daily forecasts (writes `forecast_log_*.csv`).
+- `github/scripts/retrain_rf_model.py` — full pipeline to retrain the Random Forest on 2012–2022 CMEMS reanalysis data.
+- `github/scripts/download_model.py` — downloads the pre-trained model (~3 GB) from Google Drive to `data/models/`.
 - `*.csv` — example CSV files in the repository (e.g., `env_history_*.csv`, `model_ready_input_*.csv`, `forecast_log_*.csv`).
 - **`METHODOLOGY.md`** — detailed documentation of the model, data splits, backtesting design, leakage controls, and missing-data policy.
 
