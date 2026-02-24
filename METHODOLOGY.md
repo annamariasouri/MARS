@@ -25,13 +25,14 @@ The active predictor is `data/models/rf_chl_retrained.pkl`, a scikit-learn `Rand
 | Validation R² (overall) | **0.9449** (160,083 samples) |
 | Validation RMSE (overall) | 0.0794 mg/m³ |
 
-Per-region validation performance:
+Per-region validation performance (2023–2025, region-day level):
 
-| Region | n | RMSE | R² |
-|---|---|---|---|
+| Region      | n_days | RMSE   | R²     |
+|------------|--------|--------|--------|
 | Thermaikos | 60,984 | 0.1283 | 0.9185 |
-| Piraeus | 90,387 | 0.0070 | 0.9742 |
-| Limassol | 8,712 | 0.0051 | 0.9085 |
+| Piraeus    | 90,387 | 0.0070 | 0.9742 |
+| Limassol   | 8,712  | 0.0051 | 0.9085 |
+| **Overall**|160,083 | 0.0794 | 0.9449 |
 
 **24 input features:**  
 Current-day: `nh4`, `no3`, `po4`, `so`, `thetao`  

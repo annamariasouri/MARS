@@ -53,7 +53,7 @@ st.markdown(
         --grad1: {PRIMARY_GRAD_1};
         --grad2: {PRIMARY_GRAD_2};
       }}
-      body {{ background: linear-gradient(180deg,#00111f 0%,#001b33 40%,#001f3f 100%) fixed; color:#E0F2FF; }}
+    body {{ background: #fff !important; color:#222 !important; }}
       .marine-hero {{
         background: linear-gradient(90deg, var(--grad1), var(--grad2));
         color: white; padding: 18px 22px; border-radius: 16px; box-shadow: 0 10px 28px rgba(0,0,0,.25);
@@ -70,7 +70,7 @@ st.markdown(
       .badge.high {{ background: rgba(208,0,0,.15); color:#750000; border:1px solid rgba(208,0,0,.35); }}
       .section-title {{ color: #fff; font-weight:800; }}
     /* map-specific title: black text */
-    .map-section-title {{ color: #000; font-weight:800; }}
+    .map-section-title {{ color: #D00000; font-weight:800; }}
       .soft-card {{ background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px;box-shadow:0 8px 24px rgba(0,0,0,.25);}}
       iframe, .folium-map {{ border-radius: 16px; box-shadow: 0 0 40px rgba(0,0,0,0.6); }}
     </style>
@@ -408,6 +408,11 @@ forecast = load_forecast(region)
 env = load_env(region)
 region_title = REGIONS[region]["title"]
 summary = summarize_region(forecast)
+# DEBUG: Show which file and value are being used
+if not forecast.empty:
+    st.info(f"[DEBUG] Loaded forecast file for region '{region}'. Dates: {forecast['date'].min()} to {forecast['date'].max()}. Latest predicted_chl: {forecast.iloc[-1]['predicted_chl']}")
+else:
+    st.info(f"[DEBUG] No forecast data loaded for region '{region}'.")
 
 # === KPI helpers ===
 
