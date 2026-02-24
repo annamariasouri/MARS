@@ -145,8 +145,10 @@ for region in REGIONS:
     else:
         risk_score = 0
 
+    # Always use ISO format for date
+    iso_date_str = pd.to_datetime(forecast_date_str).strftime("%Y-%m-%d")
     result = {
-        "date": forecast_date_str,
+        "date": iso_date_str,
         "predicted_chl": round(predicted_chl_mean, 3),
         "bloom_risk_flag": risk_flag,
         "threshold_used": round(threshold, 3),
@@ -159,10 +161,12 @@ for region in REGIONS:
     import pandas as pd
     if os.path.exists(output_path):
         df_existing = pd.read_csv(output_path)
-        df_existing = df_existing[df_existing['date'] != forecast_date_str]
+        # Convert all date values to ISO format for comparison
+        df_existing['date'] = pd.to_datetime(df_existing['date'], errors='coerce').dt.strftime('%Y-%m-%d')
+        df_existing = df_existing[df_existing['date'] != iso_date_str]
         df_existing = pd.concat([df_existing, pd.DataFrame([result])], ignore_index=True)
         df_existing.to_csv(output_path, index=False)
     else:
         pd.DataFrame([result]).to_csv(output_path, index=False)
-    print(f"✅ Nowcast (true prediction) stored for {region} on {forecast_date_str}")
-    log_forecast_success(target_date_str, region, 1)
+    print(f"✅ Nowcast (true prediction) stored for {region} on {iso_date_str}")
+    log_forecast_success(iso_date_str, region, 1)
