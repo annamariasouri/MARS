@@ -94,82 +94,75 @@ log_forecast_start(target_date_str, REGIONS)
 
 # === Loop through each region
 for region in REGIONS:
-    # Forecast for today and next 30 days (31 forecasts total)
+    # Only predict and store today's nowcast (true prediction)
     output_path = os.path.join(FORECAST_DIR, f"forecast_log_{region}.csv")
-    forecast_dates = [yesterday + pd.Timedelta(days=i) for i in range(0, 31)]
+    forecast_date = yesterday  # Only today's date
+    forecast_date_str = forecast_date.strftime("%Y-%m-%d")
+    csv_input = os.path.join(MODEL_READY_DIR, f"model_ready_input_{region}_{forecast_date_str}.csv")
+    used_input_date = None
+    df_input = pd.DataFrame()
+    # Try the exact-date input first
+    if os.path.exists(csv_input):
+        try:
+            df_input = pd.read_csv(csv_input)
+            if df_input.shape[0] > 0:
+                used_input_date = forecast_date_str
+        except Exception:
+            df_input = pd.DataFrame()
 
-    all_results = []
-    for forecast_date in forecast_dates:
-        forecast_date_str = forecast_date.strftime("%Y-%m-%d")
-        csv_input = os.path.join(MODEL_READY_DIR, f"model_ready_input_{region}_{forecast_date_str}.csv")
-        used_input_date = None
-        df_input = pd.DataFrame()
-        # Try the exact-date input first
-        if os.path.exists(csv_input):
-            try:
-                df_input = pd.read_csv(csv_input)
-                if df_input.shape[0] > 0:
-                    used_input_date = forecast_date_str
-            except Exception:
-                df_input = pd.DataFrame()
+    # If exact-date input missing or empty, search backwards up to 7 days for most recent non-empty input
+    if df_input.shape[0] == 0:
+        lookback_days = 7
+        for i in range(1, lookback_days + 1):
+            alt_date = (forecast_date - pd.Timedelta(days=i)).strftime("%Y-%m-%d")
+            alt_path = os.path.join(MODEL_READY_DIR, f"model_ready_input_{region}_{alt_date}.csv")
+            if os.path.exists(alt_path):
+                try:
+                    alt_df = pd.read_csv(alt_path)
+                    if alt_df.shape[0] > 0:
+                        df_input = alt_df.copy()
+                        used_input_date = alt_date
+                        print(f"Using fallback model input for {region}: {alt_path} (for target date {forecast_date_str})")
+                        break
+                except Exception:
+                    continue
 
-        # If exact-date input missing or empty, search backwards up to 7 days for most recent non-empty input
-        if df_input.shape[0] == 0:
-            lookback_days = 7
-            for i in range(1, lookback_days + 1):
-                alt_date = (forecast_date - pd.Timedelta(days=i)).strftime("%Y-%m-%d")
-                alt_path = os.path.join(MODEL_READY_DIR, f"model_ready_input_{region}_{alt_date}.csv")
-                if os.path.exists(alt_path):
-                    try:
-                        alt_df = pd.read_csv(alt_path)
-                        if alt_df.shape[0] > 0:
-                            df_input = alt_df.copy()
-                            used_input_date = alt_date
-                            print(f"Using fallback model input for {region}: {alt_path} (for target date {forecast_date_str})")
-                            break
-                    except Exception:
-                        continue
-
-        if df_input.shape[0] == 0:
-            if used_input_date is None:
-                print(f"No model input found for {region} on {forecast_date_str} and no fallback available. Skipping prediction.")
-            else:
-                print(f"Fallback input for {region} on {forecast_date_str} was empty. Skipping prediction.")
-            continue
-        predicted_chl = model.predict(df_input)
-        predicted_chl_mean = np.mean(predicted_chl)
-        threshold = np.percentile(predicted_chl, 90)
-        risk_pct = float(np.mean(predicted_chl >= threshold)) * 100
-        risk_flag = int(predicted_chl_mean >= threshold)
-
-        # Threshold-relative risk (main risk score)
-        if threshold > 0:
-            risk_score = min(100, max(0, (predicted_chl_mean / threshold) * 100))
+    if df_input.shape[0] == 0:
+        if used_input_date is None:
+            print(f"No model input found for {region} on {forecast_date_str} and no fallback available. Skipping prediction.")
         else:
-            risk_score = 0
+            print(f"Fallback input for {region} on {forecast_date_str} was empty. Skipping prediction.")
+        continue
+    predicted_chl = model.predict(df_input)
+    predicted_chl_mean = np.mean(predicted_chl)
+    threshold = np.percentile(predicted_chl, 90)
+    risk_pct = float(np.mean(predicted_chl >= threshold)) * 100
+    risk_flag = int(predicted_chl_mean >= threshold)
 
-        result = {
-            "date": forecast_date_str,
-            "predicted_chl": round(predicted_chl_mean, 3),
-            "bloom_risk_flag": risk_flag,
-            "threshold_used": round(threshold, 3),
-            "risk_pct": round(risk_pct, 1),
-            "risk_score": round(risk_score, 1),
-            "num_grid_points": len(predicted_chl)
-        }
-        all_results.append(result)
-
-    if all_results:
-        df_results = pd.DataFrame(all_results)
-        if os.path.exists(output_path):
-            df_results.to_csv(output_path, mode='a', index=False, header=False)
-        else:
-            df_results.to_csv(output_path, index=False)
-        print(f"✅ Forecast complete for {region}:")
-        print(df_results)
-        
-        # Log success
-        log_forecast_success(target_date_str, region, len(all_results))
+    # Threshold-relative risk (main risk score)
+    if threshold > 0:
+        risk_score = min(100, max(0, (predicted_chl_mean / threshold) * 100))
     else:
-        print(f"⚠️  No forecasts generated for {region}")
-        log_forecast_error(target_date_str, region, "No forecasts generated")
+        risk_score = 0
+
+    result = {
+        "date": forecast_date_str,
+        "predicted_chl": round(predicted_chl_mean, 3),
+        "bloom_risk_flag": risk_flag,
+        "threshold_used": round(threshold, 3),
+        "risk_pct": round(risk_pct, 1),
+        "risk_score": round(risk_score, 1),
+        "num_grid_points": len(predicted_chl)
+    }
+
+    # Read existing CSV, drop any row with today's date, append new result, and save
+    import pandas as pd
+    if os.path.exists(output_path):
+        df_existing = pd.read_csv(output_path)
+        df_existing = df_existing[df_existing['date'] != forecast_date_str]
+        df_existing = pd.concat([df_existing, pd.DataFrame([result])], ignore_index=True)
+        df_existing.to_csv(output_path, index=False)
+    else:
+        pd.DataFrame([result]).to_csv(output_path, index=False)
+    print(f"✅ Nowcast (true prediction) stored for {region} on {forecast_date_str}")
+    log_forecast_success(target_date_str, region, 1)
