@@ -30,6 +30,7 @@ if args.date:
         tgt = datetime.strptime(args.date, '%Y-%m-%d')
     except Exception:
         raise ValueError('Invalid --date format, expected YYYY-MM-DD')
+
 else:
     tgt = datetime.today() - timedelta(days=1)
 

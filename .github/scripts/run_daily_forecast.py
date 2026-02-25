@@ -30,8 +30,9 @@ if args.date:
         yesterday = target_date
     except ValueError:
         raise ValueError('Invalid --date format, expected YYYY-MM-DD')
+
 else:
-    yesterday = datetime.today() - pd.Timedelta(days=1)
+    yesterday = datetime.today()
 
 target_date_str = yesterday.strftime("%Y-%m-%d")
 
