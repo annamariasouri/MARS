@@ -58,3 +58,4 @@ forecast_date,target_date,lat,lon,predicted_chl,observed_chl,err,abs_err,bloom_p
 ,2026-04-01,,,0.104,,,,False,False,|2026-04-01 00:00:00|None|None
 ,2026-04-02,,,0.105,,,,False,False,|2026-04-02 00:00:00|None|None
 ,2026-04-03,,,0.106,,,,False,False,|2026-04-03 00:00:00|None|None
+,2026-04-04,,,0.107,,,,False,False,|2026-04-04 00:00:00|None|None
