@@ -36,7 +36,7 @@ def main():
     print(f"Downloading model from Google Drive → {MODEL_PATH}")
     print("This file is ~3 GB; download time depends on your connection.")
 
-    gdown.download(url, MODEL_PATH, quiet=False, fuzzy=True)
+    gdown.download(url, MODEL_PATH, quiet=False)
 
     if os.path.exists(MODEL_PATH):
         size_gb = os.path.getsize(MODEL_PATH) / 1e9

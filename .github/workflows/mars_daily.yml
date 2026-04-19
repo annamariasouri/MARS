@@ -26,7 +26,7 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y libhdf5-dev libnetcdf-dev netcdf-bin
           python -m pip install --upgrade pip
-          pip install gdown
+          pip install "gdown>=5.2"
           pip install -r requirements.txt
 
       - name: Ensure data directories exist
