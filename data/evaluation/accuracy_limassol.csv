@@ -90,3 +90,4 @@ forecast_date,target_date,lat,lon,predicted_chl,observed_chl,err,abs_err,bloom_p
 ,2026-05-10,,,0.088,,,,False,False,|2026-05-10 00:00:00|None|None
 ,2026-05-11,,,0.084,,,,False,False,|2026-05-11 00:00:00|None|None
 ,2026-05-12,,,0.081,,,,False,False,|2026-05-12 00:00:00|None|None
+,2026-05-13,,,0.073,,,,False,False,|2026-05-13 00:00:00|None|None
