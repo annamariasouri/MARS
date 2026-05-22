@@ -88,6 +88,12 @@ jobs:
           echo "Scanning env_history files"
           python .github/scripts/scan_env_histories.py || true
 
+      - name: Export web dashboard data
+        env:
+          MARS_DATA_DIR: data
+        run: |
+          python .github/scripts/export_dashboard_data.py
+
       - name: Upload diagnostics artifact
         uses: actions/upload-artifact@v4
         with:
@@ -117,6 +123,6 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/** || true
+          git add data/** web/data.js || true
           git commit -m "Daily data update: $(date -u +'%Y-%m-%d')" || echo "No changes to commit"
           git push

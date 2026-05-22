@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MARS — Logo</title>
+  <link rel="icon" href="favicon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,400&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    body { padding: 0; }
+    .logo-page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 48px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+    .logo-head {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 32px;
+    }
+    .logo-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--teal);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+    .logo-title {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 400;
+      letter-spacing: -1px;
+      line-height: 1.05;
+      margin: 0 0 14px;
+    }
+    .logo-title em { color: var(--teal); font-style: italic; }
+    .logo-lede {
+      font-size: 15px;
+      color: var(--text-dim);
+      max-width: 60ch;
+    }
+
+    .variants {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+    .var-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+    }
+    .var-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .var-name {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      margin: 0;
+    }
+    .var-code {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+    .var-desc {
+      font-size: 12.5px;
+      color: var(--text-dim);
+      line-height: 1.55;
+      max-width: 52ch;
+    }
+    .var-stage {
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      min-height: 180px;
+    }
+    .var-sizes {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .var-size-row {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+    .var-size-label {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .var-lockup {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .var-lockup-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .var-lockup-name {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+    .var-lockup-sub {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .var-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding-top: 6px;
+      border-top: 1px solid var(--line);
+      margin-top: 4px;
+      padding-top: 18px;
+    }
+    .var-apply-btn {
+      background: var(--teal);
+      color: #061325;
+      border: none;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+    }
+    .var-apply-btn:hover { filter: brightness(1.1); }
+    .var-apply-btn.applied { background: var(--surface-2); color: var(--text-dim); cursor: default; }
+    .var-secondary-btn {
+      background: transparent;
+      color: var(--text-dim);
+      border: 1px solid var(--line-strong);
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .var-secondary-btn:hover { color: var(--text); }
+
+    .swatches {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .swatch-block { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+    .swatch-block-label {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--text-muted);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .swatch-chip {
+      width: 100%;
+      height: 64px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+    .swatch-hex {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text);
+      letter-spacing: 0.5px;
+    }
+    .swatch-name { font-size: 11.5px; color: var(--text-dim); }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .back-link:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="logo-page">
+    <div class="logo-head">
+      <a href="index.html" class="back-link">← BACK TO DASHBOARD</a>
+      <div class="logo-eyebrow">Identity · Logo system</div>
+      <h1 class="logo-title">Choose a <em>logo</em> for MARS</h1>
+      <p class="logo-lede">
+        Four directions, all built from the same marine-research vocabulary: depth,
+        signal, basin, surface. Each works as a 32 px tile (sidebar / favicon) and
+        scales up to a primary mark with the wordmark. Pick the one you like —
+        clicking <em>Apply to dashboard</em> sets it as the default.
+      </p>
+    </div>
+
+    <div id="variants" class="variants"></div>
+
+    <div>
+      <div class="logo-eyebrow" style="margin-bottom:16px">Palette</div>
+      <div class="swatches">
+        <div class="swatch-block">
+          <div class="swatch-block-label">Abyss</div>
+          <div class="swatch-chip" style="background: linear-gradient(135deg, #0f2950, #061325);"></div>
+          <div class="swatch-hex">#061325 → #0f2950</div>
+          <div class="swatch-name">Tile background</div>
+        </div>
+        <div class="swatch-block">
+          <div class="swatch-block-label">Bioluminescence</div>
+          <div class="swatch-chip" style="background: #4dd0c5;"></div>
+          <div class="swatch-hex">#4dd0c5</div>
+          <div class="swatch-name">Primary teal · accents</div>
+        </div>
+        <div class="swatch-block">
+          <div class="swatch-block-label">Depth</div>
+          <div class="swatch-chip" style="background: #5c93ff;"></div>
+          <div class="swatch-hex">#5c93ff</div>
+          <div class="swatch-name">Secondary · marker dots</div>
+        </div>
+        <div class="swatch-block">
+          <div class="swatch-block-label">Foam</div>
+          <div class="swatch-chip" style="background: #e8eef7; border-color: rgba(0,0,0,0.1);"></div>
+          <div class="swatch-hex">#e8eef7</div>
+          <div class="swatch-name">Wordmark · text</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- React + Babel -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="logo.jsx"></script>
+
+  <script type="text/babel">
+    const VARIANTS = [
+      {
+        id: 'pulse',
+        name: 'Pulse',
+        code: 'mars://logo/pulse',
+        desc: 'A satellite sensing the basin from above. Concentric arcs rise from a transmitter point toward the sea surface — the literal mechanic of MARS, distilled.',
+      },
+      {
+        id: 'crest',
+        name: 'Crest',
+        code: 'mars://logo/crest',
+        desc: 'The letter M built as two wave crests meeting at a trough. Most readable as a literal MARS monogram while still feeling marine.',
+      },
+      {
+        id: 'stratum',
+        name: 'Stratum',
+        code: 'mars://logo/stratum',
+        desc: 'A water column profile. Stacked depth layers with a probe line through them — speaks to the layered Copernicus variables and vertical sampling.',
+      },
+      {
+        id: 'mark',
+        name: 'Mark',
+        code: 'mars://logo/mark',
+        desc: 'A clean monogram. The plain MARS M with a subtle wave undercut and a satellite dot above — the most utilitarian option.',
+      },
+    ];
+
+    function VariantCard({ v }) {
+      const [applied, setApplied] = React.useState(
+        () => (localStorage.getItem('mars-logo-variant') || 'pulse') === v.id
+      );
+      React.useEffect(() => {
+        const onStorage = () => setApplied((localStorage.getItem('mars-logo-variant') || 'pulse') === v.id);
+        window.addEventListener('storage', onStorage);
+        return () => window.removeEventListener('storage', onStorage);
+      });
+      const apply = () => {
+        localStorage.setItem('mars-logo-variant', v.id);
+        // notify any open dashboard tab
+        window.dispatchEvent(new StorageEvent('storage', { key: 'mars-logo-variant' }));
+        setApplied(true);
+        document.querySelectorAll('.var-apply-btn').forEach(b => {
+          if (b.dataset.id !== v.id) {
+            b.classList.remove('applied');
+            b.textContent = 'Apply to dashboard';
+          }
+        });
+      };
+
+      return (
+        <div className="var-card">
+          <div className="var-card-head">
+            <h2 className="var-name">{v.name}</h2>
+            <span className="var-code">{v.code}</span>
+          </div>
+          <p className="var-desc">{v.desc}</p>
+
+          <div className="var-stage">
+            {/* Big mark */}
+            <window.MarsLogo variant={v.id} size={120} />
+            {/* Lockup */}
+            <div className="var-lockup">
+              <window.MarsLogo variant={v.id} size={48} />
+              <div className="var-lockup-text">
+                <div className="var-lockup-name">MARS</div>
+                <div className="var-lockup-sub">Marine Autonomous<br/>Risk System</div>
+              </div>
+            </div>
+            {/* Small sizes */}
+            <div className="var-size-row">
+              <div style={{display:'flex', flexDirection:'column', alignItems:'center', gap:6}}>
+                <window.MarsLogo variant={v.id} size={32} />
+                <div className="var-size-label">32 px</div>
+              </div>
+              <div style={{display:'flex', flexDirection:'column', alignItems:'center', gap:6}}>
+                <window.MarsLogo variant={v.id} size={16} />
+                <div className="var-size-label">16 px</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="var-actions">
+            <button
+              className={`var-apply-btn ${applied ? 'applied' : ''}`}
+              data-id={v.id}
+              onClick={apply}
+              disabled={applied}>
+              {applied ? '✓ Applied' : 'Apply to dashboard'}
+            </button>
+            <a href="index.html" className="var-secondary-btn"
+               style={{textDecoration:'none', display:'inline-flex'}}>Open dashboard →</a>
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      return <>{VARIANTS.map(v => <VariantCard key={v.id} v={v} />)}</>;
+    }
+
+    ReactDOM.createRoot(document.getElementById('variants')).render(<App />);
+  </script>
+</body>
+</html>

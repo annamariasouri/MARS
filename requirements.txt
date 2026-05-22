@@ -1,4 +1,4 @@
-streamlit
+streamlit>=1.33
 pandas
 numpy
 gdown>=5.2
@@ -8,6 +8,3 @@ joblib==1.5.2
 scikit-learn==1.7.2
 copernicusmarine
 matplotlib
-folium
-streamlit-folium
-plotly
