@@ -24,7 +24,7 @@ Opens **http://localhost:8765/** — the new design with your project data.
 
 That URL shows the **new design**, not the old Streamlit layout and not a folder list. Data comes from the CSVs in your repo (updated daily by GitHub Actions).
 
-Optional: GitHub Pages (`deploy_dashboard.yml`) is a backup static host; **Streamlit Cloud is the main way to go online** if you already use Streamlit.
+GitHub Pages is optional (workflow **Deploy MARS Dashboard**, manual run only). **Streamlit Cloud** is the main way to go online.
 
 ## How predictions are made
 

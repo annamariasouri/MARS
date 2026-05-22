@@ -1,14 +1,15 @@
-# Build web/data.js from CSVs and publish the dashboard to GitHub Pages.
+# Optional: publish static dashboard to GitHub Pages.
+# Does NOT run on every push (avoids 404 if Pages is not enabled).
+#
+# To use:
+#   1. Repo Settings → Pages → Build and deployment → Source: GitHub Actions
+#   2. Actions → "Deploy MARS Dashboard" → Run workflow
+#
+# Online app: use Streamlit Cloud with streamlit_app.py (recommended).
+
 name: Deploy MARS Dashboard
 
 on:
-  push:
-    branches: [main, master]
-    paths:
-      - "web/**"
-      - "data/**"
-      - ".github/scripts/export_dashboard_data.py"
-      - ".github/workflows/deploy_dashboard.yml"
   workflow_dispatch:
 
 permissions:
