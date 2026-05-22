@@ -1,4 +1,4 @@
-streamlit>=1.33
+streamlit>=1.33,<2
 pandas
 numpy
 gdown>=5.2

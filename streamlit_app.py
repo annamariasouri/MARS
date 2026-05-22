@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 ROOT = Path(__file__).resolve().parent
 SCRIPTS = ROOT / ".github" / "scripts"
@@ -47,11 +48,12 @@ def _dashboard_html() -> str:
     return build_html(WEB, build_payload())
 
 
-html = _dashboard_html()
+try:
+    html = _dashboard_html()
+except Exception as exc:
+    st.error("Could not load MARS dashboard data from the repository CSVs.")
+    st.exception(exc)
+    st.stop()
 
-if hasattr(st, "html"):
-    st.html(html, height=1000, scrolling=True)
-else:
-    import streamlit.components.v1 as components
-
-    components.html(html, height=1000, scrolling=True)
+# st.html() does not accept scrolling= (causes TypeError on Streamlit Cloud).
+components.html(html, height=900, scrolling=True)
