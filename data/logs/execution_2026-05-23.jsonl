@@ -1,0 +1,8 @@
+{"timestamp": "2026-05-23T05:18:22.154624", "component": "download", "status": "START", "message": "Starting download for 2026-05-22", "metadata": {"date": "2026-05-22", "regions": ["thermaikos", "peiraeus", "limassol"]}}
+{"timestamp": "2026-05-23T05:18:44.088621", "component": "download", "status": "SUCCESS", "message": "Downloaded thermaikos", "metadata": {"date": "2026-05-22", "region": "thermaikos", "expansion": 0.0, "files": 4}}
+{"timestamp": "2026-05-23T05:19:23.788754", "component": "download", "status": "SUCCESS", "message": "Downloaded peiraeus", "metadata": {"date": "2026-05-22", "region": "peiraeus", "expansion": 0.05, "files": 4}}
+{"timestamp": "2026-05-23T05:19:42.328562", "component": "download", "status": "SUCCESS", "message": "Downloaded limassol", "metadata": {"date": "2026-05-22", "region": "limassol", "expansion": 0.0, "files": 4}}
+{"timestamp": "2026-05-23T05:19:46.798168", "component": "forecast", "status": "START", "message": "Starting forecasts for 2026-05-23", "metadata": {"date": "2026-05-23", "regions": ["limassol", "thermaikos", "peiraeus"]}}
+{"timestamp": "2026-05-23T05:19:46.908854", "component": "forecast", "status": "SUCCESS", "message": "Generated 1 forecasts for limassol", "metadata": {"date": "2026-05-23", "region": "limassol", "count": 1}}
+{"timestamp": "2026-05-23T05:19:46.971239", "component": "forecast", "status": "SUCCESS", "message": "Generated 1 forecasts for thermaikos", "metadata": {"date": "2026-05-23", "region": "thermaikos", "count": 1}}
+{"timestamp": "2026-05-23T05:19:47.022088", "component": "forecast", "status": "SUCCESS", "message": "Generated 1 forecasts for peiraeus", "metadata": {"date": "2026-05-23", "region": "peiraeus", "count": 1}}
