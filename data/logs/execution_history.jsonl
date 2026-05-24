@@ -750,3 +750,11 @@
 {"timestamp": "2026-05-23T05:19:46.908854", "component": "forecast", "status": "SUCCESS", "message": "Generated 1 forecasts for limassol", "metadata": {"date": "2026-05-23", "region": "limassol", "count": 1}}
 {"timestamp": "2026-05-23T05:19:46.971239", "component": "forecast", "status": "SUCCESS", "message": "Generated 1 forecasts for thermaikos", "metadata": {"date": "2026-05-23", "region": "thermaikos", "count": 1}}
 {"timestamp": "2026-05-23T05:19:47.022088", "component": "forecast", "status": "SUCCESS", "message": "Generated 1 forecasts for peiraeus", "metadata": {"date": "2026-05-23", "region": "peiraeus", "count": 1}}
+{"timestamp": "2026-05-24T05:22:54.738566", "component": "download", "status": "START", "message": "Starting download for 2026-05-23", "metadata": {"date": "2026-05-23", "regions": ["thermaikos", "peiraeus", "limassol"]}}
+{"timestamp": "2026-05-24T05:23:16.574096", "component": "download", "status": "SUCCESS", "message": "Downloaded thermaikos", "metadata": {"date": "2026-05-23", "region": "thermaikos", "expansion": 0.0, "files": 4}}
+{"timestamp": "2026-05-24T05:23:57.377410", "component": "download", "status": "SUCCESS", "message": "Downloaded peiraeus", "metadata": {"date": "2026-05-23", "region": "peiraeus", "expansion": 0.05, "files": 4}}
+{"timestamp": "2026-05-24T05:24:15.185066", "component": "download", "status": "SUCCESS", "message": "Downloaded limassol", "metadata": {"date": "2026-05-23", "region": "limassol", "expansion": 0.0, "files": 4}}
+{"timestamp": "2026-05-24T05:24:19.507330", "component": "forecast", "status": "START", "message": "Starting forecasts for 2026-05-24", "metadata": {"date": "2026-05-24", "regions": ["limassol", "thermaikos", "peiraeus"]}}
+{"timestamp": "2026-05-24T05:24:19.582298", "component": "forecast", "status": "SUCCESS", "message": "Generated 1 forecasts for limassol", "metadata": {"date": "2026-05-24", "region": "limassol", "count": 1}}
+{"timestamp": "2026-05-24T05:24:19.644676", "component": "forecast", "status": "SUCCESS", "message": "Generated 1 forecasts for thermaikos", "metadata": {"date": "2026-05-24", "region": "thermaikos", "count": 1}}
+{"timestamp": "2026-05-24T05:24:19.695804", "component": "forecast", "status": "SUCCESS", "message": "Generated 1 forecasts for peiraeus", "metadata": {"date": "2026-05-24", "region": "peiraeus", "count": 1}}
