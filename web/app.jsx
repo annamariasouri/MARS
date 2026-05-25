@@ -1,6 +1,6 @@
 // MARS Dashboard — main app
 const { useState, useMemo } = React;
-const { LineChart, ScatterChart, Sparkline, RiskStrip, fmtNum, fmtDate, RegionMap } = window;
+const { LineChart, ScatterChart, Sparkline, RiskStrip, AccuracyDayStrip, fmtNum, fmtDate, RegionMap } = window;
 
 // Tweak defaults — host can rewrite this block.
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
@@ -604,113 +604,131 @@ function isCloseMatch(row) {
     && Math.abs(err) < ACCURACY_TOL;
 }
 
-/** Group paired forecast days into weekly (7d) or bi-weekly (14d) buckets. */
-function computePeriodAccuracy(rows, periodDays) {
+function accuracyBadgeLevel(pct) {
+  if (pct >= 80) return 'low';
+  if (pct >= 50) return 'med';
+  return 'high';
+}
+
+function windowAccuracy(sorted, n) {
+  const slice = sorted.slice(-n);
+  if (!slice.length) return null;
+  const close = slice.filter(isCloseMatch).length;
+  return { pct: Math.round((close / slice.length) * 100), close, total: slice.length };
+}
+
+function computeAccuracyStats(rows) {
   const paired = rows.filter(
     d => d.target_date && d.predicted_chl != null && d.observed_chl != null && !isNaN(d.observed_chl)
   );
-  if (!paired.length) return [];
+  if (!paired.length) return null;
 
   const sorted = [...paired].sort((a, b) => new Date(a.target_date) - new Date(b.target_date));
-  const minT = new Date(sorted[0].target_date).getTime();
-  const dayMs = 86400000;
-  const buckets = new Map();
+  const close = sorted.filter(isCloseMatch).length;
+  const mae = sorted.reduce((s, d) => s + (d.abs_err || 0), 0) / sorted.length;
 
-  sorted.forEach(d => {
-    const idx = Math.floor((new Date(d.target_date).getTime() - minT) / (periodDays * dayMs));
-    if (!buckets.has(idx)) buckets.set(idx, []);
-    buckets.get(idx).push(d);
-  });
+  const rolling = [];
+  for (let i = 0; i < sorted.length; i++) {
+    const win = sorted.slice(Math.max(0, i - 6), i + 1);
+    if (win.length < 4) continue;
+    rolling.push({
+      date: sorted[i].target_date,
+      pct: Math.round((win.filter(isCloseMatch).length / win.length) * 100),
+    });
+  }
 
-  return Array.from(buckets.entries())
-    .map(([idx, days]) => {
-      const close = days.filter(isCloseMatch).length;
-      const start = days[0].target_date;
-      const end = days[days.length - 1].target_date;
-      return {
-        idx,
-        start,
-        end,
-        label: `${fmtDate(start)} – ${fmtDate(end)}`,
-        total: days.length,
-        close,
-        pct: Math.round((close / days.length) * 100),
-      };
-    })
-    .sort((a, b) => b.idx - a.idx);
+  return {
+    sorted,
+    overall: { pct: Math.round((close / sorted.length) * 100), close, total: sorted.length },
+    last7: windowAccuracy(sorted, 7),
+    last14: windowAccuracy(sorted, 14),
+    mae,
+    rolling,
+  };
 }
 
-function accuracyPctColor(pct) {
-  if (pct >= 80) return 'var(--ok)';
-  if (pct >= 50) return 'var(--warn)';
-  return 'var(--danger)';
-}
+function AccuracySkillBlock({ rows, region }) {
+  const stats = useMemo(() => computeAccuracyStats(rows), [rows]);
+  const tolTip = `Close match = forecast within ${ACCURACY_TOL} mg/m³ of Copernicus CHL (env-history).`;
 
-function ForecastAccuracyCard({ rows, region }) {
-  const [mode, setMode] = useState('week');
-  const periodDays = mode === 'week' ? 7 : 14;
-  const periods = useMemo(() => computePeriodAccuracy(rows, periodDays), [rows, periodDays]);
-
-  const overall = useMemo(() => {
-    const paired = rows.filter(
-      d => d.predicted_chl != null && d.observed_chl != null && !isNaN(d.observed_chl)
+  if (!stats) {
+    return (
+      <div className="chart" style={{ padding: 24, textAlign: 'center', color: 'var(--text-muted)', fontSize: 12 }}>
+        Not enough paired forecast days to score accuracy yet.
+      </div>
     );
-    if (!paired.length) return null;
-    const close = paired.filter(isCloseMatch).length;
-    return { close, total: paired.length, pct: Math.round((close / paired.length) * 100) };
-  }, [rows]);
+  }
+
+  const { overall, last7, last14, mae, rolling, sorted } = stats;
 
   return (
-    <div className="accuracy-summary-card">
-      <div className="accuracy-summary-head">
-        <div>
-          <div className="accuracy-summary-title">
-            Forecast accuracy · {REGIONS[region].short}
-            <InfoTip text={`Share of days where the RF forecast was within ${ACCURACY_TOL} mg/m³ of Copernicus CHL (env-history). Same rule as “Close match” in the table below.`} />
-          </div>
-          <div className="accuracy-summary-sub">
-            Close match rate · tolerance {ACCURACY_TOL} mg/m³
-          </div>
-        </div>
-        {overall && (
-          <div className="accuracy-summary-overall">
-            <div className="accuracy-summary-overall-label">All paired days</div>
-            <div className="accuracy-summary-overall-val" style={{ color: accuracyPctColor(overall.pct) }}>
-              {overall.pct}%
-            </div>
-            <div className="accuracy-summary-overall-meta">{overall.close}/{overall.total} days</div>
-          </div>
-        )}
-        <div className="accuracy-period-toggle">
-          <button
-            type="button"
-            className={`accuracy-period-btn ${mode === 'week' ? 'active' : ''}`}
-            onClick={() => setMode('week')}>
-            Weekly
-          </button>
-          <button
-            type="button"
-            className={`accuracy-period-btn ${mode === 'biweek' ? 'active' : ''}`}
-            onClick={() => setMode('biweek')}>
-            Bi-weekly
-          </button>
+    <div className="accuracy-skill-block">
+      <div className="section-head" style={{ marginBottom: 10 }}>
+        <h2 className="section-title">Forecast skill · {REGIONS[region].short}</h2>
+        <div className="section-sub">
+          vs Copernicus CHL · ±{ACCURACY_TOL} mg/m³
+          <InfoTip text={tolTip} />
         </div>
       </div>
-      {periods.length === 0 ? (
-        <div className="accuracy-summary-empty">Not enough paired forecast days yet.</div>
-      ) : (
-        <div className="accuracy-period-grid">
-          {periods.map(p => (
-            <div key={`${mode}-${p.idx}`} className="accuracy-period-tile">
-              <div className="accuracy-period-label">{p.label}</div>
-              <div className="accuracy-period-pct" style={{ color: accuracyPctColor(p.pct) }}>
-                {p.pct}%
-              </div>
-              <div className="accuracy-period-meta">{p.close}/{p.total} close match</div>
-            </div>
-          ))}
+
+      <div className="kpi-grid accuracy-kpi-grid">
+        <KpiCard
+          label="Close match · all days"
+          badge={`${overall.pct}%`}
+          badgeLevel={accuracyBadgeLevel(overall.pct)}
+          sub={<span>{overall.close} of {overall.total} days</span>}
+          info={tolTip}
+          sparkData={rolling.map(d => d.pct)}
+          sparkColor="var(--teal)"
+        />
+        <KpiCard
+          label="Last 7 days"
+          badge={last7 ? `${last7.pct}%` : '—'}
+          badgeLevel={last7 ? accuracyBadgeLevel(last7.pct) : 'med'}
+          sub={last7 ? <span>{last7.close}/{last7.total} days</span> : null}
+        />
+        <KpiCard
+          label="Last 14 days"
+          badge={last14 ? `${last14.pct}%` : '—'}
+          badgeLevel={last14 ? accuracyBadgeLevel(last14.pct) : 'med'}
+          sub={last14 ? <span>{last14.close}/{last14.total} days</span> : null}
+        />
+        <KpiCard
+          label="Typical |error|"
+          value={fmtNum(mae, 3)}
+          unit="mg/m³"
+          sub={<span>Mean gap vs Copernicus</span>}
+          info="Average absolute difference between predicted and observed CHL over all paired days. Lower is better."
+        />
+      </div>
+
+      <div className="chart-grid-2" style={{ marginTop: 14 }}>
+        <div className="chart">
+          <div className="chart-header">
+            <div className="chart-title">Close-match rate · 7-day rolling</div>
+            <div className="chart-meta">% of days within {ACCURACY_TOL} mg/m³</div>
+          </div>
+          <LineChart
+            data={rolling}
+            x="date"
+            ys={[{ key: 'pct', label: 'Close match %', color: 'var(--teal)' }]}
+            height={200}
+            areaFill={true}
+            height_unit="%"
+          />
         </div>
-      )}
+        <div className="chart">
+          <div className="chart-header">
+            <div className="chart-title">Day-by-day outcome</div>
+            <div className="chart-meta">{sorted.length} forecast days · oldest → newest</div>
+          </div>
+          <div style={{ padding: '8px 4px 4px' }}>
+            {window.AccuracyDayStrip
+              ? <window.AccuracyDayStrip rows={sorted} tol={ACCURACY_TOL} />
+              : null}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -722,7 +740,7 @@ function AccuracyTab({ region, accuracy, env }) {
 
   return (
     <div style={{display:'flex', flexDirection:'column', gap:18}}>
-      <ForecastAccuracyCard rows={merged} region={region} />
+      <AccuracySkillBlock rows={merged} region={region} />
       <div style={{display:'grid', gridTemplateColumns:'minmax(0, 1fr) minmax(0, 1fr)', gap:14}}>
         <div className="chart">
           <div className="chart-header">
