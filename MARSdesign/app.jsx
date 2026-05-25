@@ -25,39 +25,17 @@ const ENV_VARS = [
   { key: "po4",    label: "Phosphate PO₄",   unit: "µmol/L",  color: "#c084fc" },
 ];
 
-const META = () => window.MARS_META || {};
-const VALIDATION = () => {
-  const rows = META().validation;
-  if (rows && rows.length) return rows.filter(r => !r.is_total);
-  return [
-    { region: "Thermaikos", n: 60984, rmse: 0.1283, mae: 0.0629, r2: 0.9185 },
-    { region: "Piraeus",    n: 90387, rmse: 0.0070, mae: 0.0040, r2: 0.9742 },
-    { region: "Limassol",   n: 8712,  rmse: 0.0051, mae: 0.0031, r2: 0.9085 },
-  ];
-};
-const VALIDATION_TOTAL = () => {
-  const rows = META().validation;
-  const total = rows && rows.find(r => r.is_total);
-  if (total) return total;
-  const v = VALIDATION();
-  return {
-    region: "Overall",
-    n: v.reduce((s, r) => s + (r.n || 0), 0),
-    rmse: 0.0794,
-    mae: 0.0264,
-    r2: 0.9449,
-  };
-};
-const BLOOM_METRICS = () => {
-  const rows = META().bloom_metrics;
-  if (rows && rows.length) return rows;
-  return [
-    { region: "Thermaikos", threshold: 1.00, prevalence: 12.4, precision: 0.825, recall: 0.849, f1: 0.837 },
-    { region: "Piraeus",    threshold: 0.50, prevalence: 0.0,  precision: 0,     recall: 0,     f1: 0 },
-    { region: "Limassol",   threshold: 0.30, prevalence: 0.0,  precision: 0,     recall: 0,     f1: 0 },
-  ];
-};
-const MODEL_LABEL = () => META().model_version || "rf_chl · v2026.05";
+// validation metrics (from the original dashboard)
+const VALIDATION = [
+  { region: "Thermaikos", n: 60984, rmse: 0.1283, mae: 0.0629, r2: 0.9185 },
+  { region: "Piraeus",    n: 90387, rmse: 0.0070, mae: 0.0040, r2: 0.9742 },
+  { region: "Limassol",   n: 8712,  rmse: 0.0051, mae: 0.0031, r2: 0.9085 },
+];
+const BLOOM_METRICS = [
+  { region: "Thermaikos", threshold: 1.00, prevalence: 12.4, precision: 0.825, recall: 0.849, f1: 0.837 },
+  { region: "Piraeus",    threshold: 0.50, prevalence: 0.0,  precision: 0,     recall: 0,     f1: 0 },
+  { region: "Limassol",   threshold: 0.30, prevalence: 0.0,  precision: 0,     recall: 0,     f1: 0 },
+];
 
 function riskLevel(pct) {
   if (pct == null || isNaN(pct)) return 'low';
@@ -84,7 +62,7 @@ function TopBar({ theme, onToggleTheme }) {
 
   return (
     <header className="topbar">
-      <div className="topbar-brand" title="MARS — Marine Autonomous Risk System">
+      <a className="topbar-brand" href="MARS%20Logo.html" title="Logo & identity">
         {window.MarsLogo
           ? <window.MarsLogo variant={logoVariant} size={38} />
           : <div className="brand-mark">M</div>}
@@ -92,7 +70,7 @@ function TopBar({ theme, onToggleTheme }) {
           <div className="brand-title">MARS</div>
           <div className="brand-sub">Marine Autonomous Risk System</div>
         </div>
-      </div>
+      </a>
 
       <div className="topbar-credit">
         <span className="topbar-credit-text">
@@ -154,7 +132,7 @@ function Hero({ regionData, region, asOf, theme, onToggleTheme }) {
         <div className="hero-meta-row">Forecast as of</div>
         <div className="hero-meta-val">{asOf}</div>
         <div className="hero-meta-row" style={{marginTop:6}}>Model</div>
-        <div className="hero-meta-val">{MODEL_LABEL()}</div>
+        <div className="hero-meta-val">rf_chl · v2026.05</div>
       </div>
     </div>
   );
@@ -205,8 +183,7 @@ function FlagIcon({ country }) {
   return null;
 }
 
-function MapSection({ region, setRegion, regionSummaries, coverage }) {
-  const cov = coverage || {};
+function MapSection({ region, setRegion, regionSummaries }) {
   return (
     <div className="map-card">
       <div className="map-pane">
@@ -267,12 +244,8 @@ function MapSection({ region, setRegion, regionSummaries, coverage }) {
         })}
         <div style={{padding:'14px 18px', marginTop:'auto', borderTop:'1px solid var(--line)'}}>
           <div style={{fontSize:10.5, color:'var(--text-muted)', letterSpacing:1.2, textTransform:'uppercase', fontWeight:600, marginBottom:6}}>Coverage window</div>
-          <div style={{fontFamily:'var(--font-mono)', fontSize:12, color:'var(--text)'}}>
-            {cov.start && cov.end ? `${cov.start} → ${cov.end}` : '—'}
-          </div>
-          <div style={{fontFamily:'var(--font-mono)', fontSize:11, color:'var(--text-muted)', marginTop:2}}>
-            {cov.forecast_days != null ? `${cov.forecast_days} forecast days` : '—'} · {cov.basin_count || 3} locations
-          </div>
+          <div style={{fontFamily:'var(--font-mono)', fontSize:12, color:'var(--text)'}}>2026-02-13 → 2026-05-20</div>
+          <div style={{fontFamily:'var(--font-mono)', fontSize:11, color:'var(--text-muted)', marginTop:2}}>97 forecast days · 3 locations</div>
         </div>
       </div>
     </div>
@@ -283,7 +256,7 @@ function MapSection({ region, setRegion, regionSummaries, coverage }) {
 
 function KpiCard({ label, value, unit, sub, info, sparkData, sparkColor, badge, badgeLevel }) {
   return (
-    <div className="kpi kpi-card">
+    <div className="kpi">
       <div className="kpi-label">
         <span>{label}</span>
         {info && <InfoTip text={info} />}
@@ -606,29 +579,24 @@ function AccuracyTab({ region, accuracy }) {
               </tr>
             </thead>
             <tbody>
-              {VALIDATION().map(r => (
+              {VALIDATION.map(r => (
                 <tr key={r.region}>
                   <td style={{color:'var(--text)'}}>{r.region}</td>
-                  <td className="num">{(r.n || 0).toLocaleString()}</td>
-                  <td className="num">{(r.rmse ?? 0).toFixed(4)}</td>
-                  <td className="num">{(r.mae ?? 0).toFixed(4)}</td>
+                  <td className="num">{r.n.toLocaleString()}</td>
+                  <td className="num">{r.rmse.toFixed(4)}</td>
+                  <td className="num">{r.mae.toFixed(4)}</td>
                   <td className="num" style={{color: r.r2 > 0.9 ? 'var(--ok)' : 'var(--text)'}}>
-                    {(r.r2 ?? 0).toFixed(4)}
+                    {r.r2.toFixed(4)}
                   </td>
                 </tr>
               ))}
-              {(() => {
-                const t = VALIDATION_TOTAL();
-                return (
               <tr className="total">
-                <td>{t.region}</td>
-                <td className="num">{(t.n || 0).toLocaleString()}</td>
-                <td className="num">{(t.rmse ?? 0).toFixed(4)}</td>
-                <td className="num">{(t.mae ?? 0).toFixed(4)}</td>
-                <td className="num">{(t.r2 ?? 0).toFixed(4)}</td>
+                <td>Overall</td>
+                <td className="num">160,083</td>
+                <td className="num">0.0794</td>
+                <td className="num">0.0264</td>
+                <td className="num">0.9449</td>
               </tr>
-                );
-              })()}
             </tbody>
           </table>
         </div>
@@ -649,15 +617,15 @@ function AccuracyTab({ region, accuracy }) {
               </tr>
             </thead>
             <tbody>
-              {BLOOM_METRICS().map(r => (
+              {BLOOM_METRICS.map(r => (
                 <tr key={r.region}>
                   <td style={{color:'var(--text)'}}>{r.region}</td>
-                  <td className="num">{(r.threshold ?? 0).toFixed(2)}</td>
-                  <td className="num">{r.prevalence != null ? `${Number(r.prevalence).toFixed(1)}%` : '—'}</td>
-                  <td className="num">{(r.precision ?? 0).toFixed(3)}</td>
-                  <td className="num">{(r.recall ?? 0).toFixed(3)}</td>
+                  <td className="num">{r.threshold.toFixed(2)}</td>
+                  <td className="num">{r.prevalence.toFixed(1)}%</td>
+                  <td className="num">{r.precision.toFixed(3)}</td>
+                  <td className="num">{r.recall.toFixed(3)}</td>
                   <td className="num" style={{color: r.f1 > 0.7 ? 'var(--ok)' : r.f1 > 0 ? 'var(--text)' : 'var(--text-muted)'}}>
-                    {(r.f1 ?? 0).toFixed(3)}
+                    {r.f1.toFixed(3)}
                   </td>
                 </tr>
               ))}
@@ -807,17 +775,7 @@ function App() {
             <h2 className="section-title">Regional outlook · Eastern Mediterranean</h2>
             <div className="section-sub">3 locations · click any to focus</div>
           </div>
-          <MapSection
-            region={region}
-            setRegion={setRegion}
-            regionSummaries={summaries}
-            coverage={{
-              start: META().coverage_start,
-              end: META().coverage_end,
-              forecast_days: META().forecast_days,
-              basin_count: META().basin_count,
-            }}
-          />
+          <MapSection region={region} setRegion={setRegion} regionSummaries={summaries} />
         </div>
 
         <KpiRow region={region} summary={summary} env={env} />

@@ -1,6 +1,6 @@
-# Claude design assets (used inside Streamlit)
+# MARSdesign assets (used inside Streamlit)
 
-These files are the UI (HTML/CSS/JSX). You do not run them directly.
+Synced from `MARSdesign/` — the UI (HTML/CSS/JSX). You do not run this folder directly.
 
 - **Online:** deploy `streamlit_app.py` on [Streamlit Cloud](https://share.streamlit.io)
 - **Local:** `.\dev.ps1` from the repo root

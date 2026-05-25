@@ -1,5 +1,5 @@
 """
-MARS dashboard — Streamlit host for the Claude design (web/).
+MARS dashboard — Streamlit host for the MARSdesign UI (web/).
 
 Deploy online: https://share.streamlit.io → this file as main script.
 Run locally:  streamlit run streamlit_app.py --server.port 8765
@@ -30,13 +30,30 @@ st.set_page_config(
 st.markdown(
     """
     <style>
+      /* Full-bleed dashboard — hide Streamlit chrome */
       header[data-testid="stHeader"] { background: transparent; }
       [data-testid="stToolbar"] { display: none; }
+      footer { visibility: hidden; }
+      #MainMenu { visibility: hidden; }
+      .stApp {
+        background: #f6f8fa;
+      }
       .block-container {
         padding: 0 !important;
         max-width: 100% !important;
       }
-      iframe { border: none !important; }
+      section[data-testid="stMain"] > div {
+        padding-top: 0 !important;
+      }
+      iframe {
+        border: none !important;
+        width: 100% !important;
+        min-height: 100vh !important;
+        height: 100vh !important;
+      }
+      div[data-testid="stHtml"] {
+        width: 100%;
+      }
     </style>
     """,
     unsafe_allow_html=True,
@@ -55,5 +72,4 @@ except Exception as exc:
     st.exception(exc)
     st.stop()
 
-# st.html() does not accept scrolling= (causes TypeError on Streamlit Cloud).
 components.html(html, height=900, scrolling=True)

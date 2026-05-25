@@ -12,9 +12,11 @@ foreach ($c in $listeners) {
     Stop-Process -Id $c.OwningProcess -Force -ErrorAction SilentlyContinue
 }
 
+$Python = if (Get-Command py -ErrorAction SilentlyContinue) { "py", "-3" } else { "python" }
+
 if (-not $SkipExport) {
     Write-Host "Updating dashboard data from data/ ..."
-    python .github/scripts/export_dashboard_data.py
+    & @Python .github/scripts/export_dashboard_data.py
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 }
 
@@ -24,4 +26,4 @@ Write-Host "Press Ctrl+C to stop."
 Write-Host ""
 
 Start-Process "http://localhost:$Port/"
-streamlit run streamlit_app.py --server.port $Port --server.headless true
+& @Python -m streamlit run streamlit_app.py --server.port $Port --server.headless true

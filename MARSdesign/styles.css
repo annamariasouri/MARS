@@ -81,8 +81,7 @@
     0 0 0 1px rgba(15, 23, 42, 0.02),
     0 8px 24px -16px rgba(12, 74, 110, 0.20);
 }
-.theme-light .kpi-card,
-.theme-light .kpi {
+.theme-light .kpi-card {
   background: var(--surface);
   border: 1px solid var(--line);
   box-shadow:
@@ -91,8 +90,7 @@
   position: relative;
 }
 /* Cyan accent stripe on KPI cards */
-.theme-light .kpi-card::before,
-.theme-light .kpi::before {
+.theme-light .kpi-card::before {
   content: "";
   position: absolute;
   top: 0; left: 16px; right: 16px;

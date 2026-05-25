@@ -4,7 +4,7 @@ Daily red-tide risk forecasts for the Eastern Mediterranean (Thermaikos, Piraeus
 
 ## Dashboard (primary UI)
 
-The **Claude design** lives in `web/`. **Streamlit** hosts it online and locally (same look, same `data/` CSVs).
+The **MARSdesign** prototype lives in `MARSdesign/`; the integrated UI used by Streamlit is in `web/`. **Streamlit** hosts it online and locally (same look, live `data/` CSVs).
 
 ### Run locally
 
@@ -38,7 +38,8 @@ GitHub Pages is optional (workflow **Deploy MARS Dashboard**, manual run only). 
 
 | Path | Role |
 |------|------|
-| `web/` | **Dashboard UI** (`index.html`, `app.jsx`, …) |
+| `MARSdesign/` | Design prototype (reference screenshots, handoff) |
+| `web/` | **Dashboard UI** synced from MARSdesign (`index.html`, `app.jsx`, …) |
 | `data/forecasts/` | Daily forecast logs |
 | `data/copernicus/env_history/` | Environmental time series |
 | `data/evaluation/` | Accuracy & bloom metrics |
