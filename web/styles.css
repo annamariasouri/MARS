@@ -1040,58 +1040,6 @@ body::before {
   .accuracy-kpi-grid { grid-template-columns: 1fr; }
 }
 
-.accuracy-day-strip-wrap {
-  padding: 4px 0 0;
-}
-.accuracy-day-strip {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
-  padding: 6px 0 10px;
-}
-.accuracy-day-strip--empty {
-  font-size: 12px;
-  color: var(--text-muted);
-  padding: 20px 0;
-}
-.accuracy-day {
-  width: 10px;
-  height: 22px;
-  border-radius: 2px;
-  background: var(--line);
-  flex-shrink: 0;
-  transition: transform 0.12s ease;
-}
-.accuracy-day:hover {
-  transform: scaleY(1.08);
-}
-.accuracy-day.hit { background: var(--ok); opacity: 0.85; }
-.accuracy-day.miss { background: var(--warn); opacity: 0.9; }
-.accuracy-day.none { background: var(--line); opacity: 0.5; }
-
-.accuracy-day-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  font-size: 11px;
-  color: var(--text-muted);
-}
-.accuracy-day-legend span {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.accuracy-day-swatch {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
-  font-style: normal;
-}
-.accuracy-day-swatch.hit { background: var(--ok); }
-.accuracy-day-swatch.miss { background: var(--warn); }
-.accuracy-day-swatch.none { background: var(--line); }
-
 .kpi-spark {
   position: absolute;
   right: 0;

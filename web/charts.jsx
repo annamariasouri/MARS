@@ -321,45 +321,6 @@ function Sparkline({ values, color = 'var(--teal)', height = 28, fill = true }) 
   );
 }
 
-// ---------- Accuracy day strip (forecast vs Copernicus) ----------
-function AccuracyDayStrip({ rows, tol = 0.2 }) {
-  const sorted = (rows || [])
-    .filter(d => d && d.target_date)
-    .sort((a, b) => new Date(a.target_date) - new Date(b.target_date));
-
-  if (!sorted.length) {
-    return <div className="accuracy-day-strip accuracy-day-strip--empty">No paired days</div>;
-  }
-
-  return (
-    <div className="accuracy-day-strip-wrap">
-      <div className="accuracy-day-strip">
-        {sorted.map((d, i) => {
-          const obs = d.observed_chl;
-          const err = d.err;
-          let cls = 'none';
-          let tip = `${d.target_date}: no observation`;
-          if (obs != null && !isNaN(obs) && err != null && !isNaN(err)) {
-            if (Math.abs(err) < tol) {
-              cls = 'hit';
-              tip = `${d.target_date}: close match (|err| ${fmtNum(Math.abs(err), 3)} mg/m³)`;
-            } else {
-              cls = 'miss';
-              tip = `${d.target_date}: large gap (|err| ${fmtNum(Math.abs(err), 3)} mg/m³)`;
-            }
-          }
-          return <div key={i} className={`accuracy-day ${cls}`} title={tip} />;
-        })}
-      </div>
-      <div className="accuracy-day-legend">
-        <span><i className="accuracy-day-swatch hit" /> Close match</span>
-        <span><i className="accuracy-day-swatch miss" /> Large gap</span>
-        <span><i className="accuracy-day-swatch none" /> No observation</span>
-      </div>
-    </div>
-  );
-}
-
 // ---------- Risk strip ----------
 function RiskStrip({ values, threshold }) {
   // values: array of predicted chl values; classify each vs threshold
@@ -377,4 +338,4 @@ function RiskStrip({ values, threshold }) {
   );
 }
 
-Object.assign(window, { LineChart, ScatterChart, Sparkline, RiskStrip, AccuracyDayStrip, fmtNum, fmtDate });
+Object.assign(window, { LineChart, ScatterChart, Sparkline, RiskStrip, fmtNum, fmtDate });

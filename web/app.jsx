@@ -1,6 +1,6 @@
 // MARS Dashboard — main app
 const { useState, useMemo } = React;
-const { LineChart, ScatterChart, Sparkline, RiskStrip, AccuracyDayStrip, fmtNum, fmtDate, RegionMap } = window;
+const { LineChart, ScatterChart, Sparkline, RiskStrip, fmtNum, fmtDate, RegionMap } = window;
 
 // Tweak defaults — host can rewrite this block.
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
@@ -659,7 +659,7 @@ function AccuracySkillBlock({ rows, region }) {
     );
   }
 
-  const { overall, last7, last14, mae, rolling, sorted } = stats;
+  const { overall, last7, last14, mae, rolling } = stats;
 
   return (
     <div className="accuracy-skill-block">
@@ -702,32 +702,19 @@ function AccuracySkillBlock({ rows, region }) {
         />
       </div>
 
-      <div className="chart-grid-2" style={{ marginTop: 14 }}>
-        <div className="chart">
-          <div className="chart-header">
-            <div className="chart-title">Close-match rate · 7-day rolling</div>
-            <div className="chart-meta">% of days within {ACCURACY_TOL} mg/m³</div>
-          </div>
-          <LineChart
-            data={rolling}
-            x="date"
-            ys={[{ key: 'pct', label: 'Close match %', color: 'var(--teal)' }]}
-            height={200}
-            areaFill={true}
-            height_unit="%"
-          />
+      <div className="chart" style={{ marginTop: 14 }}>
+        <div className="chart-header">
+          <div className="chart-title">Close-match rate · 7-day rolling</div>
+          <div className="chart-meta">% of days within {ACCURACY_TOL} mg/m³</div>
         </div>
-        <div className="chart">
-          <div className="chart-header">
-            <div className="chart-title">Day-by-day outcome</div>
-            <div className="chart-meta">{sorted.length} forecast days · oldest → newest</div>
-          </div>
-          <div style={{ padding: '8px 4px 4px' }}>
-            {window.AccuracyDayStrip
-              ? <window.AccuracyDayStrip rows={sorted} tol={ACCURACY_TOL} />
-              : null}
-          </div>
-        </div>
+        <LineChart
+          data={rolling}
+          x="date"
+          ys={[{ key: 'pct', label: 'Close match %', color: 'var(--teal)' }]}
+          height={200}
+          areaFill={true}
+          height_unit="%"
+        />
       </div>
     </div>
   );
