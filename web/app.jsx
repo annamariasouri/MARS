@@ -581,6 +581,21 @@ function TrendsTab({ region, env }) {
   );
 }
 
+function forecastMatchStatus(row) {
+  const obs = row.observed_chl;
+  const err = row.err;
+  if (obs == null || obs === '' || isNaN(obs)) {
+    return { key: 'pending', label: 'No observation yet', color: 'var(--text-muted)' };
+  }
+  if (err == null || isNaN(err)) {
+    return { key: 'unknown', label: '—', color: 'var(--text-muted)' };
+  }
+  if (Math.abs(err) < 0.2) {
+    return { key: 'close', label: 'Close match', color: 'var(--ok)' };
+  }
+  return { key: 'gap', label: 'Large gap', color: 'var(--warn)' };
+}
+
 function AccuracyTab({ region, accuracy, env }) {
   const merged = useMemo(() => mergeAccuracyWithEnv(accuracy, env), [accuracy, env]);
   const withObs = merged.filter(d => d.observed_chl != null && !isNaN(d.observed_chl) && d.predicted_chl != null);
@@ -588,6 +603,11 @@ function AccuracyTab({ region, accuracy, env }) {
 
   return (
     <div style={{display:'flex', flexDirection:'column', gap:18}}>
+      <p className="accuracy-explainer">
+        <strong>Predicted</strong> (blue) is the Random Forest daily CHL forecast.
+        <strong> Observed</strong> (orange) is Copernicus chlorophyll from env-history — the reference we compare against.
+        When the two lines move together, the model is tracking well; when they diverge (e.g. a flat high blue line while orange drops), the forecast is off.
+      </p>
       <div style={{display:'grid', gridTemplateColumns:'minmax(0, 1fr) minmax(0, 1fr)', gap:14}}>
         <div className="chart">
           <div className="chart-header">
@@ -694,8 +714,11 @@ function AccuracyTab({ region, accuracy, env }) {
 
       <div className="chart" style={{padding:0}}>
           <div className="chart-header" style={{padding:'14px 18px 10px'}}>
-          <div className="chart-title">Recent forecasts · {REGIONS[region].short}</div>
-          <div className="chart-meta">12 most recent · observed from env-history when available</div>
+          <div className="chart-title">
+            Recent forecasts · {REGIONS[region].short}
+            <InfoTip text="Each row is one forecast day. Error = predicted − observed (mg/m³). Status compares that error to a 0.2 mg/m³ tolerance: Close match means the model was near Copernicus CHL that day; Large gap means it missed. No observation yet means env-history has no CHL for that date (often the latest day)." />
+          </div>
+          <div className="chart-meta">12 most recent days</div>
         </div>
         <table className="tbl">
           <thead>
@@ -705,12 +728,16 @@ function AccuracyTab({ region, accuracy, env }) {
               <th className="num">Observed</th>
               <th className="num">Error</th>
               <th className="num">|Error|</th>
-              <th>Status</th>
+              <th>
+                Status
+                <InfoTip text="Close match: |error| &lt; 0.2 mg/m³. Large gap: model further from Copernicus CHL. No observation yet: no env-history CHL for that date." />
+              </th>
             </tr>
           </thead>
           <tbody>
             {recent.map((r, i) => {
-              const hasObs = r.observed_chl != null;
+              const hasObs = r.observed_chl != null && !isNaN(r.observed_chl);
+              const st = forecastMatchStatus(r);
               return (
                 <tr key={i}>
                   <td style={{color:'var(--text)'}}>{r.target_date}</td>
@@ -718,12 +745,8 @@ function AccuracyTab({ region, accuracy, env }) {
                   <td className="num">{hasObs ? fmtNum(r.observed_chl, 3) : '—'}</td>
                   <td className="num">{hasObs ? fmtNum(r.err, 3) : '—'}</td>
                   <td className="num">{hasObs ? fmtNum(r.abs_err, 3) : '—'}</td>
-                  <td style={{fontFamily:'var(--font-ui)'}}>
-                    {hasObs
-                      ? <span style={{color: Math.abs(r.err) < 0.2 ? 'var(--ok)' : 'var(--warn)'}}>
-                          {Math.abs(r.err) < 0.2 ? '✓ within tol.' : '○ off tol.'}
-                        </span>
-                      : <span style={{color:'var(--text-muted)'}}>● pending obs</span>}
+                  <td style={{fontFamily:'var(--font-ui)', color: st.color, fontSize: 12}}>
+                    {st.label}
                   </td>
                 </tr>
               );

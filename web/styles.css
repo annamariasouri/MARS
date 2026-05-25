@@ -1030,6 +1030,21 @@ body::before {
 .kpi-trend.down { color: var(--ok); }
 .kpi-trend.flat { color: var(--text-muted); }
 
+.accuracy-explainer {
+  margin: 0;
+  padding: 12px 14px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-dim);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.accuracy-explainer strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
 .kpi-spark {
   position: absolute;
   right: 0;
