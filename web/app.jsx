@@ -58,6 +58,7 @@ const BLOOM_METRICS = () => {
   ];
 };
 const MODEL_LABEL = () => META().model_version || "rf_chl · v2026.05";
+const ACCURACY_TOL = 0.2; // mg/m³ — same rule as Close match in the recent table
 
 function riskLevel(pct) {
   if (pct == null || isNaN(pct)) return 'low';
@@ -590,10 +591,128 @@ function forecastMatchStatus(row) {
   if (err == null || isNaN(err)) {
     return { key: 'unknown', label: '—', color: 'var(--text-muted)' };
   }
-  if (Math.abs(err) < 0.2) {
+  if (Math.abs(err) < ACCURACY_TOL) {
     return { key: 'close', label: 'Close match', color: 'var(--ok)' };
   }
   return { key: 'gap', label: 'Large gap', color: 'var(--warn)' };
+}
+
+function isCloseMatch(row) {
+  const err = row.err;
+  return row.observed_chl != null && !isNaN(row.observed_chl)
+    && row.predicted_chl != null && err != null && !isNaN(err)
+    && Math.abs(err) < ACCURACY_TOL;
+}
+
+/** Group paired forecast days into weekly (7d) or bi-weekly (14d) buckets. */
+function computePeriodAccuracy(rows, periodDays) {
+  const paired = rows.filter(
+    d => d.target_date && d.predicted_chl != null && d.observed_chl != null && !isNaN(d.observed_chl)
+  );
+  if (!paired.length) return [];
+
+  const sorted = [...paired].sort((a, b) => new Date(a.target_date) - new Date(b.target_date));
+  const minT = new Date(sorted[0].target_date).getTime();
+  const dayMs = 86400000;
+  const buckets = new Map();
+
+  sorted.forEach(d => {
+    const idx = Math.floor((new Date(d.target_date).getTime() - minT) / (periodDays * dayMs));
+    if (!buckets.has(idx)) buckets.set(idx, []);
+    buckets.get(idx).push(d);
+  });
+
+  return Array.from(buckets.entries())
+    .map(([idx, days]) => {
+      const close = days.filter(isCloseMatch).length;
+      const start = days[0].target_date;
+      const end = days[days.length - 1].target_date;
+      return {
+        idx,
+        start,
+        end,
+        label: `${fmtDate(start)} – ${fmtDate(end)}`,
+        total: days.length,
+        close,
+        pct: Math.round((close / days.length) * 100),
+      };
+    })
+    .sort((a, b) => b.idx - a.idx);
+}
+
+function accuracyPctColor(pct) {
+  if (pct >= 80) return 'var(--ok)';
+  if (pct >= 50) return 'var(--warn)';
+  return 'var(--danger)';
+}
+
+function ForecastAccuracyCard({ rows, region }) {
+  const [mode, setMode] = useState('week');
+  const periodDays = mode === 'week' ? 7 : 14;
+  const periods = useMemo(() => computePeriodAccuracy(rows, periodDays), [rows, periodDays]);
+
+  const overall = useMemo(() => {
+    const paired = rows.filter(
+      d => d.predicted_chl != null && d.observed_chl != null && !isNaN(d.observed_chl)
+    );
+    if (!paired.length) return null;
+    const close = paired.filter(isCloseMatch).length;
+    return { close, total: paired.length, pct: Math.round((close / paired.length) * 100) };
+  }, [rows]);
+
+  return (
+    <div className="accuracy-summary-card">
+      <div className="accuracy-summary-head">
+        <div>
+          <div className="accuracy-summary-title">
+            Forecast accuracy · {REGIONS[region].short}
+            <InfoTip text={`Share of days where the RF forecast was within ${ACCURACY_TOL} mg/m³ of Copernicus CHL (env-history). Same rule as “Close match” in the table below.`} />
+          </div>
+          <div className="accuracy-summary-sub">
+            Close match rate · tolerance {ACCURACY_TOL} mg/m³
+          </div>
+        </div>
+        {overall && (
+          <div className="accuracy-summary-overall">
+            <div className="accuracy-summary-overall-label">All paired days</div>
+            <div className="accuracy-summary-overall-val" style={{ color: accuracyPctColor(overall.pct) }}>
+              {overall.pct}%
+            </div>
+            <div className="accuracy-summary-overall-meta">{overall.close}/{overall.total} days</div>
+          </div>
+        )}
+        <div className="accuracy-period-toggle">
+          <button
+            type="button"
+            className={`accuracy-period-btn ${mode === 'week' ? 'active' : ''}`}
+            onClick={() => setMode('week')}>
+            Weekly
+          </button>
+          <button
+            type="button"
+            className={`accuracy-period-btn ${mode === 'biweek' ? 'active' : ''}`}
+            onClick={() => setMode('biweek')}>
+            Bi-weekly
+          </button>
+        </div>
+      </div>
+      {periods.length === 0 ? (
+        <div className="accuracy-summary-empty">Not enough paired forecast days yet.</div>
+      ) : (
+        <div className="accuracy-period-grid">
+          {periods.map(p => (
+            <div key={`${mode}-${p.idx}`} className="accuracy-period-tile">
+              <div className="accuracy-period-label">{p.label}</div>
+              <div className="accuracy-period-pct" style={{ color: accuracyPctColor(p.pct) }}>
+                {p.pct}%
+              </div>
+              <div className="accuracy-period-meta">{p.close}/{p.total} close match</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function AccuracyTab({ region, accuracy, env }) {
@@ -603,11 +722,7 @@ function AccuracyTab({ region, accuracy, env }) {
 
   return (
     <div style={{display:'flex', flexDirection:'column', gap:18}}>
-      <p className="accuracy-explainer">
-        <strong>Predicted</strong> (blue) is the Random Forest daily CHL forecast.
-        <strong> Observed</strong> (orange) is Copernicus chlorophyll from env-history — the reference we compare against.
-        When the two lines move together, the model is tracking well; when they diverge (e.g. a flat high blue line while orange drops), the forecast is off.
-      </p>
+      <ForecastAccuracyCard rows={merged} region={region} />
       <div style={{display:'grid', gridTemplateColumns:'minmax(0, 1fr) minmax(0, 1fr)', gap:14}}>
         <div className="chart">
           <div className="chart-header">

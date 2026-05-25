@@ -1030,19 +1030,118 @@ body::before {
 .kpi-trend.down { color: var(--ok); }
 .kpi-trend.flat { color: var(--text-muted); }
 
-.accuracy-explainer {
-  margin: 0;
-  padding: 12px 14px;
-  font-size: 12.5px;
-  line-height: 1.55;
-  color: var(--text-dim);
+.accuracy-summary-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.02), 0 6px 18px -12px rgba(12, 74, 110, 0.16);
+}
+.theme-light .accuracy-summary-card {
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.02), 0 8px 24px -16px rgba(12, 74, 110, 0.20);
+}
+.accuracy-summary-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px 20px;
+  margin-bottom: 14px;
+}
+.accuracy-summary-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.accuracy-summary-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+.accuracy-summary-overall {
+  margin-left: auto;
+  text-align: right;
+}
+.accuracy-summary-overall-label {
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.accuracy-summary-overall-val {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+.accuracy-summary-overall-meta {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+.accuracy-period-toggle {
+  display: flex;
+  gap: 4px;
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
+  padding: 3px;
 }
-.accuracy-explainer strong {
-  color: var(--text);
+.accuracy-period-btn {
+  font-family: var(--font-ui);
+  font-size: 11px;
   font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.accuracy-period-btn.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.accuracy-period-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+.accuracy-period-tile {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+.accuracy-period-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+.accuracy-period-pct {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+.accuracy-period-meta {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.accuracy-summary-empty {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 8px 0;
 }
 
 .kpi-spark {
