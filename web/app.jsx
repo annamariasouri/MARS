@@ -60,6 +60,7 @@ const BLOOM_METRICS = () => {
 const MODEL_LABEL = () => META().model_version || "rf_chl · v2026.05";
 const ACCURACY_TOL = 0.2; // mg/m³ — same rule as Close match in the recent table
 
+/** Likelihood KPIs: share of forecast days projected to exceed threshold. */
 function riskLevel(pct) {
   if (pct == null || isNaN(pct)) return 'low';
   if (pct <= 33) return 'low';
@@ -68,6 +69,31 @@ function riskLevel(pct) {
 }
 function riskLabel(level) {
   return level === 'high' ? 'High' : level === 'med' ? 'Moderate' : 'Low';
+}
+
+/** Continuous risk: closeness to today's adaptive threshold (not a confirmed bloom). */
+const THRESHOLD_WATCH_PCT = 75;
+const THRESHOLD_HIGH_PCT = 90;
+
+function continuousRiskLevel(score, bloomFlag) {
+  if (bloomFlag === 1 || bloomFlag === true) return 'high';
+  if (score == null || isNaN(score)) return 'low';
+  if (score >= THRESHOLD_HIGH_PCT) return 'high';
+  if (score >= THRESHOLD_WATCH_PCT) return 'med';
+  return 'low';
+}
+
+function continuousRiskLabel(level, bloomFlag) {
+  if (bloomFlag === 1 || bloomFlag === true) return 'Alert';
+  return level === 'high' ? 'High' : level === 'med' ? 'Watch' : 'Low';
+}
+
+function continuousRiskSub(score, bloomFlag) {
+  if (bloomFlag === 1 || bloomFlag === true) {
+    return 'Predicted CHL at or above today\'s threshold';
+  }
+  if (score != null && score >= 100) return 'At threshold line · not a confirmed bloom';
+  return 'How close predicted CHL is to today\'s threshold';
 }
 
 /** Pair each forecast day with Copernicus CHL from env-history (Environmental Trends). */
@@ -360,11 +386,12 @@ function KpiRow({ region, summary, env }) {
         />
 
         <KpiCard
-          label="Continuous risk"
+          label="Near threshold"
           value=""
-          badge={`${riskLabel(riskLevel(summary.risk_score))} · ${fmtNum(summary.risk_score, 1)}%`}
-          badgeLevel={riskLevel(summary.risk_score)}
-          sub={<span>How close to threshold today</span>}
+          info="Smart-city view: how close today's RF prediction is to the adaptive threshold (P90 of grid forecasts). This is not a confirmed bloom — use Alert when the prediction crosses the line."
+          badge={`${continuousRiskLabel(continuousRiskLevel(summary.risk_score, summary.bloom_flag), summary.bloom_flag)} · ${fmtNum(summary.risk_score, 1)}%`}
+          badgeLevel={continuousRiskLevel(summary.risk_score, summary.bloom_flag)}
+          sub={<span>{continuousRiskSub(summary.risk_score, summary.bloom_flag)}</span>}
         />
 
         <KpiCard
@@ -941,12 +968,13 @@ function App() {
         tempTrend: currTemp - meanTemp7,
         threshold: last.threshold,
         risk_score: last.risk_score,
+        bloom_flag: last.flag,
         rec7: (risk7 / 7) * 100,
         rec30: (risk30 / 30) * 100,
         risk7, risk30,
         thresholdSeries: last30.map(d => d.threshold),
         chlSeries: e.slice(-14).map(d => d.chl).filter(v => !isNaN(v)),
-        level: riskLevel(last.risk_score),
+        level: continuousRiskLevel(last.risk_score, last.flag),
       };
     });
     return out;
