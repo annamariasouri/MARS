@@ -130,30 +130,76 @@ def load_env(region: str) -> pd.DataFrame:
     return merged.sort_values("date").reset_index(drop=True)
 
 
+def _env_chl_daily(region: str) -> pd.DataFrame:
+    """Daily median CHL from Copernicus env-history (same source as Environmental Trends)."""
+    env = load_env(region)
+    if env.empty or "chl" not in env.columns:
+        return pd.DataFrame()
+    daily = (
+        env.dropna(subset=["date", "chl"])
+        .groupby("date", as_index=False)["chl"]
+        .median()
+        .rename(columns={"date": "target_date", "chl": "env_chl"})
+    )
+    return daily
+
+
 def load_accuracy(region: str) -> pd.DataFrame:
     path = os.path.join(DATA_DIR, "evaluation", f"accuracy_{region}.csv")
-    if not os.path.exists(path):
-        return pd.DataFrame()
-    df = pd.read_csv(path)
-    df.columns = [c.strip().lower() for c in df.columns]
-    if "target_date" in df.columns:
-        df["target_date"] = pd.to_datetime(df["target_date"], errors="coerce").dt.strftime(
-            "%Y-%m-%d"
-        )
-    # One row per target day (median if multiple grid points)
-    if "target_date" in df.columns and len(df) > 0:
-        agg = {
-            c: "median"
-            for c in ("predicted_chl", "observed_chl", "err", "abs_err")
-            if c in df.columns
-        }
-        if agg:
-            df = df.groupby("target_date", as_index=False).agg(agg)
+    df = pd.DataFrame()
+    if os.path.exists(path):
+        df = pd.read_csv(path)
+        df.columns = [c.strip().lower() for c in df.columns]
+        if "target_date" in df.columns:
+            df["target_date"] = pd.to_datetime(df["target_date"], errors="coerce").dt.strftime(
+                "%Y-%m-%d"
+            )
+        # One row per target day (median if multiple grid points)
+        if "target_date" in df.columns and len(df) > 0:
+            agg = {
+                c: "median"
+                for c in ("predicted_chl", "observed_chl", "err", "abs_err")
+                if c in df.columns
+            }
+            if agg:
+                df = df.groupby("target_date", as_index=False).agg(agg)
+
+    if df.empty:
+        fc = load_forecast(region)
+        if fc.empty:
+            return pd.DataFrame()
+        df = fc.rename(columns={"date": "target_date"})[["target_date", "predicted_chl"]].copy()
+        df["observed_chl"] = None
+        df["err"] = None
+        df["abs_err"] = None
+
     keep = ["target_date", "predicted_chl", "observed_chl", "err", "abs_err"]
     for col in keep:
         if col not in df.columns:
             df[col] = None
-    return df[keep].sort_values("target_date").reset_index(drop=True)
+
+    return enrich_accuracy_with_env(region, df[keep])
+
+
+def enrich_accuracy_with_env(region: str, acc: pd.DataFrame) -> pd.DataFrame:
+    """Fill missing observed_chl from env-history CHL so accuracy charts are complete."""
+    env_daily = _env_chl_daily(region)
+    if env_daily.empty:
+        return acc.sort_values("target_date").reset_index(drop=True)
+
+    out = acc.merge(env_daily, on="target_date", how="left")
+    missing = out["observed_chl"].isna() & out["env_chl"].notna()
+    out.loc[missing, "observed_chl"] = out.loc[missing, "env_chl"]
+
+    has_both = out["predicted_chl"].notna() & out["observed_chl"].notna()
+    out.loc[has_both, "err"] = out.loc[has_both, "predicted_chl"] - out.loc[has_both, "observed_chl"]
+    out.loc[has_both, "abs_err"] = out.loc[has_both, "err"].abs()
+
+    return (
+        out.drop(columns=["env_chl"])
+        .sort_values("target_date")
+        .reset_index(drop=True)
+    )
 
 
 def load_validation_table() -> list[dict]:
@@ -266,7 +312,7 @@ def main() -> None:
     )
     with open(OUT_PATH, "w", encoding="utf-8") as f:
         f.write(content)
-    print(f"Wrote {OUT_PATH}")
+    print(f"Wrote {os.path.relpath(OUT_PATH, REPO_ROOT)}")
     print(
         f"  Coverage: {payload['MARS_META'].get('coverage_start')} -> "
         f"{payload['MARS_META'].get('coverage_end')} "

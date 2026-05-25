@@ -1947,653 +1947,653 @@ window.MARS_DATA = {
    {
     "target_date": "2026-02-14",
     "predicted_chl": 0.758,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.728046,
+    "err": 0.029954,
+    "abs_err": 0.029954
    },
    {
     "target_date": "2026-02-15",
     "predicted_chl": 0.758,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.61175,
+    "err": 0.14625,
+    "abs_err": 0.14625
    },
    {
     "target_date": "2026-02-16",
     "predicted_chl": 0.758,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.617294,
+    "err": 0.140706,
+    "abs_err": 0.140706
    },
    {
     "target_date": "2026-02-17",
     "predicted_chl": 0.758,
     "observed_chl": 0.85638,
-    "err": null,
-    "abs_err": null
+    "err": -0.09838,
+    "abs_err": 0.09838
    },
    {
     "target_date": "2026-02-18",
     "predicted_chl": 0.758,
     "observed_chl": 0.853596,
-    "err": null,
-    "abs_err": null
+    "err": -0.095596,
+    "abs_err": 0.095596
    },
    {
     "target_date": "2026-02-19",
     "predicted_chl": 0.758,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.575997,
+    "err": 0.182003,
+    "abs_err": 0.182003
    },
    {
     "target_date": "2026-02-20",
     "predicted_chl": 0.758,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.622044,
+    "err": 0.135956,
+    "abs_err": 0.135956
    },
    {
     "target_date": "2026-02-21",
     "predicted_chl": 0.757,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.606646,
+    "err": 0.150354,
+    "abs_err": 0.150354
    },
    {
     "target_date": "2026-02-22",
     "predicted_chl": 0.757,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.578568,
+    "err": 0.178432,
+    "abs_err": 0.178432
    },
    {
     "target_date": "2026-02-23",
     "predicted_chl": 0.757,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.61154,
+    "err": 0.14546,
+    "abs_err": 0.14546
    },
    {
     "target_date": "2026-02-24",
     "predicted_chl": 0.757,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.653585,
+    "err": 0.103415,
+    "abs_err": 0.103415
    },
    {
     "target_date": "2026-02-25",
     "predicted_chl": 0.803,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.695415,
+    "err": 0.107585,
+    "abs_err": 0.107585
    },
    {
     "target_date": "2026-02-26",
     "predicted_chl": 0.761,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.879951,
+    "err": -0.118951,
+    "abs_err": 0.118951
    },
    {
     "target_date": "2026-02-27",
     "predicted_chl": 0.766,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.812254,
+    "err": -0.046254,
+    "abs_err": 0.046254
    },
    {
     "target_date": "2026-02-28",
     "predicted_chl": 0.775,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.767825,
+    "err": 0.007175,
+    "abs_err": 0.007175
    },
    {
     "target_date": "2026-03-01",
     "predicted_chl": 0.761,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.741718,
+    "err": 0.019282,
+    "abs_err": 0.019282
    },
    {
     "target_date": "2026-03-02",
     "predicted_chl": 0.77,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.31245,
+    "err": -0.54245,
+    "abs_err": 0.54245
    },
    {
     "target_date": "2026-03-03",
     "predicted_chl": 0.802,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.593862,
+    "err": -0.791862,
+    "abs_err": 0.791862
    },
    {
     "target_date": "2026-03-04",
     "predicted_chl": 0.782,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.269967,
+    "err": -0.487967,
+    "abs_err": 0.487967
    },
    {
     "target_date": "2026-03-05",
     "predicted_chl": 0.79,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.045644,
+    "err": -0.255644,
+    "abs_err": 0.255644
    },
    {
     "target_date": "2026-03-06",
     "predicted_chl": 0.798,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.922952,
+    "err": -0.124952,
+    "abs_err": 0.124952
    },
    {
     "target_date": "2026-03-07",
     "predicted_chl": 0.799,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.855936,
+    "err": -0.056936,
+    "abs_err": 0.056936
    },
    {
     "target_date": "2026-03-08",
     "predicted_chl": 0.808,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.809914,
+    "err": -0.001914,
+    "abs_err": 0.001914
    },
    {
     "target_date": "2026-03-09",
     "predicted_chl": 0.805,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.47948,
+    "err": -0.67448,
+    "abs_err": 0.67448
    },
    {
     "target_date": "2026-03-10",
     "predicted_chl": 0.8,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.750544,
+    "err": -0.950544,
+    "abs_err": 0.950544
    },
    {
     "target_date": "2026-03-11",
     "predicted_chl": 0.773,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.323688,
+    "err": -0.550688,
+    "abs_err": 0.550688
    },
    {
     "target_date": "2026-03-12",
     "predicted_chl": 0.774,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.064597,
+    "err": -0.290597,
+    "abs_err": 0.290597
    },
    {
     "target_date": "2026-03-13",
     "predicted_chl": 0.777,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.922804,
+    "err": -0.145804,
+    "abs_err": 0.145804
    },
    {
     "target_date": "2026-03-14",
     "predicted_chl": 0.797,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.840351,
+    "err": -0.043351,
+    "abs_err": 0.043351
    },
    {
     "target_date": "2026-03-15",
     "predicted_chl": 0.8,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.794596,
+    "err": 0.005404,
+    "abs_err": 0.005404
    },
    {
     "target_date": "2026-03-16",
     "predicted_chl": 0.806,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.270732,
+    "err": -0.464732,
+    "abs_err": 0.464732
    },
    {
     "target_date": "2026-03-17",
     "predicted_chl": 0.808,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.438755,
+    "err": -0.630755,
+    "abs_err": 0.630755
    },
    {
     "target_date": "2026-03-18",
     "predicted_chl": 0.789,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.121278,
+    "err": -0.332278,
+    "abs_err": 0.332278
    },
    {
     "target_date": "2026-03-19",
     "predicted_chl": 0.782,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.957522,
+    "err": -0.175522,
+    "abs_err": 0.175522
    },
    {
     "target_date": "2026-03-20",
     "predicted_chl": 0.775,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.856992,
+    "err": -0.081992,
+    "abs_err": 0.081992
    },
    {
     "target_date": "2026-03-21",
     "predicted_chl": 0.78,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.799143,
+    "err": -0.019143,
+    "abs_err": 0.019143
    },
    {
     "target_date": "2026-03-22",
     "predicted_chl": 0.775,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.765426,
+    "err": 0.009574,
+    "abs_err": 0.009574
    },
    {
     "target_date": "2026-03-23",
     "predicted_chl": 0.762,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.123191,
+    "err": -0.361191,
+    "abs_err": 0.361191
    },
    {
     "target_date": "2026-03-24",
     "predicted_chl": 0.774,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.260722,
+    "err": -0.486722,
+    "abs_err": 0.486722
    },
    {
     "target_date": "2026-03-25",
     "predicted_chl": 0.777,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.050497,
+    "err": -0.273497,
+    "abs_err": 0.273497
    },
    {
     "target_date": "2026-03-26",
     "predicted_chl": 0.784,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.90414,
+    "err": -0.12014,
+    "abs_err": 0.12014
    },
    {
     "target_date": "2026-03-27",
     "predicted_chl": 0.794,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.791464,
+    "err": 0.002536,
+    "abs_err": 0.002536
    },
    {
     "target_date": "2026-03-28",
     "predicted_chl": 0.782,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.746545,
+    "err": 0.035455,
+    "abs_err": 0.035455
    },
    {
     "target_date": "2026-03-29",
     "predicted_chl": 0.776,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.710001,
+    "err": 0.065999,
+    "abs_err": 0.065999
    },
    {
     "target_date": "2026-03-30",
     "predicted_chl": 0.775,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.858755,
+    "err": -0.083755,
+    "abs_err": 0.083755
    },
    {
     "target_date": "2026-03-31",
     "predicted_chl": 0.79,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.914996,
+    "err": -0.124996,
+    "abs_err": 0.124996
    },
    {
     "target_date": "2026-04-01",
     "predicted_chl": 0.79,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.804765,
+    "err": -0.014765,
+    "abs_err": 0.014765
    },
    {
     "target_date": "2026-04-02",
     "predicted_chl": 0.802,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.745601,
+    "err": 0.056399,
+    "abs_err": 0.056399
    },
    {
     "target_date": "2026-04-03",
     "predicted_chl": 0.807,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.722852,
+    "err": 0.084148,
+    "abs_err": 0.084148
    },
    {
     "target_date": "2026-04-04",
     "predicted_chl": 0.811,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.703902,
+    "err": 0.107098,
+    "abs_err": 0.107098
    },
    {
     "target_date": "2026-04-05",
     "predicted_chl": 0.824,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.684557,
+    "err": 0.139443,
+    "abs_err": 0.139443
    },
    {
     "target_date": "2026-04-06",
     "predicted_chl": 0.823,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.998278,
+    "err": -0.175278,
+    "abs_err": 0.175278
    },
    {
     "target_date": "2026-04-07",
     "predicted_chl": 0.815,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.111709,
+    "err": -0.296709,
+    "abs_err": 0.296709
    },
    {
     "target_date": "2026-04-08",
     "predicted_chl": 0.808,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.940998,
+    "err": -0.132998,
+    "abs_err": 0.132998
    },
    {
     "target_date": "2026-04-10",
     "predicted_chl": 0.818,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.770383,
+    "err": 0.047617,
+    "abs_err": 0.047617
    },
    {
     "target_date": "2026-04-11",
     "predicted_chl": 0.821,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.717632,
+    "err": 0.103368,
+    "abs_err": 0.103368
    },
    {
     "target_date": "2026-04-12",
     "predicted_chl": 0.823,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.694077,
+    "err": 0.128923,
+    "abs_err": 0.128923
    },
    {
     "target_date": "2026-04-19",
     "predicted_chl": 0.743,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.579712,
+    "err": 0.163288,
+    "abs_err": 0.163288
    },
    {
     "target_date": "2026-04-20",
     "predicted_chl": 0.72,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.799725,
+    "err": -0.079725,
+    "abs_err": 0.079725
    },
    {
     "target_date": "2026-04-21",
     "predicted_chl": 0.707,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.823774,
+    "err": -0.116774,
+    "abs_err": 0.116774
    },
    {
     "target_date": "2026-04-22",
     "predicted_chl": 0.677,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.647842,
+    "err": 0.029158,
+    "abs_err": 0.029158
    },
    {
     "target_date": "2026-04-23",
     "predicted_chl": 0.661,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.552963,
+    "err": 0.108037,
+    "abs_err": 0.108037
    },
    {
     "target_date": "2026-04-24",
     "predicted_chl": 0.656,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.500035,
+    "err": 0.155965,
+    "abs_err": 0.155965
    },
    {
     "target_date": "2026-04-25",
     "predicted_chl": 0.641,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.47101,
+    "err": 0.16999,
+    "abs_err": 0.16999
    },
    {
     "target_date": "2026-04-26",
     "predicted_chl": 0.626,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.462656,
+    "err": 0.163344,
+    "abs_err": 0.163344
    },
    {
     "target_date": "2026-04-27",
     "predicted_chl": 0.619,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.983896,
+    "err": -0.364896,
+    "abs_err": 0.364896
    },
    {
     "target_date": "2026-04-28",
     "predicted_chl": 0.613,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 1.163096,
+    "err": -0.550096,
+    "abs_err": 0.550096
    },
    {
     "target_date": "2026-04-29",
     "predicted_chl": 0.6,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.832362,
+    "err": -0.232362,
+    "abs_err": 0.232362
    },
    {
     "target_date": "2026-04-30",
     "predicted_chl": 0.592,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.651545,
+    "err": -0.059545,
+    "abs_err": 0.059545
    },
    {
     "target_date": "2026-05-01",
     "predicted_chl": 0.585,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.510679,
+    "err": 0.074321,
+    "abs_err": 0.074321
    },
    {
     "target_date": "2026-05-02",
     "predicted_chl": 0.581,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.475975,
+    "err": 0.105025,
+    "abs_err": 0.105025
    },
    {
     "target_date": "2026-05-03",
     "predicted_chl": 0.573,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.467362,
+    "err": 0.105638,
+    "abs_err": 0.105638
    },
    {
     "target_date": "2026-05-04",
     "predicted_chl": 0.56,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.731959,
+    "err": -0.171959,
+    "abs_err": 0.171959
    },
    {
     "target_date": "2026-05-05",
     "predicted_chl": 0.558,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.829895,
+    "err": -0.271895,
+    "abs_err": 0.271895
    },
    {
     "target_date": "2026-05-06",
     "predicted_chl": 0.561,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.641183,
+    "err": -0.080183,
+    "abs_err": 0.080183
    },
    {
     "target_date": "2026-05-07",
     "predicted_chl": 0.55,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.518494,
+    "err": 0.031506,
+    "abs_err": 0.031506
    },
    {
     "target_date": "2026-05-08",
     "predicted_chl": 0.538,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.445635,
+    "err": 0.092365,
+    "abs_err": 0.092365
    },
    {
     "target_date": "2026-05-09",
     "predicted_chl": 0.53,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.399905,
+    "err": 0.130095,
+    "abs_err": 0.130095
    },
    {
     "target_date": "2026-05-10",
     "predicted_chl": 0.518,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.370329,
+    "err": 0.147671,
+    "abs_err": 0.147671
    },
    {
     "target_date": "2026-05-11",
     "predicted_chl": 0.498,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.526417,
+    "err": -0.028417,
+    "abs_err": 0.028417
    },
    {
     "target_date": "2026-05-12",
     "predicted_chl": 0.487,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.578284,
+    "err": -0.091284,
+    "abs_err": 0.091284
    },
    {
     "target_date": "2026-05-13",
     "predicted_chl": 0.468,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.48148,
+    "err": -0.01348,
+    "abs_err": 0.01348
    },
    {
     "target_date": "2026-05-14",
     "predicted_chl": 0.456,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.413045,
+    "err": 0.042955,
+    "abs_err": 0.042955
    },
    {
     "target_date": "2026-05-15",
     "predicted_chl": 0.446,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.376538,
+    "err": 0.069462,
+    "abs_err": 0.069462
    },
    {
     "target_date": "2026-05-16",
     "predicted_chl": 0.442,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.346579,
+    "err": 0.095421,
+    "abs_err": 0.095421
    },
    {
     "target_date": "2026-05-17",
     "predicted_chl": 0.433,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.324293,
+    "err": 0.108707,
+    "abs_err": 0.108707
    },
    {
     "target_date": "2026-05-18",
     "predicted_chl": 0.409,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.315229,
+    "err": 0.093771,
+    "abs_err": 0.093771
    },
    {
     "target_date": "2026-05-19",
     "predicted_chl": 0.4,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.331656,
+    "err": 0.068344,
+    "abs_err": 0.068344
    },
    {
     "target_date": "2026-05-20",
     "predicted_chl": 0.377,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.349934,
+    "err": 0.027066,
+    "abs_err": 0.027066
    },
    {
     "target_date": "2026-05-21",
     "predicted_chl": 0.374,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.380327,
+    "err": -0.006327,
+    "abs_err": 0.006327
    },
    {
     "target_date": "2026-05-22",
     "predicted_chl": 0.377,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.403124,
+    "err": -0.026124,
+    "abs_err": 0.026124
    },
    {
     "target_date": "2026-05-23",
     "predicted_chl": 0.378,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.411265,
+    "err": -0.033265,
+    "abs_err": 0.033265
    },
    {
     "target_date": "2026-05-24",
     "predicted_chl": 0.379,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.406935,
+    "err": -0.027935,
+    "abs_err": 0.027935
    },
    {
     "target_date": "2026-05-25",
@@ -4543,653 +4543,653 @@ window.MARS_DATA = {
    {
     "target_date": "2026-02-14",
     "predicted_chl": 0.222,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.282917,
+    "err": -0.060917,
+    "abs_err": 0.060917
    },
    {
     "target_date": "2026-02-15",
     "predicted_chl": 0.222,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.234307,
+    "err": -0.012307,
+    "abs_err": 0.012307
    },
    {
     "target_date": "2026-02-16",
     "predicted_chl": 0.222,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.233917,
+    "err": -0.011917,
+    "abs_err": 0.011917
    },
    {
     "target_date": "2026-02-17",
     "predicted_chl": 0.222,
     "observed_chl": 0.237229,
-    "err": null,
-    "abs_err": null
+    "err": -0.015229,
+    "abs_err": 0.015229
    },
    {
     "target_date": "2026-02-18",
     "predicted_chl": 0.222,
     "observed_chl": 0.240182,
-    "err": null,
-    "abs_err": null
+    "err": -0.018182,
+    "abs_err": 0.018182
    },
    {
     "target_date": "2026-02-19",
     "predicted_chl": 0.222,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.233433,
+    "err": -0.011433,
+    "abs_err": 0.011433
    },
    {
     "target_date": "2026-02-20",
     "predicted_chl": 0.222,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.234412,
+    "err": -0.012412,
+    "abs_err": 0.012412
    },
    {
     "target_date": "2026-02-21",
     "predicted_chl": 0.227,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.235654,
+    "err": -0.008654,
+    "abs_err": 0.008654
    },
    {
     "target_date": "2026-02-22",
     "predicted_chl": 0.227,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.235901,
+    "err": -0.008901,
+    "abs_err": 0.008901
    },
    {
     "target_date": "2026-02-23",
     "predicted_chl": 0.227,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.235883,
+    "err": -0.008883,
+    "abs_err": 0.008883
    },
    {
     "target_date": "2026-02-24",
     "predicted_chl": 0.227,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.236226,
+    "err": -0.009226,
+    "abs_err": 0.009226
    },
    {
     "target_date": "2026-02-25",
     "predicted_chl": 0.23,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.236038,
+    "err": -0.006038,
+    "abs_err": 0.006038
    },
    {
     "target_date": "2026-02-26",
     "predicted_chl": 0.214,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.434041,
+    "err": -0.220041,
+    "abs_err": 0.220041
    },
    {
     "target_date": "2026-02-27",
     "predicted_chl": 0.217,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.420315,
+    "err": -0.203315,
+    "abs_err": 0.203315
    },
    {
     "target_date": "2026-02-28",
     "predicted_chl": 0.22,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.407755,
+    "err": -0.187755,
+    "abs_err": 0.187755
    },
    {
     "target_date": "2026-03-01",
     "predicted_chl": 0.217,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.394727,
+    "err": -0.177727,
+    "abs_err": 0.177727
    },
    {
     "target_date": "2026-03-02",
     "predicted_chl": 0.219,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.392403,
+    "err": -0.173403,
+    "abs_err": 0.173403
    },
    {
     "target_date": "2026-03-03",
     "predicted_chl": 0.256,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.387988,
+    "err": -0.131988,
+    "abs_err": 0.131988
    },
    {
     "target_date": "2026-03-04",
     "predicted_chl": 0.262,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.373156,
+    "err": -0.111156,
+    "abs_err": 0.111156
    },
    {
     "target_date": "2026-03-05",
     "predicted_chl": 0.278,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.357105,
+    "err": -0.079105,
+    "abs_err": 0.079105
    },
    {
     "target_date": "2026-03-06",
     "predicted_chl": 0.283,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.341133,
+    "err": -0.058133,
+    "abs_err": 0.058133
    },
    {
     "target_date": "2026-03-07",
     "predicted_chl": 0.284,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.322888,
+    "err": -0.038888,
+    "abs_err": 0.038888
    },
    {
     "target_date": "2026-03-08",
     "predicted_chl": 0.287,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.303904,
+    "err": -0.016904,
+    "abs_err": 0.016904
    },
    {
     "target_date": "2026-03-09",
     "predicted_chl": 0.284,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.289336,
+    "err": -0.005336,
+    "abs_err": 0.005336
    },
    {
     "target_date": "2026-03-10",
     "predicted_chl": 0.281,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.275562,
+    "err": 0.005438,
+    "abs_err": 0.005438
    },
    {
     "target_date": "2026-03-11",
     "predicted_chl": 0.289,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.261621,
+    "err": 0.027379,
+    "abs_err": 0.027379
    },
    {
     "target_date": "2026-03-12",
     "predicted_chl": 0.284,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.248392,
+    "err": 0.035608,
+    "abs_err": 0.035608
    },
    {
     "target_date": "2026-03-13",
     "predicted_chl": 0.286,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.236902,
+    "err": 0.049098,
+    "abs_err": 0.049098
    },
    {
     "target_date": "2026-03-14",
     "predicted_chl": 0.234,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.227949,
+    "err": 0.006051,
+    "abs_err": 0.006051
    },
    {
     "target_date": "2026-03-15",
     "predicted_chl": 0.225,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.21965,
+    "err": 0.00535,
+    "abs_err": 0.00535
    },
    {
     "target_date": "2026-03-16",
     "predicted_chl": 0.22,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.22762,
+    "err": -0.00762,
+    "abs_err": 0.00762
    },
    {
     "target_date": "2026-03-17",
     "predicted_chl": 0.217,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.231415,
+    "err": -0.014415,
+    "abs_err": 0.014415
    },
    {
     "target_date": "2026-03-18",
     "predicted_chl": 0.211,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.221556,
+    "err": -0.010556,
+    "abs_err": 0.010556
    },
    {
     "target_date": "2026-03-19",
     "predicted_chl": 0.211,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.213519,
+    "err": -0.002519,
+    "abs_err": 0.002519
    },
    {
     "target_date": "2026-03-20",
     "predicted_chl": 0.208,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.205902,
+    "err": 0.002098,
+    "abs_err": 0.002098
    },
    {
     "target_date": "2026-03-21",
     "predicted_chl": 0.208,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.199334,
+    "err": 0.008666,
+    "abs_err": 0.008666
    },
    {
     "target_date": "2026-03-22",
     "predicted_chl": 0.208,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.193523,
+    "err": 0.014477,
+    "abs_err": 0.014477
    },
    {
     "target_date": "2026-03-23",
     "predicted_chl": 0.209,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.243904,
+    "err": -0.034904,
+    "abs_err": 0.034904
    },
    {
     "target_date": "2026-03-24",
     "predicted_chl": 0.213,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.282954,
+    "err": -0.069954,
+    "abs_err": 0.069954
    },
    {
     "target_date": "2026-03-25",
     "predicted_chl": 0.218,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.270136,
+    "err": -0.052136,
+    "abs_err": 0.052136
    },
    {
     "target_date": "2026-03-26",
     "predicted_chl": 0.217,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.258111,
+    "err": -0.041111,
+    "abs_err": 0.041111
    },
    {
     "target_date": "2026-03-27",
     "predicted_chl": 0.221,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.24862,
+    "err": -0.02762,
+    "abs_err": 0.02762
    },
    {
     "target_date": "2026-03-28",
     "predicted_chl": 0.228,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.240207,
+    "err": -0.012207,
+    "abs_err": 0.012207
    },
    {
     "target_date": "2026-03-29",
     "predicted_chl": 0.244,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.232259,
+    "err": 0.011741,
+    "abs_err": 0.011741
    },
    {
     "target_date": "2026-03-30",
     "predicted_chl": 0.237,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.312001,
+    "err": -0.075001,
+    "abs_err": 0.075001
    },
    {
     "target_date": "2026-03-31",
     "predicted_chl": 0.227,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.372758,
+    "err": -0.145758,
+    "abs_err": 0.145758
    },
    {
     "target_date": "2026-04-01",
     "predicted_chl": 0.242,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.347942,
+    "err": -0.105942,
+    "abs_err": 0.105942
    },
    {
     "target_date": "2026-04-02",
     "predicted_chl": 0.236,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.321957,
+    "err": -0.085957,
+    "abs_err": 0.085957
    },
    {
     "target_date": "2026-04-03",
     "predicted_chl": 0.227,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.301457,
+    "err": -0.074457,
+    "abs_err": 0.074457
    },
    {
     "target_date": "2026-04-04",
     "predicted_chl": 0.22,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.282102,
+    "err": -0.062102,
+    "abs_err": 0.062102
    },
    {
     "target_date": "2026-04-05",
     "predicted_chl": 0.214,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.268336,
+    "err": -0.054336,
+    "abs_err": 0.054336
    },
    {
     "target_date": "2026-04-06",
     "predicted_chl": 0.203,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.305733,
+    "err": -0.102733,
+    "abs_err": 0.102733
    },
    {
     "target_date": "2026-04-07",
     "predicted_chl": 0.199,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.336489,
+    "err": -0.137489,
+    "abs_err": 0.137489
    },
    {
     "target_date": "2026-04-08",
     "predicted_chl": 0.222,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.319529,
+    "err": -0.097529,
+    "abs_err": 0.097529
    },
    {
     "target_date": "2026-04-10",
     "predicted_chl": 0.216,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.286396,
+    "err": -0.070397,
+    "abs_err": 0.070397
    },
    {
     "target_date": "2026-04-11",
     "predicted_chl": 0.212,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.269347,
+    "err": -0.057347,
+    "abs_err": 0.057347
    },
    {
     "target_date": "2026-04-12",
     "predicted_chl": 0.209,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.253354,
+    "err": -0.044354,
+    "abs_err": 0.044354
    },
    {
     "target_date": "2026-04-19",
     "predicted_chl": 0.215,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.180181,
+    "err": 0.034819,
+    "abs_err": 0.034819
    },
    {
     "target_date": "2026-04-20",
     "predicted_chl": 0.214,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.189679,
+    "err": 0.024321,
+    "abs_err": 0.024321
    },
    {
     "target_date": "2026-04-21",
     "predicted_chl": 0.213,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.19529,
+    "err": 0.01771,
+    "abs_err": 0.01771
    },
    {
     "target_date": "2026-04-22",
     "predicted_chl": 0.216,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.184912,
+    "err": 0.031088,
+    "abs_err": 0.031088
    },
    {
     "target_date": "2026-04-23",
     "predicted_chl": 0.219,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.172793,
+    "err": 0.046207,
+    "abs_err": 0.046207
    },
    {
     "target_date": "2026-04-24",
     "predicted_chl": 0.218,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.163165,
+    "err": 0.054835,
+    "abs_err": 0.054835
    },
    {
     "target_date": "2026-04-25",
     "predicted_chl": 0.219,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.153699,
+    "err": 0.065301,
+    "abs_err": 0.065301
    },
    {
     "target_date": "2026-04-26",
     "predicted_chl": 0.217,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.144614,
+    "err": 0.072386,
+    "abs_err": 0.072386
    },
    {
     "target_date": "2026-04-27",
     "predicted_chl": 0.21,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.152546,
+    "err": 0.057454,
+    "abs_err": 0.057454
    },
    {
     "target_date": "2026-04-28",
     "predicted_chl": 0.211,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.15789,
+    "err": 0.05311,
+    "abs_err": 0.05311
    },
    {
     "target_date": "2026-04-29",
     "predicted_chl": 0.205,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.148679,
+    "err": 0.056321,
+    "abs_err": 0.056321
    },
    {
     "target_date": "2026-04-30",
     "predicted_chl": 0.22,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.138892,
+    "err": 0.081108,
+    "abs_err": 0.081108
    },
    {
     "target_date": "2026-05-01",
     "predicted_chl": 0.219,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.128929,
+    "err": 0.090071,
+    "abs_err": 0.090071
    },
    {
     "target_date": "2026-05-02",
     "predicted_chl": 0.209,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.123277,
+    "err": 0.085723,
+    "abs_err": 0.085723
    },
    {
     "target_date": "2026-05-03",
     "predicted_chl": 0.196,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.127871,
+    "err": 0.068129,
+    "abs_err": 0.068129
    },
    {
     "target_date": "2026-05-04",
     "predicted_chl": 0.187,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.147883,
+    "err": 0.039117,
+    "abs_err": 0.039117
    },
    {
     "target_date": "2026-05-05",
     "predicted_chl": 0.187,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.156689,
+    "err": 0.030311,
+    "abs_err": 0.030311
    },
    {
     "target_date": "2026-05-06",
     "predicted_chl": 0.191,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.149954,
+    "err": 0.041046,
+    "abs_err": 0.041046
    },
    {
     "target_date": "2026-05-07",
     "predicted_chl": 0.185,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.14204,
+    "err": 0.04296,
+    "abs_err": 0.04296
    },
    {
     "target_date": "2026-05-08",
     "predicted_chl": 0.183,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.132214,
+    "err": 0.050786,
+    "abs_err": 0.050786
    },
    {
     "target_date": "2026-05-09",
     "predicted_chl": 0.179,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.120785,
+    "err": 0.058215,
+    "abs_err": 0.058215
    },
    {
     "target_date": "2026-05-10",
     "predicted_chl": 0.172,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.11093,
+    "err": 0.06107,
+    "abs_err": 0.06107
    },
    {
     "target_date": "2026-05-11",
     "predicted_chl": 0.165,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.130085,
+    "err": 0.034915,
+    "abs_err": 0.034915
    },
    {
     "target_date": "2026-05-12",
     "predicted_chl": 0.157,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.149161,
+    "err": 0.007839,
+    "abs_err": 0.007839
    },
    {
     "target_date": "2026-05-13",
     "predicted_chl": 0.154,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.143236,
+    "err": 0.010764,
+    "abs_err": 0.010764
    },
    {
     "target_date": "2026-05-14",
     "predicted_chl": 0.153,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.13784,
+    "err": 0.01516,
+    "abs_err": 0.01516
    },
    {
     "target_date": "2026-05-15",
     "predicted_chl": 0.149,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.133298,
+    "err": 0.015702,
+    "abs_err": 0.015702
    },
    {
     "target_date": "2026-05-16",
     "predicted_chl": 0.146,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.127446,
+    "err": 0.018554,
+    "abs_err": 0.018554
    },
    {
     "target_date": "2026-05-17",
     "predicted_chl": 0.144,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.121514,
+    "err": 0.022486,
+    "abs_err": 0.022486
    },
    {
     "target_date": "2026-05-18",
     "predicted_chl": 0.142,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.115768,
+    "err": 0.026232,
+    "abs_err": 0.026232
    },
    {
     "target_date": "2026-05-19",
     "predicted_chl": 0.138,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.110133,
+    "err": 0.027867,
+    "abs_err": 0.027867
    },
    {
     "target_date": "2026-05-20",
     "predicted_chl": 0.141,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.10295,
+    "err": 0.03805,
+    "abs_err": 0.03805
    },
    {
     "target_date": "2026-05-21",
     "predicted_chl": 0.139,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.096776,
+    "err": 0.042224,
+    "abs_err": 0.042224
    },
    {
     "target_date": "2026-05-22",
     "predicted_chl": 0.137,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.091071,
+    "err": 0.045929,
+    "abs_err": 0.045929
    },
    {
     "target_date": "2026-05-23",
     "predicted_chl": 0.136,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.085039,
+    "err": 0.050961,
+    "abs_err": 0.050961
    },
    {
     "target_date": "2026-05-24",
     "predicted_chl": 0.132,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.076722,
+    "err": 0.055278,
+    "abs_err": 0.055278
    },
    {
     "target_date": "2026-05-25",
@@ -7187,653 +7187,653 @@ window.MARS_DATA = {
    {
     "target_date": "2026-02-14",
     "predicted_chl": 0.153,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.087069,
+    "err": 0.065931,
+    "abs_err": 0.065931
    },
    {
     "target_date": "2026-02-15",
     "predicted_chl": 0.153,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.103624,
+    "err": 0.049376,
+    "abs_err": 0.049376
    },
    {
     "target_date": "2026-02-16",
     "predicted_chl": 0.153,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.103143,
+    "err": 0.049857,
+    "abs_err": 0.049857
    },
    {
     "target_date": "2026-02-17",
     "predicted_chl": 0.153,
     "observed_chl": 0.070665,
-    "err": null,
-    "abs_err": null
+    "err": 0.082335,
+    "abs_err": 0.082335
    },
    {
     "target_date": "2026-02-18",
     "predicted_chl": 0.153,
     "observed_chl": 0.0718,
-    "err": null,
-    "abs_err": null
+    "err": 0.0812,
+    "abs_err": 0.0812
    },
    {
     "target_date": "2026-02-19",
     "predicted_chl": 0.153,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.121841,
+    "err": 0.031159,
+    "abs_err": 0.031159
    },
    {
     "target_date": "2026-02-20",
     "predicted_chl": 0.153,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.128513,
+    "err": 0.024487,
+    "abs_err": 0.024487
    },
    {
     "target_date": "2026-02-21",
     "predicted_chl": 0.154,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.132958,
+    "err": 0.021042,
+    "abs_err": 0.021042
    },
    {
     "target_date": "2026-02-22",
     "predicted_chl": 0.154,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.139256,
+    "err": 0.014744,
+    "abs_err": 0.014744
    },
    {
     "target_date": "2026-02-23",
     "predicted_chl": 0.154,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.1477,
+    "err": 0.0063,
+    "abs_err": 0.0063
    },
    {
     "target_date": "2026-02-24",
     "predicted_chl": 0.154,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.157436,
+    "err": -0.003436,
+    "abs_err": 0.003436
    },
    {
     "target_date": "2026-02-25",
     "predicted_chl": 0.154,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.165405,
+    "err": -0.011405,
+    "abs_err": 0.011405
    },
    {
     "target_date": "2026-02-26",
     "predicted_chl": 0.079,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.111368,
+    "err": -0.032368,
+    "abs_err": 0.032368
    },
    {
     "target_date": "2026-02-27",
     "predicted_chl": 0.08,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.119801,
+    "err": -0.039801,
+    "abs_err": 0.039801
    },
    {
     "target_date": "2026-02-28",
     "predicted_chl": 0.079,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.124794,
+    "err": -0.045794,
+    "abs_err": 0.045794
    },
    {
     "target_date": "2026-03-01",
     "predicted_chl": 0.079,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.126653,
+    "err": -0.047653,
+    "abs_err": 0.047653
    },
    {
     "target_date": "2026-03-02",
     "predicted_chl": 0.081,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.109325,
+    "err": -0.028325,
+    "abs_err": 0.028325
    },
    {
     "target_date": "2026-03-03",
     "predicted_chl": 0.089,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.096529,
+    "err": -0.007529,
+    "abs_err": 0.007529
    },
    {
     "target_date": "2026-03-04",
     "predicted_chl": 0.087,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.100353,
+    "err": -0.013353,
+    "abs_err": 0.013353
    },
    {
     "target_date": "2026-03-05",
     "predicted_chl": 0.089,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.105045,
+    "err": -0.016045,
+    "abs_err": 0.016045
    },
    {
     "target_date": "2026-03-06",
     "predicted_chl": 0.092,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.110581,
+    "err": -0.018581,
+    "abs_err": 0.018581
    },
    {
     "target_date": "2026-03-07",
     "predicted_chl": 0.094,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.117002,
+    "err": -0.023002,
+    "abs_err": 0.023002
    },
    {
     "target_date": "2026-03-08",
     "predicted_chl": 0.096,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.123398,
+    "err": -0.027398,
+    "abs_err": 0.027398
    },
    {
     "target_date": "2026-03-09",
     "predicted_chl": 0.098,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.110982,
+    "err": -0.012982,
+    "abs_err": 0.012982
    },
    {
     "target_date": "2026-03-10",
     "predicted_chl": 0.103,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.096378,
+    "err": 0.006622,
+    "abs_err": 0.006622
    },
    {
     "target_date": "2026-03-11",
     "predicted_chl": 0.098,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.094945,
+    "err": 0.003055,
+    "abs_err": 0.003055
    },
    {
     "target_date": "2026-03-12",
     "predicted_chl": 0.1,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.093486,
+    "err": 0.006514,
+    "abs_err": 0.006514
    },
    {
     "target_date": "2026-03-13",
     "predicted_chl": 0.102,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.093241,
+    "err": 0.008759,
+    "abs_err": 0.008759
    },
    {
     "target_date": "2026-03-14",
     "predicted_chl": 0.114,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.094099,
+    "err": 0.019901,
+    "abs_err": 0.019901
    },
    {
     "target_date": "2026-03-15",
     "predicted_chl": 0.116,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.095634,
+    "err": 0.020366,
+    "abs_err": 0.020366
    },
    {
     "target_date": "2026-03-16",
     "predicted_chl": 0.117,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.090099,
+    "err": 0.026901,
+    "abs_err": 0.026901
    },
    {
     "target_date": "2026-03-17",
     "predicted_chl": 0.118,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.088389,
+    "err": 0.029611,
+    "abs_err": 0.029611
    },
    {
     "target_date": "2026-03-18",
     "predicted_chl": 0.106,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.09256,
+    "err": 0.01344,
+    "abs_err": 0.01344
    },
    {
     "target_date": "2026-03-19",
     "predicted_chl": 0.109,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.095433,
+    "err": 0.013567,
+    "abs_err": 0.013567
    },
    {
     "target_date": "2026-03-20",
     "predicted_chl": 0.11,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.098727,
+    "err": 0.011273,
+    "abs_err": 0.011273
    },
    {
     "target_date": "2026-03-21",
     "predicted_chl": 0.113,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.103655,
+    "err": 0.009345,
+    "abs_err": 0.009345
    },
    {
     "target_date": "2026-03-22",
     "predicted_chl": 0.115,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.111645,
+    "err": 0.003355,
+    "abs_err": 0.003355
    },
    {
     "target_date": "2026-03-23",
     "predicted_chl": 0.115,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.097697,
+    "err": 0.017303,
+    "abs_err": 0.017303
    },
    {
     "target_date": "2026-03-24",
     "predicted_chl": 0.123,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.087548,
+    "err": 0.035452,
+    "abs_err": 0.035452
    },
    {
     "target_date": "2026-03-25",
     "predicted_chl": 0.106,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.093308,
+    "err": 0.012692,
+    "abs_err": 0.012692
    },
    {
     "target_date": "2026-03-26",
     "predicted_chl": 0.107,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.099302,
+    "err": 0.007698,
+    "abs_err": 0.007698
    },
    {
     "target_date": "2026-03-27",
     "predicted_chl": 0.109,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.105659,
+    "err": 0.003341,
+    "abs_err": 0.003341
    },
    {
     "target_date": "2026-03-28",
     "predicted_chl": 0.109,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.114169,
+    "err": -0.005169,
+    "abs_err": 0.005169
    },
    {
     "target_date": "2026-03-29",
     "predicted_chl": 0.11,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.121265,
+    "err": -0.011265,
+    "abs_err": 0.011265
    },
    {
     "target_date": "2026-03-30",
     "predicted_chl": 0.111,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.105691,
+    "err": 0.005309,
+    "abs_err": 0.005309
    },
    {
     "target_date": "2026-03-31",
     "predicted_chl": 0.113,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.097911,
+    "err": 0.015089,
+    "abs_err": 0.015089
    },
    {
     "target_date": "2026-04-01",
     "predicted_chl": 0.104,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.104583,
+    "err": -0.000583,
+    "abs_err": 0.000583
    },
    {
     "target_date": "2026-04-02",
     "predicted_chl": 0.105,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.10887,
+    "err": -0.00387,
+    "abs_err": 0.00387
    },
    {
     "target_date": "2026-04-03",
     "predicted_chl": 0.106,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.110921,
+    "err": -0.004921,
+    "abs_err": 0.004921
    },
    {
     "target_date": "2026-04-04",
     "predicted_chl": 0.107,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.11393,
+    "err": -0.00693,
+    "abs_err": 0.00693
    },
    {
     "target_date": "2026-04-05",
     "predicted_chl": 0.107,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.115511,
+    "err": -0.008511,
+    "abs_err": 0.008511
    },
    {
     "target_date": "2026-04-06",
     "predicted_chl": 0.107,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.098209,
+    "err": 0.008791,
+    "abs_err": 0.008791
    },
    {
     "target_date": "2026-04-07",
     "predicted_chl": 0.106,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.089267,
+    "err": 0.016733,
+    "abs_err": 0.016733
    },
    {
     "target_date": "2026-04-08",
     "predicted_chl": 0.101,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.098672,
+    "err": 0.002328,
+    "abs_err": 0.002328
    },
    {
     "target_date": "2026-04-10",
     "predicted_chl": 0.102,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.115759,
+    "err": -0.013759,
+    "abs_err": 0.013759
    },
    {
     "target_date": "2026-04-11",
     "predicted_chl": 0.104,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.135107,
+    "err": -0.031107,
+    "abs_err": 0.031107
    },
    {
     "target_date": "2026-04-12",
     "predicted_chl": 0.105,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.1509,
+    "err": -0.0459,
+    "abs_err": 0.0459
    },
    {
     "target_date": "2026-04-19",
     "predicted_chl": 0.108,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.065624,
+    "err": 0.042376,
+    "abs_err": 0.042376
    },
    {
     "target_date": "2026-04-20",
     "predicted_chl": 0.107,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.059681,
+    "err": 0.047319,
+    "abs_err": 0.047319
    },
    {
     "target_date": "2026-04-21",
     "predicted_chl": 0.108,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.056305,
+    "err": 0.051695,
+    "abs_err": 0.051695
    },
    {
     "target_date": "2026-04-22",
     "predicted_chl": 0.095,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.058193,
+    "err": 0.036807,
+    "abs_err": 0.036807
    },
    {
     "target_date": "2026-04-23",
     "predicted_chl": 0.094,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.059008,
+    "err": 0.034992,
+    "abs_err": 0.034992
    },
    {
     "target_date": "2026-04-24",
     "predicted_chl": 0.096,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.058653,
+    "err": 0.037347,
+    "abs_err": 0.037347
    },
    {
     "target_date": "2026-04-25",
     "predicted_chl": 0.097,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.057235,
+    "err": 0.039765,
+    "abs_err": 0.039765
    },
    {
     "target_date": "2026-04-26",
     "predicted_chl": 0.096,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.056128,
+    "err": 0.039872,
+    "abs_err": 0.039872
    },
    {
     "target_date": "2026-04-27",
     "predicted_chl": 0.094,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.0512,
+    "err": 0.0428,
+    "abs_err": 0.0428
    },
    {
     "target_date": "2026-04-28",
     "predicted_chl": 0.091,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.046589,
+    "err": 0.044411,
+    "abs_err": 0.044411
    },
    {
     "target_date": "2026-04-29",
     "predicted_chl": 0.087,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.045822,
+    "err": 0.041178,
+    "abs_err": 0.041178
    },
    {
     "target_date": "2026-04-30",
     "predicted_chl": 0.082,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.045367,
+    "err": 0.036633,
+    "abs_err": 0.036633
    },
    {
     "target_date": "2026-05-01",
     "predicted_chl": 0.083,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.045411,
+    "err": 0.037589,
+    "abs_err": 0.037589
    },
    {
     "target_date": "2026-05-02",
     "predicted_chl": 0.08,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.046383,
+    "err": 0.033617,
+    "abs_err": 0.033617
    },
    {
     "target_date": "2026-05-03",
     "predicted_chl": 0.077,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.049673,
+    "err": 0.027327,
+    "abs_err": 0.027327
    },
    {
     "target_date": "2026-05-04",
     "predicted_chl": 0.074,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.109891,
+    "err": -0.035891,
+    "abs_err": 0.035891
    },
    {
     "target_date": "2026-05-05",
     "predicted_chl": 0.079,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.17212,
+    "err": -0.09312,
+    "abs_err": 0.09312
    },
    {
     "target_date": "2026-05-06",
     "predicted_chl": 0.088,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.180255,
+    "err": -0.092255,
+    "abs_err": 0.092255
    },
    {
     "target_date": "2026-05-07",
     "predicted_chl": 0.092,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.1805,
+    "err": -0.0885,
+    "abs_err": 0.0885
    },
    {
     "target_date": "2026-05-08",
     "predicted_chl": 0.092,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.168493,
+    "err": -0.076493,
+    "abs_err": 0.076493
    },
    {
     "target_date": "2026-05-09",
     "predicted_chl": 0.091,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.135729,
+    "err": -0.044729,
+    "abs_err": 0.044729
    },
    {
     "target_date": "2026-05-10",
     "predicted_chl": 0.088,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.105848,
+    "err": -0.017848,
+    "abs_err": 0.017848
    },
    {
     "target_date": "2026-05-11",
     "predicted_chl": 0.084,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.085138,
+    "err": -0.001138,
+    "abs_err": 0.001138
    },
    {
     "target_date": "2026-05-12",
     "predicted_chl": 0.081,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.070989,
+    "err": 0.010011,
+    "abs_err": 0.010011
    },
    {
     "target_date": "2026-05-13",
     "predicted_chl": 0.073,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.069935,
+    "err": 0.003065,
+    "abs_err": 0.003065
    },
    {
     "target_date": "2026-05-14",
     "predicted_chl": 0.072,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.070972,
+    "err": 0.001028,
+    "abs_err": 0.001028
    },
    {
     "target_date": "2026-05-15",
     "predicted_chl": 0.072,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.081483,
+    "err": -0.009483,
+    "abs_err": 0.009483
    },
    {
     "target_date": "2026-05-16",
     "predicted_chl": 0.072,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.107313,
+    "err": -0.035313,
+    "abs_err": 0.035313
    },
    {
     "target_date": "2026-05-17",
     "predicted_chl": 0.076,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.118046,
+    "err": -0.042046,
+    "abs_err": 0.042046
    },
    {
     "target_date": "2026-05-18",
     "predicted_chl": 0.078,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.120245,
+    "err": -0.042245,
+    "abs_err": 0.042245
    },
    {
     "target_date": "2026-05-19",
     "predicted_chl": 0.078,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.113027,
+    "err": -0.035027,
+    "abs_err": 0.035027
    },
    {
     "target_date": "2026-05-20",
     "predicted_chl": 0.075,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.110234,
+    "err": -0.035234,
+    "abs_err": 0.035234
    },
    {
     "target_date": "2026-05-21",
     "predicted_chl": 0.076,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.126377,
+    "err": -0.050377,
+    "abs_err": 0.050377
    },
    {
     "target_date": "2026-05-22",
     "predicted_chl": 0.08,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.125941,
+    "err": -0.045941,
+    "abs_err": 0.045941
    },
    {
     "target_date": "2026-05-23",
     "predicted_chl": 0.082,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.123596,
+    "err": -0.041596,
+    "abs_err": 0.041596
    },
    {
     "target_date": "2026-05-24",
     "predicted_chl": 0.085,
-    "observed_chl": null,
-    "err": null,
-    "abs_err": null
+    "observed_chl": 0.126344,
+    "err": -0.041344,
+    "abs_err": 0.041344
    },
    {
     "target_date": "2026-05-25",
@@ -7846,7 +7846,7 @@ window.MARS_DATA = {
  }
 };
 window.MARS_META = {
- "generated_at": "2026-05-25T06:24:09Z",
+ "generated_at": "2026-05-25T06:35:16Z",
  "data_dir": "C:\\Users\\annam\\OneDrive\\\u03a5\u03c0\u03bf\u03bb\u03bf\u03b3\u03b9\u03c3\u03c4\u03ae\u03c2\\MARS PHD\\MARS\\data",
  "coverage_start": "2026-02-13",
  "coverage_end": "2026-05-25",

@@ -61,7 +61,8 @@ st.markdown(
 
 
 @st.cache_data(ttl=300)
-def _dashboard_html() -> str:
+def _dashboard_html(_v: int = 2) -> str:
+    """_v bumps cache when dashboard data wiring changes."""
     return build_html(WEB, build_payload())
 
 

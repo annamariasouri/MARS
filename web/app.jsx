@@ -69,6 +69,29 @@ function riskLabel(level) {
   return level === 'high' ? 'High' : level === 'med' ? 'Moderate' : 'Low';
 }
 
+/** Pair each forecast day with Copernicus CHL from env-history (Environmental Trends). */
+function mergeAccuracyWithEnv(accuracy, env) {
+  const chlByDate = {};
+  (env || []).forEach(d => {
+    if (d.date != null && d.chl != null && !isNaN(d.chl)) chlByDate[d.date] = d.chl;
+  });
+  return (accuracy || []).map(row => {
+    const date = row.target_date;
+    let observed = row.observed_chl;
+    if ((observed == null || observed === '') && chlByDate[date] != null) {
+      observed = chlByDate[date];
+    }
+    const pred = row.predicted_chl;
+    let err = row.err;
+    let abs_err = row.abs_err;
+    if (observed != null && pred != null && !isNaN(observed) && !isNaN(pred)) {
+      err = pred - observed;
+      abs_err = Math.abs(err);
+    }
+    return { ...row, observed_chl: observed, err, abs_err };
+  });
+}
+
 // ====================================================================
 
 function TopBar({ theme, onToggleTheme }) {
@@ -412,7 +435,7 @@ function TabsBlock({ region, forecast, env, accuracy, summary }) {
       <div className="tab-body">
         {tab === 'forecast' && <ForecastTab region={region} forecast={forecast} env={env} summary={summary} />}
         {tab === 'trends'   && <TrendsTab region={region} env={env} />}
-        {tab === 'accuracy' && <AccuracyTab region={region} accuracy={accuracy} />}
+        {tab === 'accuracy' && <AccuracyTab region={region} accuracy={accuracy} env={env} />}
       </div>
     </div>
   );
@@ -558,9 +581,10 @@ function TrendsTab({ region, env }) {
   );
 }
 
-function AccuracyTab({ region, accuracy }) {
-  const observed = accuracy.filter(d => d.observed_chl != null);
-  const recent = [...accuracy].sort((a,b) => new Date(b.target_date) - new Date(a.target_date)).slice(0, 12);
+function AccuracyTab({ region, accuracy, env }) {
+  const merged = useMemo(() => mergeAccuracyWithEnv(accuracy, env), [accuracy, env]);
+  const withObs = merged.filter(d => d.observed_chl != null && !isNaN(d.observed_chl) && d.predicted_chl != null);
+  const recent = [...merged].sort((a,b) => new Date(b.target_date) - new Date(a.target_date)).slice(0, 12);
 
   return (
     <div style={{display:'flex', flexDirection:'column', gap:18}}>
@@ -568,10 +592,12 @@ function AccuracyTab({ region, accuracy }) {
         <div className="chart">
           <div className="chart-header">
             <div className="chart-title">Predicted vs Observed · time series</div>
-            <div className="chart-meta">{REGIONS[region].short}</div>
+            <div className="chart-meta">
+              {REGIONS[region].short} · observed = Copernicus CHL (env-history)
+            </div>
           </div>
           <LineChart
-            data={accuracy} x="target_date"
+            data={merged} x="target_date"
             ys={[
               { key:'predicted_chl', label:'Predicted', color:'var(--depth)' },
               { key:'observed_chl',  label:'Observed',  color:'#e89a2b' },
@@ -583,9 +609,9 @@ function AccuracyTab({ region, accuracy }) {
         <div className="chart">
           <div className="chart-header">
             <div className="chart-title">Predicted vs Observed · scatter</div>
-            <div className="chart-meta">n = {observed.length}</div>
+            <div className="chart-meta">n = {withObs.length} paired days</div>
           </div>
-          <ScatterChart data={observed} xKey="predicted_chl" yKey="observed_chl" height={220} />
+          <ScatterChart data={withObs} xKey="predicted_chl" yKey="observed_chl" height={220} />
         </div>
       </div>
 
@@ -667,9 +693,9 @@ function AccuracyTab({ region, accuracy }) {
       </div>
 
       <div className="chart" style={{padding:0}}>
-        <div className="chart-header" style={{padding:'14px 18px 10px'}}>
+          <div className="chart-header" style={{padding:'14px 18px 10px'}}>
           <div className="chart-title">Recent forecasts · {REGIONS[region].short}</div>
-          <div className="chart-meta">12 most recent · ground truth pending after lag</div>
+          <div className="chart-meta">12 most recent · observed from env-history when available</div>
         </div>
         <table className="tbl">
           <thead>
