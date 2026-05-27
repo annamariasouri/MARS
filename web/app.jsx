@@ -58,87 +58,79 @@ const BLOOM_METRICS = () => {
   ];
 };
 const MODEL_LABEL = () => META().model_version || "rf_chl · v2026.05";
-const ACCURACY_TOL = 0.2; // mg/m³ — same rule as Close match in the recent table
+const ACCURACY_TOL = 0.2; // mg/m³
+const ACCURACY_STATUS_TIP = `On target = predicted CHL within ${ACCURACY_TOL} mg/m³ of Copernicus CHL. Off target = larger error. Pending = no observation yet.`;
 
-/** Projected exceedance frequency (7d / 30d outlook). */
-function exceedanceOutlookLevel(pct) {
+/** Share of forecast days over bloom threshold (7d / 30d). */
+function outlookRiskLevel(pct) {
   if (pct == null || isNaN(pct)) return 'low';
   if (pct <= 33) return 'low';
   if (pct <= 66) return 'med';
   return 'high';
 }
-function exceedanceOutlookLabel(pct) {
+function outlookRiskLabel(pct) {
   if (pct == null || isNaN(pct)) return '—';
-  if (pct <= 33) return 'Unlikely';
-  if (pct <= 66) return 'Possible';
-  return 'Likely';
+  if (pct <= 33) return 'Low';
+  if (pct <= 66) return 'Medium';
+  return 'High';
 }
 
-/**
- * Bloom alert level — operational early-warning tier from predicted CHL vs adaptive P90 threshold.
- * Not observed bloom status; follows common HAB monitoring tier language (normal → elevated → high → exceedance).
- */
-const THRESHOLD_ELEVATED_PCT = 75;
-const THRESHOLD_HIGH_PCT = 90;
+const RISK_MEDIUM_PCT = 75;
+const RISK_HIGH_PCT = 90;
 
-function bloomAlertTier(score, bloomFlag) {
+/** Today's bloom risk vs adaptive P90 threshold (Low → Alert). */
+function bloomRiskTier(score, bloomFlag) {
   if (bloomFlag === 1 || bloomFlag === true) {
-    return { key: 'exceedance', label: 'Exceedance predicted', badgeLevel: 'high' };
+    return { key: 'alert', label: 'Alert', badgeLevel: 'high' };
   }
   if (score == null || isNaN(score)) {
-    return { key: 'normal', label: 'Normal', badgeLevel: 'low' };
+    return { key: 'low', label: 'Low', badgeLevel: 'low' };
   }
   if (score >= 100) {
-    return { key: 'exceedance', label: 'Exceedance predicted', badgeLevel: 'high' };
+    return { key: 'alert', label: 'Alert', badgeLevel: 'high' };
   }
-  if (score >= THRESHOLD_HIGH_PCT) {
+  if (score >= RISK_HIGH_PCT) {
     return { key: 'high', label: 'High', badgeLevel: 'high' };
   }
-  if (score >= THRESHOLD_ELEVATED_PCT) {
-    return { key: 'elevated', label: 'Elevated', badgeLevel: 'med' };
+  if (score >= RISK_MEDIUM_PCT) {
+    return { key: 'medium', label: 'Medium', badgeLevel: 'med' };
   }
-  return { key: 'normal', label: 'Normal', badgeLevel: 'low' };
+  return { key: 'low', label: 'Low', badgeLevel: 'low' };
 }
 
-function bloomAlertSub(score, predicted, threshold, bloomFlag) {
+function bloomRiskSub(score, predicted, threshold) {
   const parts = [];
-  if (score != null && !isNaN(score)) parts.push(`${fmtNum(score, 0)}% of adaptive threshold`);
+  if (score != null && !isNaN(score)) parts.push(`${fmtNum(score, 0)}% of threshold`);
   if (predicted != null && threshold != null) {
-    parts.push(`predicted ${fmtNum(predicted, 3)} vs ${fmtNum(threshold, 3)} mg/m³`);
+    parts.push(`${fmtNum(predicted, 3)} vs ${fmtNum(threshold, 3)} mg/m³`);
   }
-  const base = parts.join(' · ') || 'Model vs adaptive threshold';
-  if (bloomFlag === 1 || bloomFlag === true || (score != null && score >= 100)) {
-    return `${base} · exceedance predicted (not confirmed bloom)`;
-  }
-  return `${base} · model estimate only`;
+  return parts.join(' · ') || 'Predicted CHL vs adaptive threshold';
 }
 
-/** Forecast verification vs Copernicus CHL (model skill, not bloom risk). */
-function forecastQualityStatus(row) {
+function forecastAccuracyStatus(row) {
   const obs = row.observed_chl;
   const err = row.err;
   if (obs == null || obs === '' || isNaN(obs)) {
-    return { key: 'pending', label: 'Awaiting observation', color: 'var(--text-muted)' };
+    return { key: 'pending', label: 'Pending', color: 'var(--text-muted)' };
   }
   if (err == null || isNaN(err)) {
     return { key: 'unknown', label: '—', color: 'var(--text-muted)' };
   }
   if (Math.abs(err) < ACCURACY_TOL) {
-    return { key: 'good', label: 'Good agreement', color: 'var(--ok)' };
+    return { key: 'on', label: 'On target', color: 'var(--ok)' };
   }
-  return { key: 'poor', label: 'Poor agreement', color: 'var(--warn)' };
+  return { key: 'off', label: 'Off target', color: 'var(--warn)' };
 }
 
 function mapPinLabel(levelKey) {
   const map = {
-    normal: 'Normal',
-    elevated: 'Elevated',
+    low: 'Low',
+    medium: 'Medium',
+    med: 'Medium',
     high: 'High',
-    exceedance: 'Exceedance',
-    low: 'Normal',
-    med: 'Elevated',
+    alert: 'Alert',
   };
-  return map[levelKey] || 'Normal';
+  return map[levelKey] || 'Low';
 }
 
 /** Pair each forecast day with Copernicus CHL from env-history (Environmental Trends). */
@@ -431,14 +423,14 @@ function KpiRow({ region, summary, env }) {
         />
 
         <KpiCard
-          label="Bloom alert level"
+          label="Bloom risk · today"
           value=""
-          info="Operational early-warning tier from today's predicted chlorophyll vs the adaptive bloom threshold (90th percentile of grid forecasts). Tiers follow standard HAB monitoring language. This reflects model output only — not a confirmed harmful algal bloom in the water."
-          badge={bloomAlertTier(summary.risk_score, summary.bloom_flag).label}
-          badgeLevel={bloomAlertTier(summary.risk_score, summary.bloom_flag).badgeLevel}
+          info="Low / Medium / High / Alert from today's predicted chlorophyll vs the adaptive bloom threshold (P90 of grid forecasts). Model forecast only — not a confirmed bloom in the water."
+          badge={bloomRiskTier(summary.risk_score, summary.bloom_flag).label}
+          badgeLevel={bloomRiskTier(summary.risk_score, summary.bloom_flag).badgeLevel}
           sub={
             <span>
-              {bloomAlertSub(summary.risk_score, summary.predicted_chl, summary.threshold, summary.bloom_flag)}
+              {bloomRiskSub(summary.risk_score, summary.predicted_chl, summary.threshold)}
             </span>
           }
         />
@@ -453,20 +445,20 @@ function KpiRow({ region, summary, env }) {
         />
 
         <KpiCard
-          label="Exceedance outlook · 7d"
+          label="Bloom risk · 7 days"
           value=""
-          info="Share of the next 7 forecast days where predicted CHL is at or above the adaptive bloom threshold (P90). Expressed as exceedance frequency, not probability of an observed bloom."
-          badge={exceedanceOutlookLabel(summary.rec7)}
-          badgeLevel={exceedanceOutlookLevel(summary.rec7)}
+          info="Low / Medium / High from how many of the next 7 forecast days are predicted at or above the bloom threshold."
+          badge={outlookRiskLabel(summary.rec7)}
+          badgeLevel={outlookRiskLevel(summary.rec7)}
           sub={<span>{fmtNum(summary.rec7, 0)}% · {summary.risk7}/7 days over threshold</span>}
         />
 
         <KpiCard
-          label="Exceedance outlook · 30d"
+          label="Bloom risk · 30 days"
           value=""
-          info="Same as the 7-day outlook, over the next 30 forecast days. Useful for sustained exceedance patterns."
-          badge={exceedanceOutlookLabel(summary.rec30)}
-          badgeLevel={exceedanceOutlookLevel(summary.rec30)}
+          info="Same scale as the 7-day outlook, over the next 30 forecast days."
+          badge={outlookRiskLabel(summary.rec30)}
+          badgeLevel={outlookRiskLevel(summary.rec30)}
           sub={<span>{fmtNum(summary.rec30, 0)}% · {summary.risk30}/30 days over threshold</span>}
         />
 
@@ -710,8 +702,6 @@ function computeAccuracyStats(rows) {
 
 function AccuracySkillBlock({ rows, region }) {
   const stats = useMemo(() => computeAccuracyStats(rows), [rows]);
-  const tolTip = `Forecast agreement = predicted CHL within ${ACCURACY_TOL} mg/m³ of Copernicus CHL (env-history). This measures model skill, not bloom risk.`;
-
   if (!stats) {
     return (
       <div className="chart" style={{ padding: 24, textAlign: 'center', color: 'var(--text-muted)', fontSize: 12 }}>
@@ -725,34 +715,34 @@ function AccuracySkillBlock({ rows, region }) {
   return (
     <div className="accuracy-skill-block">
       <div className="section-head" style={{ marginBottom: 10 }}>
-        <h2 className="section-title">Forecast verification · {REGIONS[region].short}</h2>
+        <h2 className="section-title">Model accuracy · {REGIONS[region].short}</h2>
         <div className="section-sub">
-          Model vs Copernicus CHL · ±{ACCURACY_TOL} mg/m³
-          <InfoTip text={tolTip} />
+          Predicted vs Copernicus CHL · ±{ACCURACY_TOL} mg/m³
+          <InfoTip text={ACCURACY_STATUS_TIP} />
         </div>
       </div>
 
       <div className="kpi-grid accuracy-kpi-grid">
         <KpiCard
-          label="Agreement · all days"
+          label="Accuracy · all days"
           badge={`${overall.pct}%`}
           badgeLevel={accuracyBadgeLevel(overall.pct)}
-          sub={<span>{overall.close} of {overall.total} days within tolerance</span>}
-          info={tolTip}
+          sub={<span>{overall.close} of {overall.total} days on target</span>}
+          info={ACCURACY_STATUS_TIP}
           sparkData={rolling.map(d => d.pct)}
           sparkColor="var(--teal)"
         />
         <KpiCard
-          label="Agreement · 7 days"
+          label="Accuracy · 7 days"
           badge={last7 ? `${last7.pct}%` : '—'}
           badgeLevel={last7 ? accuracyBadgeLevel(last7.pct) : 'med'}
-          sub={last7 ? <span>{last7.close}/{last7.total} days</span> : null}
+          sub={last7 ? <span>{last7.close}/{last7.total} on target</span> : null}
         />
         <KpiCard
-          label="Agreement · 14 days"
+          label="Accuracy · 14 days"
           badge={last14 ? `${last14.pct}%` : '—'}
           badgeLevel={last14 ? accuracyBadgeLevel(last14.pct) : 'med'}
-          sub={last14 ? <span>{last14.close}/{last14.total} days</span> : null}
+          sub={last14 ? <span>{last14.close}/{last14.total} on target</span> : null}
         />
         <KpiCard
           label="Mean absolute error"
@@ -765,13 +755,13 @@ function AccuracySkillBlock({ rows, region }) {
 
       <div className="chart" style={{ marginTop: 14 }}>
         <div className="chart-header">
-          <div className="chart-title">Agreement rate · 7-day rolling</div>
-          <div className="chart-meta">% of days within {ACCURACY_TOL} mg/m³ of Copernicus</div>
+          <div className="chart-title">Accuracy trend · 7-day rolling</div>
+          <div className="chart-meta">% of days on target (±{ACCURACY_TOL} mg/m³)</div>
         </div>
         <LineChart
           data={rolling}
           x="date"
-          ys={[{ key: 'pct', label: 'Agreement %', color: 'var(--teal)' }]}
+          ys={[{ key: 'pct', label: 'Accuracy %', color: 'var(--teal)' }]}
           height={200}
           areaFill={true}
           height_unit="%"
@@ -897,7 +887,7 @@ function AccuracyTab({ region, accuracy, env }) {
           <div className="chart-header" style={{padding:'14px 18px 10px'}}>
           <div className="chart-title">
             Recent forecasts · {REGIONS[region].short}
-            <InfoTip text="Each row is one forecast day. Error = predicted − observed CHL (mg/m³). Verification compares |error| to a 0.2 mg/m³ tolerance — this is model performance, not bloom alert level." />
+            <InfoTip text="Each row is one forecast day. Status = On target if |error| &lt; 0.2 mg/m³ vs Copernicus CHL; Off target if not; Pending if no observation yet." />
           </div>
           <div className="chart-meta">12 most recent days</div>
         </div>
@@ -910,15 +900,15 @@ function AccuracyTab({ region, accuracy, env }) {
               <th className="num">Error</th>
               <th className="num">|Error|</th>
               <th>
-                Verification
-                <InfoTip text="Good agreement: |error| &lt; 0.2 mg/m³ vs Copernicus CHL. Poor agreement: larger error. Awaiting observation: no env-history CHL yet for that date." />
+                Status
+                <InfoTip text={ACCURACY_STATUS_TIP} />
               </th>
             </tr>
           </thead>
           <tbody>
             {recent.map((r, i) => {
               const hasObs = r.observed_chl != null && !isNaN(r.observed_chl);
-              const st = forecastQualityStatus(r);
+              const st = forecastAccuracyStatus(r);
               return (
                 <tr key={i}>
                   <td style={{color:'var(--text)'}}>{r.target_date}</td>
@@ -995,7 +985,7 @@ function App() {
       const risk7 = last7.filter(d => d.predicted_chl >= d.threshold).length;
       const risk30 = last30.filter(d => d.predicted_chl >= d.threshold).length;
 
-      const tier = bloomAlertTier(last.risk_score, last.flag);
+      const tier = bloomRiskTier(last.risk_score, last.flag);
       out[r] = {
         chl: currChl,
         predicted_chl: last.predicted_chl,
