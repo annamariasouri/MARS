@@ -22,7 +22,7 @@ OUT_PATH = os.path.join(WEB_DIR, "data.js")
 
 REGIONS = ("thermaikos", "peiraeus", "limassol")
 REGION_TITLES = {
-    "thermaikos": "Thermaikos",
+    "thermaikos": "Thessaloniki",
     "peiraeus": "Piraeus",
     "limassol": "Limassol",
 }
@@ -293,6 +293,7 @@ def build_payload() -> dict:
         "coverage_start": coverage_start,
         "coverage_end": coverage_end,
         "forecast_days": forecast_days,
+        "port_count": len(REGIONS),
         "basin_count": len(REGIONS),
         "validation": load_validation_table(),
         "bloom_metrics": load_bloom_table(),

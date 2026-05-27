@@ -1,5 +1,5 @@
 // Eastern Mediterranean map — Leaflet with a clean dark basemap (CartoDB Dark Matter).
-// Drops custom DOM markers for the 3 monitored locations; click to focus.
+// Drops custom DOM markers for the 3 monitored ports; click to focus.
 
 const { useEffect, useRef } = React;
 
@@ -52,7 +52,7 @@ const RegionMap = ({ active, onSelect, regions, summaries }) => {
       const div = L.DomUtil.create('div', 'mars-map-title');
       div.innerHTML = `
         <div class="mars-map-title-eyebrow">EASTERN MEDITERRANEAN · 19°–36° E</div>
-        <div class="mars-map-title-text">3 monitored locations</div>
+        <div class="mars-map-title-text">3 monitored ports</div>
       `;
       return div;
     };

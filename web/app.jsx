@@ -11,9 +11,9 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 }/*EDITMODE-END*/;
 
 const REGIONS = {
-  thermaikos: { title: "Thermaikos (Greece)", short: "Thermaikos", country: "Greece", bbox: [40.2, 40.7, 22.5, 23.0] },
-  peiraeus:   { title: "Piraeus (Greece)",     short: "Piraeus",    country: "Greece", bbox: [37.9, 38.1, 23.5, 23.8] },
-  limassol:   { title: "Limassol (Cyprus)",    short: "Limassol",   country: "Cyprus", bbox: [34.6, 34.8, 33.0, 33.2] },
+  thermaikos: { title: "Port of Thessaloniki (Greece)", short: "Thessaloniki", country: "Greece", bbox: [40.2, 40.7, 22.5, 23.0] },
+  peiraeus:   { title: "Port of Piraeus (Greece)",      short: "Piraeus",    country: "Greece", bbox: [37.9, 38.1, 23.5, 23.8] },
+  limassol:   { title: "Port of Limassol (Cyprus)",     short: "Limassol",   country: "Cyprus", bbox: [34.6, 34.8, 33.0, 33.2] },
 };
 
 const ENV_VARS = [
@@ -30,7 +30,7 @@ const VALIDATION = () => {
   const rows = META().validation;
   if (rows && rows.length) return rows.filter(r => !r.is_total);
   return [
-    { region: "Thermaikos", n: 60984, rmse: 0.1283, mae: 0.0629, r2: 0.9185 },
+    { region: "Thessaloniki", n: 60984, rmse: 0.1283, mae: 0.0629, r2: 0.9185 },
     { region: "Piraeus",    n: 90387, rmse: 0.0070, mae: 0.0040, r2: 0.9742 },
     { region: "Limassol",   n: 8712,  rmse: 0.0051, mae: 0.0031, r2: 0.9085 },
   ];
@@ -52,7 +52,7 @@ const BLOOM_METRICS = () => {
   const rows = META().bloom_metrics;
   if (rows && rows.length) return rows;
   return [
-    { region: "Thermaikos", threshold: 1.00, prevalence: 12.4, precision: 0.825, recall: 0.849, f1: 0.837 },
+    { region: "Thessaloniki", threshold: 1.00, prevalence: 12.4, precision: 0.825, recall: 0.849, f1: 0.837 },
     { region: "Piraeus",    threshold: 0.50, prevalence: 0.0,  precision: 0,     recall: 0,     f1: 0 },
     { region: "Limassol",   threshold: 0.30, prevalence: 0.0,  precision: 0,     recall: 0,     f1: 0 },
   ];
@@ -197,7 +197,7 @@ function Hero({ regionData, region, asOf, theme, onToggleTheme }) {
         </h1>
         <p className="hero-sub">
           A daily marine bloom outlook combining Copernicus environmental observations with a trained
-          Random Forest model. Selected location: <strong style={{color:'var(--text)'}}>{REGIONS[region].title}</strong>.
+          Random Forest model. Selected port: <strong style={{color:'var(--text)'}}>{REGIONS[region].title}</strong>.
         </p>
       </div>
       <div className="hero-meta">
@@ -269,7 +269,7 @@ function MapSection({ region, setRegion, regionSummaries, coverage }) {
       </div>
       <div className="region-list">
         <div className="region-list-header">
-          <div className="region-list-title">Monitored locations</div>
+          <div className="region-list-title">Monitored ports</div>
           <span style={{fontFamily:'var(--font-mono)', fontSize:10, color:'var(--text-muted)'}}>
             3 / 3 ACTIVE
           </span>
@@ -321,7 +321,7 @@ function MapSection({ region, setRegion, regionSummaries, coverage }) {
             {cov.start && cov.end ? `${cov.start} → ${cov.end}` : '—'}
           </div>
           <div style={{fontFamily:'var(--font-mono)', fontSize:11, color:'var(--text-muted)', marginTop:2}}>
-            {cov.forecast_days != null ? `${cov.forecast_days} forecast days` : '—'} · {cov.basin_count || 3} locations
+            {cov.forecast_days != null ? `${cov.forecast_days} forecast days` : '—'} · {cov.port_count || cov.basin_count || 3} ports
           </div>
         </div>
       </div>
@@ -541,9 +541,9 @@ function ForecastTab({ region, forecast, env, summary }) {
         <summary>How does the model produce these numbers?</summary>
         <div className="expander-body">
           Daily Copernicus Marine fields (nutrients, temperature, salinity, surface chlorophyll) are
-          ingested per location. We compute lagged values, rolling averages, nutrient ratios and anomalies,
+          ingested per port. We compute lagged values, rolling averages, nutrient ratios and anomalies,
           then feed them to a retrained Random Forest (<code>rf_chl_retrained.pkl</code>). The model emits
-          a daily CHL prediction per grid cell, summarised to the location median. A bloom-risk flag fires
+          a daily CHL prediction per grid cell, summarised to the port median. A bloom-risk flag fires
           when the prediction crosses an adaptive threshold — the 90th percentile of predicted CHL over
           the rolling history — which keeps false positives down in naturally productive water.
         </div>
@@ -832,7 +832,7 @@ function AccuracyTab({ region, accuracy, env }) {
               Bloom detection · precision/recall
               <InfoTip text="Treating bloom-risk as a binary alarm: precision = of the days the model flagged, how many actually crossed the threshold. Recall = of the days that did cross, how many the model caught. F1 balances both; prevalence shows how often blooms occurred in the test window." />
             </div>
-            <div className="chart-meta">location thresholds</div>
+            <div className="chart-meta">port thresholds</div>
           </div>
           <table className="tbl">
             <thead>
@@ -1002,7 +1002,7 @@ function App() {
         <div>
           <div className="section-head" style={{marginBottom:10}}>
             <h2 className="section-title">Regional outlook · Eastern Mediterranean</h2>
-            <div className="section-sub">3 locations · click any to focus</div>
+            <div className="section-sub">3 ports · click any to focus</div>
           </div>
           <MapSection
             region={region}
@@ -1012,7 +1012,7 @@ function App() {
               start: META().coverage_start,
               end: META().coverage_end,
               forecast_days: META().forecast_days,
-              basin_count: META().basin_count,
+              port_count: META().port_count ?? META().basin_count,
             }}
           />
         </div>

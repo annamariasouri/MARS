@@ -7990,15 +7990,16 @@ window.MARS_DATA = {
  }
 };
 window.MARS_META = {
- "generated_at": "2026-05-27T05:35:23Z",
- "data_dir": "/home/runner/work/MARS/MARS/data",
+ "generated_at": "2026-05-27T19:57:10Z",
+ "data_dir": "C:\\Users\\annam\\OneDrive\\\u03a5\u03c0\u03bf\u03bb\u03bf\u03b3\u03b9\u03c3\u03c4\u03ae\u03c2\\MARS PHD\\MARS\\data",
  "coverage_start": "2026-02-13",
  "coverage_end": "2026-05-27",
  "forecast_days": 96,
+ "port_count": 3,
  "basin_count": 3,
  "validation": [
   {
-   "region": "Thermaikos",
+   "region": "Thessaloniki",
    "n": 60984,
    "rmse": 0.1283498838369107,
    "mae": null,
@@ -8029,7 +8030,7 @@ window.MARS_META = {
  ],
  "bloom_metrics": [
   {
-   "region": "Thermaikos",
+   "region": "Thessaloniki",
    "threshold": 1.0236915763,
    "prevalence": null,
    "precision": 0.8571428571428571,
