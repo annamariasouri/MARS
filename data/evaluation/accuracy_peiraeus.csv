@@ -101,3 +101,4 @@ forecast_date,target_date,lat,lon,predicted_chl,observed_chl,err,abs_err,bloom_p
 ,2026-05-29,,,0.127,,,,False,False,|2026-05-29 00:00:00|None|None
 ,2026-05-30,,,0.125,,,,False,False,|2026-05-30 00:00:00|None|None
 ,2026-05-31,,,0.123,,,,False,False,|2026-05-31 00:00:00|None|None
+,2026-06-01,,,0.123,,,,False,False,|2026-06-01 00:00:00|None|None
