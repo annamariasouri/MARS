@@ -1025,6 +1025,14 @@ window.MARS_DATA = {
     "risk_score": 100.0,
     "risk_pct": 74.0,
     "flag": 1
+   },
+   {
+    "date": "2026-06-29",
+    "predicted_chl": 0.131,
+    "threshold": 0.134,
+    "risk_score": 97.9,
+    "risk_pct": 10.3,
+    "flag": 0
    }
   ],
   "env": [
@@ -2492,8 +2500,8 @@ window.MARS_DATA = {
     "nh4": 0.024064,
     "no3": 0.073452,
     "po4": 0.061043,
-    "thetao": 25.77762,
-    "so": 36.4708
+    "thetao": 25.777464,
+    "so": 36.48104
    },
    {
     "date": "2026-06-26",
@@ -2501,17 +2509,26 @@ window.MARS_DATA = {
     "nh4": 0.029155,
     "no3": 0.117431,
     "po4": 0.070791,
-    "thetao": 26.03638,
-    "so": 36.403008
+    "thetao": 26.036633,
+    "so": 36.43661
    },
    {
     "date": "2026-06-27",
-    "chl": 0.108816,
-    "nh4": 0.034544,
-    "no3": 0.124914,
-    "po4": 0.081301,
-    "thetao": 25.69647,
-    "so": 36.43789
+    "chl": 0.107763,
+    "nh4": 0.034257,
+    "no3": 0.120341,
+    "po4": 0.080104,
+    "thetao": 26.019962,
+    "so": 36.460835
+   },
+   {
+    "date": "2026-06-28",
+    "chl": 0.112249,
+    "nh4": 0.033638,
+    "no3": 0.08069,
+    "po4": 0.076931,
+    "thetao": 26.321796,
+    "so": 36.414642
    }
   ],
   "accuracy": [
@@ -3407,13 +3424,20 @@ window.MARS_DATA = {
    {
     "target_date": "2026-06-27",
     "predicted_chl": 0.133,
-    "observed_chl": 0.108816,
-    "err": 0.024184,
-    "abs_err": 0.024184
+    "observed_chl": 0.107763,
+    "err": 0.025237,
+    "abs_err": 0.025237
    },
    {
     "target_date": "2026-06-28",
     "predicted_chl": 0.134,
+    "observed_chl": 0.112249,
+    "err": 0.021751,
+    "abs_err": 0.021751
+   },
+   {
+    "target_date": "2026-06-29",
+    "predicted_chl": 0.131,
     "observed_chl": null,
     "err": null,
     "abs_err": null
@@ -4433,6 +4457,14 @@ window.MARS_DATA = {
    {
     "date": "2026-06-28",
     "predicted_chl": 0.055,
+    "threshold": 0.055,
+    "risk_score": 99.0,
+    "risk_pct": 85.0,
+    "flag": 0
+   },
+   {
+    "date": "2026-06-29",
+    "predicted_chl": 0.054,
     "threshold": 0.055,
     "risk_score": 99.0,
     "risk_pct": 85.0,
@@ -5913,17 +5945,26 @@ window.MARS_DATA = {
     "nh4": 0.009376,
     "no3": 0.005285,
     "po4": 0.005099,
-    "thetao": 24.370523,
-    "so": 38.79275
+    "thetao": 24.370485,
+    "so": 38.79156
    },
    {
     "date": "2026-06-27",
-    "chl": 0.037852,
-    "nh4": 0.009269,
-    "no3": 0.005152,
-    "po4": 0.00502,
-    "thetao": 24.328735,
-    "so": 38.79859
+    "chl": 0.037879,
+    "nh4": 0.009265,
+    "no3": 0.005161,
+    "po4": 0.005022,
+    "thetao": 24.313845,
+    "so": 38.797314
+   },
+   {
+    "date": "2026-06-28",
+    "chl": 0.037173,
+    "nh4": 0.009234,
+    "no3": 0.005427,
+    "po4": 0.004998,
+    "thetao": 24.347681,
+    "so": 38.801083
    }
   ],
   "accuracy": [
@@ -6819,13 +6860,20 @@ window.MARS_DATA = {
    {
     "target_date": "2026-06-27",
     "predicted_chl": 0.056,
-    "observed_chl": 0.037852,
-    "err": 0.018148,
-    "abs_err": 0.018148
+    "observed_chl": 0.037879,
+    "err": 0.018121,
+    "abs_err": 0.018121
    },
    {
     "target_date": "2026-06-28",
     "predicted_chl": 0.055,
+    "observed_chl": 0.037173,
+    "err": 0.017827,
+    "abs_err": 0.017827
+   },
+   {
+    "target_date": "2026-06-29",
+    "predicted_chl": 0.054,
     "observed_chl": null,
     "err": null,
     "abs_err": null
@@ -7839,6 +7887,14 @@ window.MARS_DATA = {
     "predicted_chl": 0.048,
     "threshold": 0.049,
     "risk_score": 99.5,
+    "risk_pct": 68.0,
+    "flag": 0
+   },
+   {
+    "date": "2026-06-29",
+    "predicted_chl": 0.048,
+    "threshold": 0.049,
+    "risk_score": 99.4,
     "risk_pct": 68.0,
     "flag": 0
    }
@@ -9317,17 +9373,26 @@ window.MARS_DATA = {
     "nh4": 0.053714,
     "no3": 0.08977,
     "po4": 0.003256,
-    "thetao": 23.025904,
-    "so": 39.267494
+    "thetao": 23.025627,
+    "so": 39.266636
    },
    {
     "date": "2026-06-27",
-    "chl": 0.031739,
-    "nh4": 0.05362,
-    "no3": 0.087646,
-    "po4": 0.003206,
-    "thetao": 23.571274,
-    "so": 39.266068
+    "chl": 0.031765,
+    "nh4": 0.053599,
+    "no3": 0.087542,
+    "po4": 0.003205,
+    "thetao": 23.530266,
+    "so": 39.26456
+   },
+   {
+    "date": "2026-06-28",
+    "chl": 0.030769,
+    "nh4": 0.054314,
+    "no3": 0.088353,
+    "po4": 0.003194,
+    "thetao": 24.224264,
+    "so": 39.268417
    }
   ],
   "accuracy": [
@@ -10279,12 +10344,19 @@ window.MARS_DATA = {
    {
     "target_date": "2026-06-27",
     "predicted_chl": 0.048,
-    "observed_chl": 0.031739,
-    "err": 0.016261,
-    "abs_err": 0.016261
+    "observed_chl": 0.031765,
+    "err": 0.016235,
+    "abs_err": 0.016235
    },
    {
     "target_date": "2026-06-28",
+    "predicted_chl": 0.048,
+    "observed_chl": 0.030769,
+    "err": 0.017231,
+    "abs_err": 0.017231
+   },
+   {
+    "target_date": "2026-06-29",
     "predicted_chl": 0.048,
     "observed_chl": null,
     "err": null,
@@ -10294,11 +10366,11 @@ window.MARS_DATA = {
  }
 };
 window.MARS_META = {
- "generated_at": "2026-06-28T05:35:25Z",
+ "generated_at": "2026-06-29T05:40:26Z",
  "data_dir": "/home/runner/work/MARS/MARS/data",
  "coverage_start": "2026-02-13",
- "coverage_end": "2026-06-28",
- "forecast_days": 128,
+ "coverage_end": "2026-06-29",
+ "forecast_days": 129,
  "port_count": 3,
  "basin_count": 3,
  "validation": [
