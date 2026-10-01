@@ -228,3 +228,4 @@ forecast_date,target_date,lat,lon,predicted_chl,observed_chl,err,abs_err,bloom_p
 ,2026-09-28,,,0.057,,,,False,False,|2026-09-28 00:00:00|None|None
 ,2026-09-29,,,0.057,,,,False,False,|2026-09-29 00:00:00|None|None
 ,2026-09-30,,,0.055,,,,False,False,|2026-09-30 00:00:00|None|None
+,2026-10-01,,,0.054,,,,False,False,|2026-10-01 00:00:00|None|None
