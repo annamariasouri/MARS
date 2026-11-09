@@ -3,6 +3,20 @@
 
 const { useEffect, useRef } = React;
 
+const CARTO_BASEMAP_KEY = 'cb1_557w_1_9ebcbacc2b83dcf5d3c95b46';
+const CARTO_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attribution/">CARTO</a>';
+const ESRI_ATTRIBUTION = 'Tiles &copy; Esri — Esri, DeLorme, NAVTEQ';
+
+const getBasemap = (isLight) => ({
+  url: isLight
+    ? `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${encodeURIComponent(CARTO_BASEMAP_KEY)}`
+    : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+  labelsUrl: isLight
+    ? `https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}.png?key=${encodeURIComponent(CARTO_BASEMAP_KEY)}`
+    : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+  attribution: isLight ? CARTO_ATTRIBUTION : ESRI_ATTRIBUTION,
+});
+
 const RegionMap = ({ active, onSelect, regions, summaries }) => {
   const mapEl = useRef(null);
   const mapRef = useRef(null);
@@ -26,25 +40,22 @@ const RegionMap = ({ active, onSelect, regions, summaries }) => {
     mapRef.current = map;
 
     // Detect theme — pick the right basemap variant.
-    const isLight = document.documentElement.classList.contains('theme-light');
-    const url = isLight
-      ? 'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
-      : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
-    const labelsUrl = isLight
-      ? 'https://basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png'
-      : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}';
+    const basemap = getBasemap(document.documentElement.classList.contains('theme-light'));
 
-    const base = L.tileLayer(url, {
+    const base = L.tileLayer(basemap.url, {
       maxZoom: 16,
-      attribution: 'Tiles &copy; Esri — Esri, DeLorme, NAVTEQ',
+      subdomains: 'abcd',
+      attribution: basemap.attribution,
     }).addTo(map);
-    const labels = L.tileLayer(labelsUrl, {
+    const labels = L.tileLayer(basemap.labelsUrl, {
       maxZoom: 16,
       pane: 'overlayPane',
+      subdomains: 'abcd',
     }).addTo(map);
 
     layersRef.current.base = base;
     layersRef.current.labels = labels;
+    layersRef.current.attribution = basemap.attribution;
 
     // Add a custom control card overlay with title + scale.
     const titleCtrl = L.control({ position: 'bottomleft' });
@@ -163,14 +174,14 @@ const RegionMap = ({ active, onSelect, regions, summaries }) => {
       const map = mapRef.current;
       if (!map || !layersRef.current.base) return;
       const isLight = document.documentElement.classList.contains('theme-light');
-      const url = isLight
-        ? 'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
-        : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
-      const labelsUrl = isLight
-        ? 'https://basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png'
-        : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}';
-      layersRef.current.base.setUrl(url);
-      layersRef.current.labels.setUrl(labelsUrl);
+      const basemap = getBasemap(isLight);
+      if (layersRef.current.attribution !== basemap.attribution) {
+        map.attributionControl.removeAttribution(layersRef.current.attribution);
+        map.attributionControl.addAttribution(basemap.attribution);
+        layersRef.current.attribution = basemap.attribution;
+      }
+      layersRef.current.base.setUrl(basemap.url);
+      layersRef.current.labels.setUrl(basemap.labelsUrl);
     });
     obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     return () => obs.disconnect();

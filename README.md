@@ -26,6 +26,8 @@ That URL shows the **new design**, not the old Streamlit layout and not a folder
 
 GitHub Pages is optional (workflow **Deploy MARS Dashboard**, manual run only). **Streamlit Cloud** is the main way to go online.
 
+The bright map uses CARTO Voyager tiles and a browser-visible CARTO Basemaps key in `MARSdesign/map.jsx` (also synced to `web/map.jsx`). Restrict the key to your dashboard domains in CARTO.
+
 ## How predictions are made
 
 - **Data ingestion:** Daily Copernicus download (nutrients, temperature, salinity, chlorophyll) per region.
