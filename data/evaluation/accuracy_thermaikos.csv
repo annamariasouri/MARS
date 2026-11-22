@@ -270,3 +270,4 @@ forecast_date,target_date,lat,lon,predicted_chl,observed_chl,err,abs_err,bloom_p
 ,2026-11-18,,,0.383,,,,False,False,|2026-11-18 00:00:00|None|None
 ,2026-11-20,,,0.427,,,,False,False,|2026-11-20 00:00:00|None|None
 ,2026-11-21,,,0.44,,,,False,False,|2026-11-21 00:00:00|None|None
+,2026-11-22,,,0.453,,,,False,False,|2026-11-22 00:00:00|None|None
